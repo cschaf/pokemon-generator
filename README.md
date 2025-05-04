@@ -2,6 +2,8 @@
 
 A simple web application that generates random Pokémon based on various filters, fetching data from the PokeAPI.
 
+**[Launch the Pokémon Generator Application](https://cschaf.github.io/pokemon-generator/index.html)**
+
 ## Project Description
 
 This project is a web-based Pokémon Generator. It allows users to select criteria such as generation, type, evolution stage, and special categories (Legendary, Mythical) to generate a list of random Pokémon matching their filters. The application fetches Pokémon data and images dynamically from the PokeAPI. Users can also toggle between the normal and shiny forms of a Pokémon by clicking its image and click on the Pokémon's number or name to view more details on Pokémon Database. The interface is designed to be modern and responsive, working well on both desktop and mobile devices, and includes a dark mode toggle and language selection (German and English).
@@ -48,9 +50,9 @@ This project's code was created with the assistance of **Gemini 2.5 Flash**, a l
 
 ## How to Use
 
-1. Clone this repository or download the `pokemon-generator.html` file.
+1. Clone this repository or download the `index.html` file.
 
-2. Open the `pokemon-generator.html` file in your web browser.
+2. Open the `index.html` file in your web browser.
 
 3. Use the controls to set your desired filters and the number of Pokémon to generate.
 
