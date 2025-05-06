@@ -38,7 +38,7 @@ All Pokémon data and images are provided by the [PokeAPI](https://pokeapi.co/).
 
 ## Copyright and Licensing
 
-* Pokémon and all associated names, characters, and images are trademarks and copyrights of © 2024 Nintendo, Creatures Inc., Game Freak Inc. All Rights Reserved.
+* Pokémon and all associated names, characters, and images are trademarks and copyrights of © 2025 Nintendo, Creatures Inc., Game Freak Inc. All Rights Reserved.
 
 * This project is a fan-made application and is not affiliated with or endorsed by Nintendo, Game Freak, or Creatures.
 
