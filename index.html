@@ -39,7 +39,7 @@
             background-color: var(--light-bg);
             color: var(--light-text);
             transition: background-color 0.3s, color 0.3s;
-            line-height: 1.6; /* Verbesserte Lesbarkeit */
+            line-height: 1.6;
         }
 
         body.dark-mode {
@@ -58,11 +58,58 @@
             color: var(--accent-color);
         }
 
+        .description {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            color: var(--light-details-text);
+        }
+        body.dark-mode .description {
+            color: var(--dark-details-text);
+        }
+
+        .loading-progress-container {
+            width: 100%;
+            background-color: var(--light-border);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .loading-progress-container {
+            background-color: var(--dark-border);
+            box-shadow: inset 0 1px 3px rgba(255,255,255,0.05);
+        }
+
+        .loading-progress-bar {
+            width: 0%;
+            height: 28px;
+            background-color: var(--secondary-color);
+            text-align: center;
+            line-height: 28px;
+            color: white;
+            border-radius: 8px;
+            transition: width 0.2s ease-out;
+            position: relative;
+        }
+        body.dark-mode .loading-progress-bar {
+             background-color: var(--accent-color);
+        }
+
+        .loading-progress-text {
+            font-weight: 600;
+            font-size: 0.85em;
+            display: inline-block;
+            padding: 0 10px;
+            white-space: nowrap;
+        }
+
         .controls {
             background-color: var(--light-controls-bg);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Weicherer Schatten */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
             transition: background-color 0.3s, box-shadow 0.3s;
         }
@@ -72,384 +119,194 @@
             box-shadow: 0 4px 10px rgba(255, 255, 255, 0.08);
         }
 
-        .control-group {
-            margin-bottom: 20px; /* Mehr Abstand */
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px; /* Mehr Abstand */
-            font-weight: 600; /* Etwas fetter */
-        }
-
-        body.dark-mode label {
-            color: var(--dark-text);
-        }
+        .control-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        body.dark-mode label { color: var(--dark-text); }
 
         select, input[type="number"] {
             width: 100%;
-            padding: 10px; /* Größerer Padding */
+            padding: 10px;
             border: 1px solid var(--light-border);
             border-radius: 5px;
-            margin-bottom: 15px; /* Mehr Abstand */
+            margin-bottom: 15px;
             background-color: var(--light-controls-bg);
             color: var(--light-text);
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            box-sizing: border-box;
         }
 
         body.dark-mode select, body.dark-mode input[type="number"] {
             border-color: var(--dark-border);
-            background-color: var(--dark-border); /* Dunklerer Hintergrund für Eingabefelder */
+            background-color: var(--dark-border);
             color: var(--dark-text);
         }
 
         .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px; /* Mehr Abstand */
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px 15px;
             margin-top: 10px;
         }
 
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-        }
-
+        .checkbox-item { display: flex; align-items: center; }
         .checkbox-item input[type="checkbox"] {
-            width: auto;
-            margin-right: 8px; /* Mehr Abstand */
-            margin-bottom: 0;
-            min-width: 16px; /* Mindestgröße für Touch */
-            min-height: 16px; /* Mindestgröße für Touch */
+            width: auto; margin-right: 8px; margin-bottom: 0;
+            min-width: 16px; min-height: 16px; flex-shrink: 0;
         }
-
-         .checkbox-item label {
-             margin-bottom: 0;
-             font-weight: 400; /* Normaler Font-Gewicht für Checkbox-Labels */
-             cursor: pointer; /* Zeige, dass das Label klickbar ist */
-         }
+        .checkbox-item label { margin-bottom: 0; font-weight: 400; cursor: pointer; }
 
         button {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px; /* Größerer Padding */
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
+            background-color: var(--secondary-color); color: white; border: none;
+            padding: 12px 20px; border-radius: 5px; cursor: pointer;
+            font-size: 16px; font-weight: 600;
             transition: background-color 0.3s, transform 0.1s ease-in-out;
-            width: 100%; /* Volle Breite auf kleinen Bildschirmen */
-            box-sizing: border-box;
+            width: 100%; box-sizing: border-box;
         }
-
-        button:hover {
-            background-color: #2a4b8d;
-            transform: translateY(-2px); /* Leichter Hover-Effekt */
-        }
-
-        button:active {
-             transform: translateY(0); /* Kein Versatz beim Klicken */
-        }
-
-         button:disabled {
-             background-color: #ccc;
-             cursor: not-allowed;
-         }
-
+        button:hover { background-color: #2a4b8d; transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
 
         #results {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Etwas breitere Karten */
-            gap: 25px; /* Mehr Abstand */
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
         }
 
         .pokemon-card {
             background-color: var(--light-card-bg);
-            border-radius: 10px;
-            overflow: hidden;
+            border-radius: 10px; overflow: hidden;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
-            display: flex;
-            flex-direction: column; /* Inhalt vertikal anordnen */
+            display: flex; flex-direction: column;
         }
-
         body.dark-mode .pokemon-card {
             background-color: var(--dark-card-bg);
             box-shadow: 0 4px 10px rgba(255, 255, 255, 0.08);
         }
-
-        .pokemon-card:hover {
-            transform: translateY(-5px);
-        }
+        .pokemon-card:hover { transform: translateY(-5px); }
 
         .pokemon-image {
-            width: 100%;
-            height: 180px; /* Etwas höher */
+            width: 100%; height: 180px;
             background-color: var(--light-image-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            position: relative; /* Für Shiny-Indikator */
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: background-color 0.3s;
+            position: relative; /* Wichtig für die Positionierung des Shiny-Indikators */
         }
-
-        body.dark-mode .pokemon-image {
-            background-color: var(--dark-image-bg);
-        }
+        body.dark-mode .pokemon-image { background-color: var(--dark-image-bg); }
 
         .pokemon-image img {
-            max-width: 100%; /* Bild passt sich an */
-            max-height: 100%;
-            object-fit: contain; /* Bildgröße beibehalten */
-            transition: transform 0.3s ease-in-out;
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; transition: transform 0.3s ease-in-out;
+        }
+        .pokemon-image img:hover { transform: scale(1.05); }
+
+        /* Shiny Indikator Styling */
+        .shiny-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            color: #FFD700; /* Goldene Sternfarbe */
+            font-size: 1.2em; /* Größe des Sterns */
+            display: none; /* Standardmäßig ausgeblendet */
+            background-color: rgba(0, 0, 0, 0.35); /* Leichter dunkler Hintergrund für Kontrast */
+            border-radius: 50%; /* Macht den Hintergrund rund */
+            padding: 5px; /* Etwas Platz um den Stern */
+            line-height: 0; /* Hilft bei der vertikalen Zentrierung des Icons */
+            z-index: 5; /* Stellt sicher, dass der Indikator über dem Bild liegt */
+            pointer-events: none; /* Verhindert, dass der Indikator Klicks auf das Bild blockiert */
         }
 
-         .pokemon-image img:hover {
-             transform: scale(1.05); /* Leichter Zoom-Effekt beim Hover */
-         }
-
-        .pokemon-info {
-            padding: 15px;
-            flex-grow: 1; /* Nimmt verfügbaren Platz ein */
-            display: flex;
-            flex-direction: column;
+        .shiny-indicator.active {
+            display: inline-block; /* Zeigt den Indikator an, wenn aktiv */
         }
 
+
+        .pokemon-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
         .pokemon-name {
-            margin: 0 0 8px 0; /* Mehr Abstand */
-            color: var(--light-text);
-            font-size: 1.1em; /* Etwas größer */
-            font-weight: 700;
+            margin: 0 0 8px 0; color: var(--light-text);
+            font-size: 1.1em; font-weight: 700;
         }
-
-        body.dark-mode .pokemon-name {
-            color: var(--dark-text);
-        }
-
+        body.dark-mode .pokemon-name { color: var(--dark-text); }
         .pokemon-details {
-            font-size: 0.9em; /* Etwas kleiner */
-            color: var(--light-details-text);
-            margin: 0 0 5px 0; /* Abstand zwischen Details */
+            font-size: 0.9em; color: var(--light-details-text);
+            margin: 0 0 5px 0;
         }
-
-        body.dark-mode .pokemon-details {
-            color: var(--dark-details-text);
-        }
-
-        .pokemon-types {
-            margin-top: 10px; /* Abstand zu Details */
-        }
-
+        body.dark-mode .pokemon-details { color: var(--dark-details-text); }
+        .pokemon-types { margin-top: 10px; }
         .type-badge {
-            display: inline-block;
-            padding: 4px 10px; /* Größerer Padding */
-            border-radius: 5px; /* Rundere Ecken */
-            font-size: 0.85em; /* Etwas kleiner */
-            color: white;
-            margin-right: 8px; /* Mehr Abstand */
-            margin-bottom: 5px;
-            font-weight: 600;
-            text-transform: capitalize; /* Erster Buchstabe groß */
-        }
-
-        .loading {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.2em; /* Etwas größer */
-            color: var(--light-status-text);
-        }
-
-        body.dark-mode .loading {
-            color: var(--dark-status-text);
+            display: inline-block; padding: 4px 10px; border-radius: 5px;
+            font-size: 0.85em; color: white; margin-right: 8px; margin-bottom: 5px;
+            font-weight: 600; text-transform: capitalize;
         }
 
         #status {
-            margin: 20px 0; /* Mehr Abstand */
-            font-style: italic;
-            text-align: center;
-            color: var(--light-status-text);
-            min-height: 1.5em; /* Mehr Platz reservieren */
+            margin: 20px 0; font-style: italic; text-align: center;
+            color: var(--light-status-text); min-height: 1.5em;
         }
-
-        body.dark-mode #status {
-            color: var(--dark-status-text);
-        }
+        body.dark-mode #status { color: var(--dark-status-text); }
 
         .attribution {
-            text-align: center;
-            margin-top: 40px; /* Mehr Abstand */
-            font-size: 0.8em; /* Kleiner */
+            text-align: center; margin-top: 40px; font-size: 0.8em;
             color: var(--light-attribution-text);
         }
-
-        body.dark-mode .attribution {
-            color: var(--dark-attribution-text);
-        }
-
-        .attribution a {
-            color: inherit; /* Farbe vom Elternelement erben */
-            text-decoration: underline;
-        }
-
-        .attribution a:hover {
-            text-decoration: none;
-        }
-
+        body.dark-mode .attribution { color: var(--dark-attribution-text); }
+        .attribution a { color: inherit; text-decoration: underline; }
+        .attribution a:hover { text-decoration: none; }
 
         .top-right-icons {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 10; /* Über anderen Elementen */
+            position: absolute; top: 20px; right: 20px;
+            display: flex; align-items: center; gap: 15px; z-index: 10;
         }
-
         .language-switcher img {
-            width: 28px; /* Etwas größere Flaggen */
-            height: auto;
-            cursor: pointer;
-            border: 2px solid transparent;
-            border-radius: 4px; /* Rundere Ecken */
+            width: 28px; height: auto; cursor: pointer;
+            border: 2px solid transparent; border-radius: 4px;
             transition: border-color 0.3s, transform 0.1s ease-in-out;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Schatten für Flaggen */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        body.dark-mode .language-switcher img {
-             box-shadow: 0 2px 5px rgba(255, 255, 255, 0.08);
-        }
-
-
-        .language-switcher img:hover {
-            transform: scale(1.1); /* Leichter Zoom */
-        }
-
-        .language-switcher img.active {
-            border-color: var(--secondary-color); /* Highlight active flag */
-        }
+        body.dark-mode .language-switcher img { box-shadow: 0 2px 5px rgba(255, 255, 255, 0.08); }
+        .language-switcher img:hover { transform: scale(1.1); }
+        .language-switcher img.active { border-color: var(--secondary-color); }
 
         .theme-switcher i {
-            font-size: 28px; /* Größeres Icon */
-            cursor: pointer;
-            color: var(--light-text);
+            font-size: 28px; cursor: pointer; color: var(--light-text);
             transition: color 0.3s, transform 0.1s ease-in-out;
         }
+        body.dark-mode .theme-switcher i { color: var(--dark-text); }
+        .theme-switcher i:hover { transform: rotate(15deg); }
 
-        body.dark-mode .theme-switcher i {
-             color: var(--dark-text);
-        }
+        /* Type colors */
+        .type-normal { background-color: #A8A878; } .type-fire { background-color: #F08030; }
+        .type-water { background-color: #6890F0; } .type-electric { background-color: #F8D030; }
+        .type-grass { background-color: #78C850; } .type-ice { background-color: #98D8D8; }
+        .type-fighting { background-color: #C03028; } .type-poison { background-color: #A040A0; }
+        .type-ground { background-color: #E0C068; } .type-flying { background-color: #A890F0; }
+        .type-psychic { background-color: #F85888; } .type-bug { background-color: #A8B820; }
+        .type-rock { background-color: #B8A038; } .type-ghost { background-color: #705898; }
+        .type-dragon { background-color: #7038F8; } .type-dark { background-color: #705848; }
+        .type-steel { background-color: #B8B8D0; } .type-fairy { background-color: #EE99AC; }
 
-        .theme-switcher i:hover {
-             transform: rotate(15deg); /* Leichte Drehung */
-        }
-
-
-        /* Type colors (remain the same for both modes) */
-        .type-normal { background-color: #A8A878; }
-        .type-fire { background-color: #F08030; }
-        .type-water { background-color: #6890F0; }
-        .type-electric { background-color: #F8D030; }
-        .type-grass { background-color: #78C850; }
-        .type-ice { background-color: #98D8D8; }
-        .type-fighting { background-color: #C03028; }
-        .type-poison { background-color: #A040A0; }
-        .type-ground { background-color: #E0C068; }
-        .type-flying { background-color: #A890F0; }
-        .type-psychic { background-color: #F85888; }
-        .type-bug { background-color: #A8B820; }
-        .type-rock { background-color: #B8A038; }
-        .type-ghost { background-color: #705898; }
-        .type-dragon { background-color: #7038F8; }
-        .type-dark { background-color: #705848; }
-        .type-steel { background-color: #B8B8D0; }
-        .type-fairy { background-color: #EE99AC; }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
-            body {
-                padding: 15px; /* Weniger Padding auf kleinen Bildschirmen */
-            }
-
-            .top-right-icons {
-                top: 10px;
-                right: 10px;
-                gap: 10px;
-            }
-
-             .language-switcher img,
-             .theme-switcher i {
-                 font-size: 20px; /* Kleinere Icons auf Mobile */
-                 width: 20px; /* Kleinere Flaggen auf Mobile */
-             }
-
-
-            .controls {
-                padding: 15px;
-            }
-
-            .checkbox-group {
-                gap: 10px;
-            }
-
-            .checkbox-item {
-                 margin-right: 10px;
-            }
-
-            button {
-                padding: 10px 15px;
-            }
-
-            #results {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Kleinere Karten auf Mobile */
-                gap: 15px;
-            }
-
-            .pokemon-card {
-                 border-radius: 8px;
-            }
-
-            .pokemon-image {
-                height: 120px; /* Kleinere Bildhöhe */
-            }
-
-            .pokemon-info {
-                padding: 10px;
-            }
-
-            .pokemon-name {
-                font-size: 1em;
-            }
-
-            .pokemon-details {
-                font-size: 0.85em;
-            }
-
-            .type-badge {
-                padding: 3px 8px;
-                font-size: 0.8em;
-                margin-right: 5px;
-            }
-
-            .loading {
-                padding: 30px;
-                font-size: 1em;
-            }
-
-            #status {
-                margin: 15px 0;
-                font-size: 0.9em;
-            }
-
-            .attribution {
-                margin-top: 20px;
-                font-size: 0.75em;
-            }
+            body { padding: 15px; }
+            .top-right-icons { top: 10px; right: 10px; gap: 10px; }
+            .language-switcher img, .theme-switcher i { font-size: 20px; width: 20px; }
+            .controls { padding: 15px; }
+            .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px 10px; }
+            button { padding: 10px 15px; }
+            #results { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+            .pokemon-card { border-radius: 8px; }
+            .pokemon-image { height: 120px; }
+            .shiny-indicator { font-size: 1em; top: 5px; right: 5px; padding: 3px;}
+            .pokemon-info { padding: 10px; }
+            .pokemon-name { font-size: 1em; }
+            .pokemon-details { font-size: 0.85em; }
+            .type-badge { padding: 3px 8px; font-size: 0.8em; margin-right: 5px; }
+            #status { margin: 15px 0; font-size: 0.9em; }
+            .attribution { margin-top: 20px; font-size: 0.75em; }
         }
+         @media (max-width: 480px) {
+             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+             .loading-progress-text { font-size: 0.8em; }
+         }
     </style>
 </head>
 <body>
@@ -465,9 +322,13 @@
          </div>
      </div>
 
-     <div class="description" data-i18n="siteDescription">
-         </div>
+     <div class="description" data-i18n="siteDescription"></div>
 
+     <div id="loading-progress-container" class="loading-progress-container" style="display: none;">
+        <div id="loading-progress-bar" class="loading-progress-bar">
+            <span id="loading-progress-text" class="loading-progress-text"></span>
+        </div>
+    </div>
 
     <div class="controls">
         <div class="control-group">
@@ -478,187 +339,69 @@
         <div class="control-group">
             <label data-i18n="generationLabel">Generation:</label>
             <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="allGen" checked>
-                    <label for="allGen" data-i18n="allLabel">Alle</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen1" class="gen-checkbox" value="1">
-                    <label for="gen1">Gen 1</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen2" class="gen-checkbox" value="2">
-                    <label for="gen2">Gen 2</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen3" class="gen-checkbox" value="3">
-                    <label for="gen3">Gen 3</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen4" class="gen-checkbox" value="4">
-                    <label for="gen4">Gen 4</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen5" class="gen-checkbox" value="5">
-                    <label for="gen5">Gen 5</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen6" class="gen-checkbox" value="6">
-                    <label for="gen6">Gen 6</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen7" class="gen-checkbox" value="7">
-                    <label for="gen7">Gen 7</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen8" class="gen-checkbox" value="8">
-                    <label for="gen8">Gen 8</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="gen9" class="gen-checkbox" value="9">
-                    <label for="gen9">Gen 9</label>
-                </div>
+                <div class="checkbox-item"><input type="checkbox" id="allGen" checked><label for="allGen" data-i18n="allLabel">Alle</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen1" class="gen-checkbox" value="1"><label for="gen1">Gen 1</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen2" class="gen-checkbox" value="2"><label for="gen2">Gen 2</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen3" class="gen-checkbox" value="3"><label for="gen3">Gen 3</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen4" class="gen-checkbox" value="4"><label for="gen4">Gen 4</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen5" class="gen-checkbox" value="5"><label for="gen5">Gen 5</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen6" class="gen-checkbox" value="6"><label for="gen6">Gen 6</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen7" class="gen-checkbox" value="7"><label for="gen7">Gen 7</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen8" class="gen-checkbox" value="8"><label for="gen8">Gen 8</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen9" class="gen-checkbox" value="9"><label for="gen9">Gen 9</label></div>
             </div>
         </div>
 
         <div class="control-group">
             <label data-i18n="typesLabel">Typen:</label>
             <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="allTypes" checked>
-                    <label for="allTypes" data-i18n="allLabel">Alle</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="normal" class="type-checkbox">
-                    <label for="normal" data-i18n="type_normal">Normal</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="fire" class="type-checkbox">
-                    <label for="fire" data-i18n="type_fire">Feuer</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="water" class="type-checkbox">
-                    <label for="water" data-i18n="type_water">Wasser</labe>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="electric" class="type-checkbox">
-                    <label for="electric" data-i18n="type_electric">Elektro</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="grass" class="type-checkbox">
-                    <label for="grass" data-i18n="type_grass">Pflanze</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="ice" class="type-checkbox">
-                    <label for="ice" data-i18n="type_ice">Eis</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="fighting" class="type-checkbox">
-                    <label for="fighting" data-i18n="type_fighting">Kampf</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="poison" class="type-checkbox">
-                    <label for="poison" data-i18n="type_poison">Gift</labe>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="ground" class="type-checkbox">
-                    <label for="ground" data-i18n="type_ground">Boden</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="flying" class="type-checkbox">
-                    <label for="flying" data-i18n="type_flying">Flug</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="psychic" class="type-checkbox">
-                    <label for="psychic" data-i18n="type_psychic">Psycho</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="bug" class="type-checkbox">
-                    <label for="bug" data-i18n="type_bug">Käfer</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="rock" class="type-checkbox">
-                    <label for="rock" data-i18n="type_rock">Gestein</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="ghost" class="type-checkbox">
-                    <label for="ghost" data-i18n="type_ghost">Geist</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="dragon" class="type-checkbox">
-                    <label for="dragon" data-i18n="type_dragon">Drache</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="dark" class="type-checkbox">
-                    <label for="dark" data-i18n="type_dark">Unlicht</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="steel" class="type-checkbox">
-                    <label for="steel" data-i18n="type_steel">Stahl</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="fairy" class="type-checkbox">
-                    <label for="fairy" data-i18n="type_fairy">Fee</label>
-                </div>
+                <div class="checkbox-item"><input type="checkbox" id="allTypes" checked><label for="allTypes" data-i18n="allLabel">Alle</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="normal" class="type-checkbox"><label for="normal" data-i18n="type_normal">Normal</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="fire" class="type-checkbox"><label for="fire" data-i18n="type_fire">Feuer</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="water" class="type-checkbox"><label for="water" data-i18n="type_water">Wasser</labe></div>
+                <div class="checkbox-item"><input type="checkbox" id="electric" class="type-checkbox"><label for="electric" data-i18n="type_electric">Elektro</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="grass" class="type-checkbox"><label for="grass" data-i18n="type_grass">Pflanze</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="ice" class="type-checkbox"><label for="ice" data-i18n="type_ice">Eis</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="fighting" class="type-checkbox"><label for="fighting" data-i18n="type_fighting">Kampf</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="poison" class="type-checkbox"><label for="poison" data-i18n="type_poison">Gift</labe></div>
+                <div class="checkbox-item"><input type="checkbox" id="ground" class="type-checkbox"><label for="ground" data-i18n="type_ground">Boden</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="flying" class="type-checkbox"><label for="flying" data-i18n="type_flying">Flug</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="psychic" class="type-checkbox"><label for="psychic" data-i18n="type_psychic">Psycho</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="bug" class="type-checkbox"><label for="bug" data-i18n="type_bug">Käfer</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="rock" class="type-checkbox"><label for="rock" data-i18n="type_rock">Gestein</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="ghost" class="type-checkbox"><label for="ghost" data-i18n="type_ghost">Geist</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="dragon" class="type-checkbox"><label for="dragon" data-i18n="type_dragon">Drache</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="dark" class="type-checkbox"><label for="dark" data-i18n="type_dark">Unlicht</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="steel" class="type-checkbox"><label for="steel" data-i18n="type_steel">Stahl</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="fairy" class="type-checkbox"><label for="fairy" data-i18n="type_fairy">Fee</label></div>
             </div>
         </div>
 
         <div class="control-group">
             <label data-i18n="evolutionPositionLabel">Evolution (Position in Kette):</label>
             <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="allEvolutions" checked>
-                    <label for="allEvolutions" data-i18n="allLabel">Alle</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="basic" class="evo-position-checkbox" value="0">
-                    <label for="basic" data-i18n="evo_basic">Grundform</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="stage1" class="evo-position-checkbox" value="1">
-                    <label for="stage1" data-i18n="evo_stage1">Erste Entwicklung</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="stage2" class="evo-position-checkbox" value="2">
-                    <label for="stage2" data-i18n="evo_stage2">Zweite Entwicklung</label>
-                </div>
+                <div class="checkbox-item"><input type="checkbox" id="allEvolutions" checked><label for="allEvolutions" data-i18n="allLabel">Alle</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="basic" class="evo-position-checkbox" value="0"><label for="basic" data-i18n="evo_basic">Grundform</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="stage1" class="evo-position-checkbox" value="1"><label for="stage1" data-i18n="evo_stage1">Erste Entwicklung</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="stage2" class="evo-position-checkbox" value="2"><label for="stage2" data-i18n="evo_stage2">Zweite Entwicklung</label></div>
             </div>
         </div>
 
         <div class="control-group">
             <label data-i18n="evolutionChainLengthLabel">Anzahl Entwicklungstufen (Gesamtlänge der Reihe):</label>
             <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="allChainLengths" checked>
-                    <label for="allChainLengths" data-i18n="allLabel">Alle</label>
-                </div>
-                 <div class="checkbox-item">
-                    <input type="checkbox" id="chainLength1" class="chain-length-checkbox" value="1">
-                    <label for="chainLength1" data-i18n="chain_length1">Keine Entwicklung (1 Stufe)</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="chainLength2" class="chain-length-checkbox" value="2">
-                    <label for="chainLength2" data-i18n="chain_length2">Eine Entwicklung (2 Stufen)</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="chainLength3" class="chain-length-checkbox" value="3">
-                    <label for="chainLength3" data-i18n="chain_length3">Zwei Entwicklungen (3 Stufen)</label>
-                </div>
+                <div class="checkbox-item"><input type="checkbox" id="allChainLengths" checked><label for="allChainLengths" data-i18n="allLabel">Alle</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="chainLength1" class="chain-length-checkbox" value="1"><label for="chainLength1" data-i18n="chain_length1">Keine Entwicklung (1 Stufe)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="chainLength2" class="chain-length-checkbox" value="2"><label for="chainLength2" data-i18n="chain_length2">Eine Entwicklung (2 Stufen)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="chainLength3" class="chain-length-checkbox" value="3"><label for="chainLength3" data-i18n="chain_length3">Zwei Entwicklungen (3 Stufen)</label></div>
             </div>
         </div>
-
 
         <div class="control-group">
             <label data-i18n="specialPokemonLabel">Spezielle Pokémon:</label>
             <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="includeLegendary" checked>
-                    <label for="includeLegendary" data-i18n="includeLegendaryLabel">Legendäre Pokémon</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="includeMythical" checked>
-                    <label for="includeMythical" data-i18n="includeMythicalLabel">Mysteriöse Pokémon</label>
-                </div>
+                <div class="checkbox-item"><input type="checkbox" id="includeLegendary" checked><label for="includeLegendary" data-i18n="includeLegendaryLabel">Legendäre Pokémon</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="includeMythical" checked><label for="includeMythical" data-i18n="includeMythicalLabel">Mysteriöse Pokémon</label></div>
             </div>
         </div>
 
@@ -668,793 +411,376 @@
 
     <div id="results"></div>
 
-    <div class="attribution" data-i18n="attributionText">
-        Daten und Bilder bereitgestellt von der <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>
-        Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. Alle Rechte vorbehalten.
-    </div>
-
+    <div class="attribution" data-i18n="attributionText"></div>
 
     <script>
-        const pokemonData = []; // Array zum Speichern der von der API geladenen Pokémon-Daten
-        const evolutionChains = new Map(); // Map zum Speichern der Evolutionsketten
+        const pokemonData = [];
+        const evolutionChains = new Map();
         let isLoading = false;
-        const POKEMON_LIMIT = 1300; // Begrenzung der abgerufenen Pokémon, um die Ladezeit zu kontrollieren
+        const POKEMON_LIMIT = 1300;
         const BASE_API_URL = 'https://pokeapi.co/api/v2/';
-        // Geänderte URL zur Pokémon Database
         const POKEMONDB_URL = 'https://pokemondb.net/pokedex/';
 
+        const loadingProgressContainer = document.getElementById('loading-progress-container');
+        const loadingProgressBarElement = document.getElementById('loading-progress-bar');
+        const loadingProgressTextElement = document.getElementById('loading-progress-text');
 
-        // Übersetzungstexte
         const translations = {
             de: {
                 appTitle: "Pokémon Generator",
                 siteDescription: "Dieser Generator ermöglicht es dir, zufällige Pokémon basierend auf verschiedenen Filtern wie Generation, Typ und Evolutionsstufe zu generieren. Klicke auf ein Pokémon-Bild, um zwischen normaler und Shiny-Form zu wechseln. Klicke auf die Pokédex-Nummer oder den Namen, um weitere Details auf Pokémon Database zu finden.",
                 countLabel: "Anzahl der zu generierenden Pokémon:",
-                generationLabel: "Generation:",
-                allLabel: "Alle",
-                typesLabel: "Typen:",
-                type_normal: "Normal",
-                type_fire: "Feuer",
-                type_water: "Wasser",
-                type_electric: "Elektro",
-                type_grass: "Pflanze",
-                type_ice: "Eis",
-                type_fighting: "Kampf",
-                type_poison: "Gift",
-                type_ground: "Boden",
-                type_flying: "Flug",
-                type_psychic: "Psycho",
-                type_bug: "Käfer",
-                type_rock: "Gestein",
-                type_ghost: "Geist",
-                type_dragon: "Drache",
-                type_dark: "Unlicht",
-                type_steel: "Stahl",
-                type_fairy: "Fee",
+                generationLabel: "Generation:", allLabel: "Alle", typesLabel: "Typen:",
+                type_normal: "Normal", type_fire: "Feuer", type_water: "Wasser", type_electric: "Elektro", type_grass: "Pflanze", type_ice: "Eis", type_fighting: "Kampf", type_poison: "Gift", type_ground: "Boden", type_flying: "Flug", type_psychic: "Psycho", type_bug: "Käfer", type_rock: "Gestein", type_ghost: "Geist", type_dragon: "Drache", type_dark: "Unlicht", type_steel: "Stahl", type_fairy: "Fee",
                 evolutionPositionLabel: "Evolution (Position in Kette):",
-                evo_basic: "Grundform",
-                evo_stage1: "Erste Entwicklung",
-                evo_stage2: "Zweite Entwicklung",
+                evo_basic: "Grundform", evo_stage1: "Erste Entwicklung", evo_stage2: "Zweite Entwicklung",
                 evolutionChainLengthLabel: "Anzahl Entwicklungstufen (Gesamtlänge der Reihe):",
-                chain_length1: "Keine Entwicklung (1 Stufe)",
-                chain_length2: "Eine Entwicklung (2 Stufen)",
-                chain_length3: "Zwei Entwicklungen (3 Stufen)",
+                chain_length1: "Keine Entwicklung (1 Stufe)", chain_length2: "Eine Entwicklung (2 Stufen)", chain_length3: "Zwei Entwicklungen (3 Stufen)",
                 specialPokemonLabel: "Spezielle Pokémon:",
-                includeLegendaryLabel: "Legendäre Pokémon",
-                includeMythicalLabel: "Mysteriöse Pokémon",
+                includeLegendaryLabel: "Legendäre Pokémon", includeMythicalLabel: "Mysteriöse Pokémon",
                 generateButton: "Pokémon generieren!",
                 loadingData: "Lade Pokémon-Daten von der PokeAPI...",
+                progressText: (loaded, total) => `${loaded} / ${total} Pokémon verarbeitet`,
                 loadingError: "Fehler beim Laden der Pokémon-Daten:",
                 noPokemonFound: "Keine Pokémon entsprechen deinen Filtern!",
                 generatedStatus: (generated, total) => `${generated} Pokémon von ${total} möglichen generiert.`,
-                cardGeneration: "Generation",
-                cardEvolution: "Entwicklung",
-                cardEvolutionNoEvo: "(Keine Entwicklung)",
-                cardEvolutionStage: "Stufe",
-                cardTotalStages: "Stufen gesamt:",
-                 darkModeToggle: "Dark Mode umschalten", // Dieser Text wird nicht mehr angezeigt, aber im Objekt behalten
-                 attributionText: 'Daten und Bilder bereitgestellt von der <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. Alle Rechte vorbehalten.'
+                cardGeneration: "Generation", cardEvolution: "Entwicklung", cardEvolutionNoEvo: "(Keine Entwicklung)", cardEvolutionStage: "Stufe", cardTotalStages: "Stufen gesamt:",
+                darkModeToggle: "Dark Mode umschalten",
+                attributionText: 'Daten und Bilder bereitgestellt von der <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. Alle Rechte vorbehalten.'
             },
             en: {
                 appTitle: "Pokémon Generator",
                 siteDescription: "This generator allows you to generate random Pokémon based on various filters such as generation, type, and evolution stage. Click on a Pokémon image to toggle between normal and shiny forms. Click on the Pokédex number or name to find more details on Pokémon Database.",
                 countLabel: "Number of Pokémon to generate:",
-                generationLabel: "Generation:",
-                allLabel: "All",
-                typesLabel: "Types:",
-                type_normal: "Normal",
-                type_fire: "Fire",
-                type_water: "Water",
-                type_electric: "Electric",
-                type_grass: "Grass",
-                type_ice: "Ice",
-                type_fighting: "Fighting",
-                type_poison: "Poison",
-                type_ground: "Ground",
-                type_flying: "Flying",
-                type_psychic: "Psychic",
-                type_bug: "Bug",
-                type_rock: "Rock",
-                type_ghost: "Ghost",
-                type_dragon: "Dragon",
-                type_dark: "Dark",
-                type_steel: "Steel",
-                type_fairy: "Fairy",
+                generationLabel: "Generation:", allLabel: "All", typesLabel: "Types:",
+                type_normal: "Normal", type_fire: "Fire", type_water: "Water", type_electric: "Electric", type_grass: "Grass", type_ice: "Ice", type_fighting: "Fighting", type_poison: "Poison", type_ground: "Ground", type_flying: "Flying", type_psychic: "Psychic", type_bug: "Bug", type_rock: "Rock", type_ghost: "Ghost", type_dragon: "Dragon", type_dark: "Dark", type_steel: "Steel", type_fairy: "Fairy",
                 evolutionPositionLabel: "Evolution (Position in chain):",
-                evo_basic: "Basic Form",
-                evo_stage1: "First Evolution",
-                evo_stage2: "Second Evolution",
+                evo_basic: "Basic Form", evo_stage1: "First Evolution", evo_stage2: "Second Evolution",
                 evolutionChainLengthLabel: "Number of Evolution Stages (Total chain length):",
-                chain_length1: "No Evolution (1 Stage)",
-                chain_length2: "One Evolution (2 Stages)",
-                chain_length3: "Two Evolutions (3 Stages)",
+                chain_length1: "No Evolution (1 Stage)", chain_length2: "One Evolution (2 Stages)", chain_length3: "Two Evolutions (3 Stages)",
                 specialPokemonLabel: "Special Pokémon:",
-                includeLegendaryLabel: "Legendary Pokémon",
-                includeMythicalLabel: "Mythical Pokémon",
+                includeLegendaryLabel: "Legendary Pokémon", includeMythicalLabel: "Mythical Pokémon",
                 generateButton: "Generate Pokémon!",
                 loadingData: "Loading Pokémon data from PokeAPI...",
+                progressText: (loaded, total) => `${loaded} / ${total} Pokémon processed`,
                 loadingError: "Error loading Pokémon data:",
                 noPokemonFound: "No Pokémon match your filters!",
                 generatedStatus: (generated, total) => `${generated} Pokémon generated from ${total} possible.`,
-                cardGeneration: "Generation",
-                cardEvolution: "Evolution",
-                cardEvolutionNoEvo: "(No evolution)",
-                cardEvolutionStage: "Stage",
-                cardTotalStages: "Total stages:",
-                darkModeToggle: "Toggle Dark Mode", // Dieser Text wird nicht mehr angezeigt, aber im Objekt behalten
+                cardGeneration: "Generation", cardEvolution: "Evolution", cardEvolutionNoEvo: "(No evolution)", cardEvolutionStage: "Stage", cardTotalStages: "Total stages:",
+                darkModeToggle: "Toggle Dark Mode",
                 attributionText: 'Data and images provided by the <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. All Rights Reserved.'
             }
         };
+        let currentLang = 'de';
 
-        let currentLang = 'de'; // Standard-Sprache
-
-        // Funktion zum Umschalten der Sprache
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
-
-            // Update Text based on data-i18n attributes
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key]) {
-                     // Handle specific cases like button text
-                     if (element.tagName === 'BUTTON') {
-                         element.textContent = translations[lang][key];
-                     } else {
-                        element.textContent = translations[lang][key];
-                     }
+                    element.innerHTML = translations[lang][key]; // Use innerHTML for elements that might contain links (like attribution)
+                    if (element.tagName === 'BUTTON') element.textContent = translations[lang][key]; // Ensure button text is just text
                 }
             });
-
-            // Update Attribution Text separately to preserve HTML (links)
-            const attributionElement = document.querySelector('.attribution[data-i18n="attributionText"]');
-             if (attributionElement && translations[lang] && translations[lang].attributionText) {
-                 attributionElement.innerHTML = translations[lang].attributionText;
-             }
-
-             // Update Site Description Text
-             const descriptionElement = document.querySelector('.description[data-i18n="siteDescription"]');
-             if (descriptionElement && translations[lang] && translations[lang].siteDescription) {
-                 descriptionElement.textContent = translations[lang].siteDescription;
-             }
-
-
-             // Update Type Labels (they have data-i18n and class)
+            // Specific handling for elements not directly using innerHTML for translation or needing attribute updates
+            document.title = translations[lang].appTitle;
             document.querySelectorAll('.type-checkbox').forEach(checkbox => {
                  const label = document.querySelector(`label[for="${checkbox.id}"]`);
                  if (label && translations[lang] && translations[lang][`type_${checkbox.id}`]) {
                       label.textContent = translations[lang][`type_${checkbox.id}`];
                  }
             });
-
-            // Update Status Message (if visible)
             const statusElement = document.getElementById('status');
-             // Einfache Anpassung der Statusmeldung, falls sie bereits geladen ist
-             if (pokemonData.length > 0 && (statusElement.textContent.includes("Pokémon") || statusElement.textContent.includes("Pokemon"))) { // Check both German and English
-                  statusElement.textContent = `${pokemonData.length} Pokémon ${currentLang === 'de' ? 'geladen!' : 'loaded!'}`;
-             } else if (statusElement.textContent.includes("generiert") || statusElement.textContent.includes("generated")) {
-                  // Wenn die Generierungsstatusmeldung sichtbar ist, aktualisiere sie
-                  const parts = statusElement.textContent.split(' ')[0]; // Extrahiere die Zahl
-                  const generatedCount = parseInt(parts) || 0;
-                   statusElement.textContent = translations[currentLang].generatedStatus(generatedCount, filterPokemon().length);
-             } else if (statusElement.textContent.includes("Keine Pokémon") || statusElement.textContent.includes("No Pokémon")) {
-                  statusElement.textContent = translations[currentLang].noPokemonFound;
-             } else if (statusElement.textContent.includes("Fehler") || statusElement.textContent.includes("Error")) {
-                 // Fehlertexte werden direkt beim Auftreten gesetzt, hier nicht übersetzen
-             } else if (isLoading) {
-                  statusElement.textContent = translations[currentLang].loadingData;
-             }
-
-
-            // Re-generate Pokémon to update card details (types, evolution info)
-            if (document.getElementById('results').innerHTML !== "") {
-                 generateRandomPokemon(); // Rufe generateRandomPokemon auf, um Kartentexte zu aktualisieren
-             }
-
-             // Set active language button style
-             document.querySelectorAll('.language-switcher img').forEach(img => { // Targeting images now
-                 if (img.dataset.lang === lang) {
-                     img.classList.add('active');
-                 } else {
-                     img.classList.remove('active');
-                 }
-             });
-
-              // Dark Mode button text is now an icon, no text update needed here
-              // updateDarkModeButtonText(document.body.classList.contains('dark-mode')); // Nicht mehr benötigt
+            if (pokemonData.length > 0 && (statusElement.textContent.includes("Pokémon") || statusElement.textContent.includes("Pokemon"))) {
+                 statusElement.textContent = `${pokemonData.length} Pokémon ${currentLang === 'de' ? 'geladen!' : 'loaded!'}`;
+            } else if (statusElement.textContent.includes("generiert") || statusElement.textContent.includes("generated")) {
+                 const parts = statusElement.textContent.split(' ')[0];
+                 const generatedCount = parseInt(parts) || 0;
+                 statusElement.textContent = translations[currentLang].generatedStatus(generatedCount, filterPokemon().length);
+            } else if (statusElement.textContent.includes("Keine Pokémon") || statusElement.textContent.includes("No Pokémon")) {
+                 statusElement.textContent = translations[currentLang].noPokemonFound;
+            } else if (isLoading && loadingProgressContainer.style.display === 'none') {
+                 statusElement.textContent = translations[currentLang].loadingData;
+            }
+            if (document.getElementById('results').innerHTML !== "") generateRandomPokemon();
+            document.querySelectorAll('.language-switcher img').forEach(img => {
+                img.classList.toggle('active', img.dataset.lang === lang);
+            });
         }
 
-        // Funktion zum Umschalten des Dark Modes
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-             updateDarkModeIcon(isDarkMode); // Update icon instead of text
+            updateDarkModeIcon(isDarkMode);
+        }
+        function updateDarkModeIcon(isDarkMode) {
+            const darkModeIcon = document.getElementById('darkModeToggle');
+            if (darkModeIcon) darkModeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
         }
 
-         // Funktion zum Aktualisieren des Dark Mode Icons
-         function updateDarkModeIcon(isDarkMode) {
-              const darkModeIcon = document.getElementById('darkModeToggle');
-              if (darkModeIcon) {
-                  if (isDarkMode) {
-                      darkModeIcon.classList.remove('fa-moon');
-                      darkModeIcon.classList.add('fa-sun'); // Zeige Sonne im Dark Mode
-                  } else {
-                       darkModeIcon.classList.remove('fa-sun');
-                       darkModeIcon.classList.add('fa-moon'); // Zeige Mond im Light Mode
-                  }
-              }
-         }
-
-
-        // Hilfsfunktion zur Bestimmung der Evolutionsstufe innerhalb einer Kette
         function getEvolutionStage(pokemonName, chain, stage = 0) {
-            // Entferne alternative Formen/Varianten aus dem Namen für den Vergleich
             const cleanPokemonName = pokemonName.split('-')[0];
-
-            // Überprüfen, ob species und name existieren, bevor split aufgerufen wird
-            if (chain && chain.species && chain.species.name) {
-                const cleanChainName = chain.species.name.split('-')[0];
-
-                if (cleanChainName === cleanPokemonName) {
-                    return stage;
-                }
-            }
-
-
-            // Durchlaufe die nächsten Entwicklungsstufen, falls vorhanden
+            if (chain && chain.species && chain.species.name && chain.species.name.split('-')[0] === cleanPokemonName) return stage;
             if (chain && chain.evolves_to) {
                 for (const evolvesTo of chain.evolves_to) {
                     const foundStage = getEvolutionStage(cleanPokemonName, evolvesTo, stage + 1);
-                    if (foundStage !== -1) {
-                        return foundStage;
-                    }
+                    if (foundStage !== -1) return foundStage;
                 }
             }
-
-
-            return -1; // Pokémon nicht in dieser Kette gefunden
+            return -1;
+        }
+        function countStagesInChain(chain) {
+            let maxDepth = 0;
+            function traverse(currentChain, currentDepth) {
+                maxDepth = Math.max(maxDepth, currentDepth);
+                if (currentChain.evolves_to) currentChain.evolves_to.forEach(evolvesTo => traverse(evolvesTo, currentDepth + 1));
+            }
+            if (chain) traverse(chain, 1);
+            return maxDepth;
         }
 
-         // Hilfsfunktion zur Bestimmung der Gesamtzahl der Stufen in einer Evolutionskette
-         function countStagesInChain(chain) {
-             let maxDepth = 0;
-
-             function traverse(currentChain, currentDepth) {
-                 maxDepth = Math.max(maxDepth, currentDepth);
-                 if (currentChain.evolves_to) { // Sicherstellen, dass evolves_to existiert
-                     for (const evolvesTo of currentChain.evolves_to) {
-                         traverse(evolvesTo, currentDepth + 1);
-                     }
-                 }
-             }
-
-             if (chain) {
-                 traverse(chain, 1); // Start with depth 1 for the base form
-             }
-
-             return maxDepth;
-         }
-
-
-        // Funktion zum Abrufen der Pokémon-Daten von der PokeAPI
         async function fetchPokemonDataFromAPI() {
             const statusElement = document.getElementById('status');
-             statusElement.textContent = translations[currentLang].loadingData;
+            statusElement.textContent = translations[currentLang].loadingData;
             isLoading = true;
-            document.getElementById('generate').disabled = true; // Deaktiviere Button während des Ladens
+            document.getElementById('generate').disabled = true;
+            if (loadingProgressContainer) loadingProgressContainer.style.display = 'block';
+            if (loadingProgressBarElement) loadingProgressBarElement.style.width = '0%';
+            if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(0, POKEMON_LIMIT);
+
+            let loadedCount = 0;
+            let totalToLoad = 0;
 
             try {
-                // Abrufen einer Liste von Pokémon (Begrenzung beachten)
                 const response = await fetch(`${BASE_API_URL}pokemon?limit=${POKEMON_LIMIT}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
+                totalToLoad = data.results.length;
+                if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(0, totalToLoad);
 
-                // Für jedes Pokémon Details abrufen (für Typ, Generation, etc.)
                 const pokemonDetailsPromises = data.results.map(async (p) => {
-                    const detailResponse = await fetch(p.url);
-                    if (!detailResponse.ok) {
-                         console.warn(`Konnte Details für ${p.name} nicht laden: ${detailResponse.status}`);
-                         return null; // Überspringe dieses Pokémon bei Fehler
-                    }
-                    const detailData = await detailResponse.json();
+                    let pokemonDetail = null;
+                    try {
+                        const detailResponse = await fetch(p.url);
+                        if (!detailResponse.ok) throw new Error(`Detail fetch for ${p.name} failed: ${detailResponse.status}`);
+                        const detailData = await detailResponse.json();
+                        if (detailData.is_default === false) return null;
 
-                    // Abrufen der Spezies-Daten für Generation und Evolutionskette
-                     const speciesResponse = await fetch(detailData.species.url);
-                     if (!speciesResponse.ok) {
-                         console.warn(`Konnte Spezies-Daten für ${p.name} nicht laden: ${speciesResponse.status}`);
-                         return null; // Überspringe dieses Pokémon bei Fehler
-                     }
-                     const speciesData = await speciesResponse.json();
+                        const speciesResponse = await fetch(detailData.species.url);
+                        if (!speciesResponse.ok) throw new Error(`Species fetch for ${p.name} failed: ${speciesResponse.status}`);
+                        const speciesData = await speciesResponse.json();
 
-                    // Bestimmen der Generation
-                    const generationUrl = speciesData.generation ? speciesData.generation.url : null;
-                    let generation = null;
-                    if (generationUrl) {
-                         const genMatch = generationUrl.match(/\/generation\/(\d+)\//);
-                         if (genMatch && genMatch[1]) {
-                             generation = parseInt(genMatch[1]);
-                         }
-                    }
+                        const generationUrl = speciesData.generation ? speciesData.generation.url : null;
+                        let generation = generationUrl ? parseInt(generationUrl.match(/\/generation\/(\d+)\//)?.[1] || 0) : null;
 
-                    // Abrufen und Speichern der Evolutionskette, falls noch nicht geschehen
-                    let evolutionChainData = null;
-                    let totalStages = 0; // Standardwert für Pokémon ohne Kette oder mit Ladefehler
-
-                    if (speciesData.evolution_chain && speciesData.evolution_chain.url) {
-                        const chainUrl = speciesData.evolution_chain.url;
-                        if (evolutionChains.has(chainUrl)) {
-                            evolutionChainData = evolutionChains.get(chainUrl);
-                        } else {
-                            try {
-                                const chainResponse = await fetch(chainUrl);
-                                if (chainResponse.ok) {
-                                    evolutionChainData = await chainResponse.json();
-                                    evolutionChains.set(chainUrl, evolutionChainData); // Kette speichern
-                                } else {
-                                    console.warn(`Konnte Evolutionskette für ${p.name} (${chainUrl}) nicht laden: ${chainResponse.status}`);
-                                }
-                            } catch (chainError) {
-                                console.warn(`Fehler beim Abrufen der Evolutionskette für ${p.name} (${chainUrl}):`, chainError);
+                        let evolutionChainData = null, totalStages = 0;
+                        if (speciesData.evolution_chain && speciesData.evolution_chain.url) {
+                            const chainUrl = speciesData.evolution_chain.url;
+                            if (evolutionChains.has(chainUrl)) evolutionChainData = evolutionChains.get(chainUrl);
+                            else {
+                                try {
+                                    const chainResponse = await fetch(chainUrl);
+                                    if (chainResponse.ok) {
+                                        evolutionChainData = await chainResponse.json();
+                                        evolutionChains.set(chainUrl, evolutionChainData);
+                                    }
+                                } catch (chainError) { console.warn(`Evo chain fetch error for ${p.name}:`, chainError); }
                             }
-                        }
+                            if (evolutionChainData) totalStages = countStagesInChain(evolutionChainData.chain);
+                        } else if (!speciesData.evolves_from_species) totalStages = 1;
 
-                        // Gesamtzahl der Stufen bestimmen, wenn Kette geladen wurde
-                        if(evolutionChainData) {
-                            totalStages = countStagesInChain(evolutionChainData.chain);
-                        }
-
-                    } else {
-                         // Wenn es keine Evolutionskette gibt (z.B. Legendäre, Mysteriöse, Babys ohne Vorentwicklung)
-                         // und es keine Vorentwicklung hat, hat die Kette 1 Stufe.
-                         if (!speciesData.evolves_from_species) {
-                              totalStages = 1;
-                         }
-                         // Wenn es eine Vorentwicklung hat, aber keine Kette gefunden wurde, bleibt totalStages 0 (unbekannt)
+                        let evolutionStage = -1;
+                        if (evolutionChainData) evolutionStage = getEvolutionStage(detailData.name, evolutionChainData.chain);
+                        else if (!speciesData.evolves_from_species) evolutionStage = 0;
+                        
+                        pokemonDetail = {
+                            id: detailData.id, name: detailData.name,
+                            germanName: speciesData.names.find(name => name.language.name === 'de')?.name || null,
+                            types: detailData.types.map(typeInfo => typeInfo.type.name),
+                            image: detailData.sprites.other['official-artwork'].front_default || detailData.sprites.front_default,
+                            shinyImage: detailData.sprites.other['official-artwork'].front_shiny || detailData.sprites.front_shiny,
+                            generation, evolutionStage, totalStages,
+                            isLegendary: speciesData.is_legendary, isMythical: speciesData.is_mythical
+                        };
+                    } catch (error) { console.warn(`Error processing ${p.name}: ${error.message}`);
+                    } finally {
+                        loadedCount++;
+                        const progressPercent = totalToLoad > 0 ? (loadedCount / totalToLoad) * 100 : 0;
+                        if (loadingProgressBarElement) loadingProgressBarElement.style.width = `${progressPercent}%`;
+                        if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(loadedCount, totalToLoad);
                     }
-
-
-                    // Bestimmen der Evolutionsstufe basierend auf der Kette
-                    let evolutionStage = -1; // -1 bedeutet unbekannt oder nicht in geladener Kette gefunden
-                    if (evolutionChainData) {
-                        evolutionStage = getEvolutionStage(detailData.name, evolutionChainData.chain);
-                    } else if (!speciesData.evolves_from_species) {
-                         // Wenn keine Kette geladen werden konnte, aber es keine Vorentwicklung hat,
-                         // gehen wir davon aus, dass es eine Grundform (Stufe 0) ist.
-                         evolutionStage = 0;
-                    } else {
-                         // Wenn keine Kette geladen werden konnte und es eine Vorentwicklung hat,
-                         // können wir die Stufe nicht genau bestimmen.
-                         evolutionStage = -1; // Bleibt unbekannt
-                    }
-
-
-                    // Bestimmen, ob legendär oder mysteriös (basierend auf Spezies-Daten)
-                    const isLegendary = speciesData.is_legendary;
-                    const isMythical = speciesData.is_mythical;
-
-                    // Ignoriere alternative Formen, die nicht die Standardform sind (z.g. Alola-Formen, Galar-Formen)
-                    // Dies ist eine Vereinfachung, um die Anzahl der geladenen Pokémon zu reduzieren und Duplikate/Varianten zu vermeiden
-                    // Eine präzisere Behandlung von Formen wäre komplexer.
-                    if (detailData.is_default === false) {
-                         return null;
-                    }
-
-
-                    return {
-                        id: detailData.id,
-                        name: detailData.name, // Englischer Name (für API calls und Fallback)
-                        germanName: speciesData.names.find(name => name.language.name === 'de')?.name || null, // Deutscher Name oder null wenn nicht gefunden
-                        types: detailData.types.map(typeInfo => typeInfo.type.name),
-                        image: detailData.sprites.other['official-artwork'].front_default || detailData.sprites.front_default, // Versuche offizielles Artwork, sonst Standard
-                        shinyImage: detailData.sprites.other['official-artwork'].front_shiny || detailData.sprites.front_shiny, // Füge Shiny-Bild-URL hinzu
-                        generation: generation,
-                        evolutionStage: evolutionStage, // Präzise Stufe (0, 1, 2...)
-                        totalStages: totalStages, // Gesamtzahl der Stufen in der Kette (1, 2, 3)
-                        isLegendary: isLegendary,
-                        isMythical: isMythical
-                    };
+                    return pokemonDetail;
                 });
 
-                // Warte, bis alle Details geladen sind und filtere fehlgeschlagene Anfragen
                 const results = await Promise.all(pokemonDetailsPromises);
-                pokemonData.push(...results.filter(p => p !== null)); // Füge nur erfolgreich geladene hinzu
-
-                 // Sortiere pokemonData einmal nach ID nach dem Laden
-                 pokemonData.sort((a, b) => a.id - b.id);
-
-
+                pokemonData.push(...results.filter(p => p !== null));
+                pokemonData.sort((a, b) => a.id - b.id);
                 statusElement.textContent = `${pokemonData.length} Pokémon ${currentLang === 'de' ? 'geladen!' : 'loaded!'}`;
-
-
             } catch (error) {
                 console.error("Fehler beim Laden der Pokémon-Daten von der PokeAPI:", error);
-                statusElement.textContent = `${translations[currentLang].loadingError} ${error}`; // Zeige den Fehler-String
+                statusElement.textContent = `${translations[currentLang].loadingError} ${error.message}`;
             } finally {
                 isLoading = false;
-                 document.getElementById('generate').disabled = false; // Aktiviere Button nach dem Laden
-                 generateRandomPokemon(); // Generiere beim Laden der Seite
+                document.getElementById('generate').disabled = false;
+                if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
+                generateRandomPokemon();
             }
         }
 
-        // Filter Pokémon basierend auf den ausgewählten Optionen
         function filterPokemon() {
             let filtered = [...pokemonData];
-
-            // Filter nach Generation
             if (!document.getElementById('allGen').checked) {
-                const selectedGens = [];
-                document.querySelectorAll('.gen-checkbox').forEach(checkbox => {
-                    if (checkbox.checked) selectedGens.push(parseInt(checkbox.value));
-                });
-
-                if (selectedGens.length > 0) {
-                    filtered = filtered.filter(p => p.generation !== null && selectedGens.includes(p.generation));
-                } else {
-                     // Wenn keine spezifische Generation ausgewählt ist und "Alle" nicht gecheckt ist,
-                     // bedeutet das, dass keine Generationen gewünscht sind.
-                     filtered = [];
-                }
+                const selectedGens = Array.from(document.querySelectorAll('.gen-checkbox:checked')).map(cb => parseInt(cb.value));
+                filtered = selectedGens.length > 0 ? filtered.filter(p => p.generation !== null && selectedGens.includes(p.generation)) : [];
             }
-
-            // Filter nach Typ
             if (!document.getElementById('allTypes').checked) {
-                const selectedTypes = [];
-                document.querySelectorAll('.type-checkbox').forEach(checkbox => {
-                    if (checkbox.checked) selectedTypes.push(checkbox.id);
-                });
-
-                if (selectedTypes.length > 0) {
-                    filtered = filtered.filter(p =>
-                        p.types.some(type => selectedTypes.includes(type))
-                    );
-                } else {
-                     // Keine Typen ausgewählt
-                     filtered = [];
-                }
+                const selectedTypes = Array.from(document.querySelectorAll('.type-checkbox:checked')).map(cb => cb.id);
+                filtered = selectedTypes.length > 0 ? filtered.filter(p => p.types.some(type => selectedTypes.includes(type))) : [];
             }
-
-            // Filter nach Evolutionsstufe (Position in der Kette)
-            let filteredByPosition = filtered; // Starte mit dem bisher gefilterten Array
             if (!document.getElementById('allEvolutions').checked) {
-                const selectedPositions = new Set(); // Verwende ein Set, um Duplikate zu vermeiden
+                const selectedPositions = new Set();
                 if (document.getElementById('basic').checked) selectedPositions.add(0);
                 if (document.getElementById('stage1').checked) selectedPositions.add(1);
                 if (document.getElementById('stage2').checked) selectedPositions.add(2);
-
-                if (selectedPositions.size > 0) {
-                     filteredByPosition = filtered.filter(p => selectedPositions.has(p.evolutionStage));
-                } else {
-                    // Keine spezifische Stufe ausgewählt, aber "Alle" nicht gecheckt
-                    filteredByPosition = [];
-                }
+                filtered = selectedPositions.size > 0 ? filtered.filter(p => selectedPositions.has(p.evolutionStage)) : [];
             }
-            // Wenn "Alle" Evolutionsstufen ausgewählt sind, wird hier nicht nach Position gefiltert.
-
-
-            // Filter nach Anzahl Entwicklungstufen (Gesamtlänge der Reihe)
-            let filteredByChainLength = filteredByPosition; // Starte mit dem nach Position gefilterten Array
-             if (!document.getElementById('allChainLengths').checked) {
+            if (!document.getElementById('allChainLengths').checked) {
                  const selectedLengths = new Set();
                  if (document.getElementById('chainLength1').checked) selectedLengths.add(1);
                  if (document.getElementById('chainLength2').checked) selectedLengths.add(2);
                  if (document.getElementById('chainLength3').checked) selectedLengths.add(3);
-
-                 if (selectedLengths.size > 0) {
-                      filteredByChainLength = filteredByPosition.filter(p => selectedLengths.has(p.totalStages));
-                 } else {
-                      // Keine spezifische Kettenlänge ausgewählt, aber "Alle" nicht gecheckt
-                      filteredByChainLength = [];
-                 }
-             }
-             // Wenn "Alle" Kettenlängen ausgewählt sind, wird hier nicht nach Kettenlänge gefiltert.
-
-
-            // Filter legendäre & mysteriöse
-            const includeLegendary = document.getElementById('includeLegendary').checked;
-            const includeMythical = document.getElementById('includeMythical').checked;
-
-            if (!includeLegendary) {
-                filteredByChainLength = filteredByChainLength.filter(p => !p.isLegendary);
+                 filtered = selectedLengths.size > 0 ? filtered.filter(p => selectedLengths.has(p.totalStages)) : [];
             }
-
-            if (!includeMythical) {
-                filteredByChainLength = filteredByChainLength.filter(p => !p.isMythical);
-            }
-
-            return filteredByChainLength; // Gebe das endgültig gefilterte Array zurück
+            if (!document.getElementById('includeLegendary').checked) filtered = filtered.filter(p => !p.isLegendary);
+            if (!document.getElementById('includeMythical').checked) filtered = filtered.filter(p => !p.isMythical);
+            return filtered;
         }
 
-        // Generiere und zeige zufällige Pokémon
         function generateRandomPokemon() {
+            if (isLoading && loadingProgressContainer && loadingProgressContainer.style.display !== 'none') return;
             if (isLoading) {
-                document.getElementById('status').textContent = translations[currentLang].loadingData;
-                return;
+                 document.getElementById('status').textContent = translations[currentLang].loadingData;
+                 return;
             }
 
             const count = parseInt(document.getElementById('count').value) || 10;
             const filteredPokemon = filterPokemon();
+            const statusElement = document.getElementById('status');
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = "";
 
             if (filteredPokemon.length === 0) {
-                document.getElementById('status').textContent = translations[currentLang].noPokemonFound;
-                document.getElementById('results').innerHTML = "";
+                statusElement.textContent = translations[currentLang].noPokemonFound;
                 return;
             }
 
-            // Zufällige Auswahl
-            let selectedPokemon = [];
-            if (count >= filteredPokemon.length) {
-                selectedPokemon = [...filteredPokemon];
-            } else {
-                const shuffled = [...filteredPokemon].sort(() => 0.5 - Math.random());
-                selectedPokemon = shuffled.slice(0, count);
-            }
-
-            // Nach ID sortieren (optional, für konsistente Ergebnisse)
+            let selectedPokemon = count >= filteredPokemon.length ? [...filteredPokemon] : [...filteredPokemon].sort(() => 0.5 - Math.random()).slice(0, count);
             selectedPokemon.sort((a, b) => a.id - b.id);
-
-            // Ergebnisse anzeigen
-            const resultsContainer = document.getElementById('results');
-            resultsContainer.innerHTML = "";
 
             selectedPokemon.forEach(pokemon => {
                 const card = document.createElement('div');
                 card.className = 'pokemon-card';
-
-                // Bestimme den anzuzeigenden Namen basierend auf der aktuellen Sprache
                 const displayedName = currentLang === 'de' && pokemon.germanName ? pokemon.germanName : capitalizeFirstLetter(pokemon.name);
-
-                // Generiere die URL für The Pokémon Database basierend auf dem englischen Namen
                 const pokemonDbUrl = `${POKEMONDB_URL}${pokemon.name}`;
+                const typeHtml = pokemon.types.map(type => `<span class="type-badge type-${type}">${translations[currentLang][`type_${type}`] || capitalizeFirstLetter(type)}</span>`).join('');
+                let specialStatusText = [
+                    pokemon.isLegendary ? translations[currentLang].includeLegendaryLabel : null,
+                    pokemon.isMythical ? translations[currentLang].includeMythicalLabel : null
+                ].filter(Boolean).join(', ');
 
-
-                // Generiere Typ-Badges mit deutschen Namen (oder englischen, je nach aktiver Sprache)
-                const typeHtml = pokemon.types.map(type =>
-                    `<span class="type-badge type-${type}">${translations[currentLang][`type_${type}`] || capitalizeFirstLetter(type)}</span>`
-                ).join('');
-
-                let specialStatus = "";
-                const specialStatuses = [];
-                if (pokemon.isLegendary) specialStatuses.push(translations[currentLang].includeLegendaryLabel);
-                if (pokemon.isMythical) specialStatuses.push(translations[currentLang].includeMythicalLabel);
-                specialStatus = specialStatuses.join(', ');
-
-
-                 // Anzeige der Evolutionsstufe im Format "Stufe/Anzahl_der_Entwicklungen"
-                 let evolutionText = `${translations[currentLang].cardEvolution}: ${translations[currentLang].cardEvolutionStage} Unbekannt`;
+                let evolutionText = `${translations[currentLang].cardEvolution}: Unbekannt`;
                  if (pokemon.evolutionStage !== -1 && pokemon.totalStages !== undefined && pokemon.totalStages > 0) {
-                      // Anzahl der Entwicklungen ist Gesamtstufen - 1
                       const numberOfEvolutions = pokemon.totalStages - 1;
-                      // Aktuelle Stufe (0-basiert) / Anzahl der Entwicklungen
-                       evolutionText = `${translations[currentLang].cardEvolution}: ${pokemon.evolutionStage}/${numberOfEvolutions}`;
-
-                      // Spezialfall für Pokémon ohne Entwicklung (Kette hat 1 Stufe, Stufe ist 0)
-                      if (pokemon.evolutionStage === 0 && pokemon.totalStages === 1) {
-                           evolutionText = `${translations[currentLang].cardEvolution}: 0/0 ${translations[currentLang].cardEvolutionNoEvo}`;
-                      } else if (pokemon.evolutionStage === 0 && pokemon.totalStages > 1) {
-                           // Grundform in einer Kette mit Entwicklungen
-                           evolutionText = `${translations[currentLang].cardEvolution}: ${pokemon.evolutionStage}/${numberOfEvolutions}`;
-                      } else if (pokemon.evolutionStage > 0 && pokemon.totalStages > 1) {
-                           // Entwickelte Formen
-                           evolutionText = `${translations[currentLang].cardEvolution}: ${pokemon.evolutionStage}/${numberOfEvolutions}`;
-                      }
-
-
+                      evolutionText = `${translations[currentLang].cardEvolution}: ${pokemon.evolutionStage}/${numberOfEvolutions}`;
+                      if (pokemon.evolutionStage === 0 && pokemon.totalStages === 1) evolutionText += ` ${translations[currentLang].cardEvolutionNoEvo}`;
                  } else if (pokemon.evolutionStage !== -1) {
-                      // Fallback, wenn Gesamtstufen unbekannt sind, aber Stufe bekannt ist
-                       evolutionText = `${translations[currentLang].cardEvolution}: ${translations[currentLang].cardEvolutionStage} ${pokemon.evolutionStage}`; // Beibehalten der 0-basierten Stufe hier
+                      evolutionText = `${translations[currentLang].cardEvolution}: ${translations[currentLang].cardEvolutionStage} ${pokemon.evolutionStage}`;
                  }
-
 
                 card.innerHTML = `
                     <div class="pokemon-image">
-                        <img src="${pokemon.image}" alt="${pokemon.name}"
-                             data-normal="${pokemon.image}"
-                             data-shiny="${pokemon.shinyImage}"
+                        <img src="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}" alt="${pokemon.name}"
+                             data-normal="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}"
+                             data-shiny="${pokemon.shinyImage || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt'}"
                              onclick="toggleShiny(this)"
-                             onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt';">
+                             onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Fehler'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Fehler';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Fehler';">
+                        <span class="shiny-indicator"><i class="fas fa-star"></i></span>
                     </div>
                     <div class="pokemon-info">
-                        <h3 class="pokemon-name">
-                            <a href="${pokemonDbUrl}" target="_blank" class="pokedex-link">
-                                #${pokemon.id} ${displayedName}
-                            </a>
-                        </h3>
-                        <p class="pokemon-details" data-i18n-prefix="cardGeneration">${translations[currentLang].cardGeneration}: ${pokemon.generation !== null ? pokemon.generation : 'Unbekannt'}</p>
+                        <h3 class="pokemon-name"><a href="${pokemonDbUrl}" target="_blank" class="pokedex-link">#${pokemon.id} ${displayedName}</a></h3>
+                        <p class="pokemon-details">${translations[currentLang].cardGeneration}: ${pokemon.generation !== null ? pokemon.generation : 'Unbekannt'}</p>
                         <p class="pokemon-details">${evolutionText}</p>
-                        <div class="pokemon-types">
-                            ${typeHtml}
-                        </div>
-                        ${specialStatus ? `<p class="pokemon-details"><strong>${specialStatus}</strong></p>` : ''}
-                    </div>
-                `;
-
+                        <div class="pokemon-types">${typeHtml}</div>
+                        ${specialStatusText ? `<p class="pokemon-details"><strong>${specialStatusText}</strong></p>` : ''}
+                    </div>`;
                 resultsContainer.appendChild(card);
             });
-
-            document.getElementById('status').textContent =
-                translations[currentLang].generatedStatus(selectedPokemon.length, filteredPokemon.length);
+            statusElement.textContent = translations[currentLang].generatedStatus(selectedPokemon.length, filteredPokemon.length);
         }
 
-        // Funktion zum Umschalten zwischen normalem und Shiny-Bild
         function toggleShiny(imgElement) {
             const currentSrc = imgElement.src;
             const normalSrc = imgElement.dataset.normal;
             const shinySrc = imgElement.dataset.shiny;
+            const imageContainer = imgElement.parentElement; // Das .pokemon-image div
+            const indicator = imageContainer.querySelector('.shiny-indicator');
 
-            if (currentSrc === normalSrc && shinySrc) {
-                imgElement.src = shinySrc;
-            } else if (shinySrc) { // Wechsle zurück zu normal, wenn Shiny angezeigt wird und Shiny-URL existiert
-                imgElement.src = normalSrc;
+            if (shinySrc && shinySrc !== 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt' && shinySrc !== 'https://placehold.co/120x120/e0e0e0/333?text=Fehler') {
+                 if (currentSrc === normalSrc) {
+                    imgElement.src = shinySrc;
+                    if (indicator) indicator.classList.add('active');
+                 } else {
+                    imgElement.src = normalSrc;
+                    if (indicator) indicator.classList.remove('active');
+                 }
             }
-            // Wenn keine Shiny-URL vorhanden ist, passiert nichts.
         }
-
 
         function capitalizeFirstLetter(string) {
-            if (!string) return '';
-            return string.charAt(0).toUpperCase() + string.slice(1);
+            return string ? string.charAt(0).toUpperCase() + string.slice(1) : '';
         }
 
-        // Funktion zum Hinzufügen der Filter-Logik
         function addFilterLogic() {
-            // Generierungs-Filter
-            const allGenCheckbox = document.getElementById('allGen');
-            const genCheckboxes = document.querySelectorAll('.gen-checkbox');
+            ['allGen', 'allTypes', 'allEvolutions', 'allChainLengths'].forEach(allId => {
+                const allCheckbox = document.getElementById(allId);
+                const specificCheckboxes = document.querySelectorAll(`.${allId.replace('all', '').toLowerCase().slice(0,-1)}-checkbox`);
+                if(!allCheckbox || specificCheckboxes.length === 0) return;
 
-            genCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        allGenCheckbox.checked = false;
-                    } else {
-                        // Wenn alle individuellen Gen-Checkboxen abgewählt sind, wähle "Alle" wieder aus
-                        const anyGenChecked = Array.from(genCheckboxes).some(cb => cb.checked);
-                        if (!anyGenChecked) {
-                            allGenCheckbox.checked = true;
-                        }
-                    }
+                specificCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) allCheckbox.checked = false;
+                        else if (!Array.from(specificCheckboxes).some(cb => cb.checked)) allCheckbox.checked = true;
+                    });
+                });
+                allCheckbox.addEventListener('change', function() {
+                    if (this.checked) specificCheckboxes.forEach(cb => cb.checked = false);
                 });
             });
-
-            allGenCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    genCheckboxes.forEach(checkbox => {
-                        checkbox.checked = false;
-                    });
-                }
-            });
-
-            // Typen-Filter
-            const allTypesCheckbox = document.getElementById('allTypes');
-            const typeCheckboxes = document.querySelectorAll('.type-checkbox');
-
-            typeCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        allTypesCheckbox.checked = false;
-                    } else {
-                        const anyTypeChecked = Array.from(typeCheckboxes).some(cb => cb.checked);
-                        if (!anyTypeChecked) {
-                            allTypesCheckbox.checked = true;
-                        }
-                    }
-                });
-            });
-
-            allTypesCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    typeCheckboxes.forEach(checkbox => {
-                        checkbox.checked = false;
-                    });
-                }
-            });
-
-             // Evolutionsposition-Filter
-             const allEvolutionsCheckbox = document.getElementById('allEvolutions');
-             const evoPositionCheckboxes = document.querySelectorAll('.evo-position-checkbox');
-
-             evoPositionCheckboxes.forEach(checkbox => {
-                  checkbox.addEventListener('change', function() {
-                      if (this.checked) {
-                           allEvolutionsCheckbox.checked = false;
-                      } else {
-                           const anyEvoPositionChecked = Array.from(evoPositionCheckboxes).some(cb => cb.checked);
-                           if (!anyEvoPositionChecked) {
-                                allEvolutionsCheckbox.checked = true;
-                           }
-                      }
-                  });
-             });
-
-             allEvolutionsCheckbox.addEventListener('change', function() {
-                  if (this.checked) {
-                       evoPositionCheckboxes.forEach(checkbox => {
-                           checkbox.checked = false;
-                       });
-                  }
-             });
-
-            // Kettenlänge-Filter
-             const allChainLengthsCheckbox = document.getElementById('allChainLengths');
-             const chainLengthCheckboxes = document.querySelectorAll('.chain-length-checkbox');
-
-             chainLengthCheckboxes.forEach(checkbox => {
-                  checkbox.addEventListener('change', function() {
-                      if (this.checked) {
-                           allChainLengthsCheckbox.checked = false;
-                      } else {
-                           const anyChainLengthChecked = Array.from(chainLengthCheckboxes).some(cb => cb.checked);
-                           if (!anyChainLengthChecked) {
-                                allChainLengthsCheckbox.checked = true;
-                           }
-                      }
-                  });
-             });
-
-             allChainLengthsCheckbox.addEventListener('change', function() {
-                  if (this.checked) {
-                       chainLengthCheckboxes.forEach(checkbox => {
-                           checkbox.checked = false;
-                       });
-                  }
-             });
         }
 
-
-        // Event-Listener für den Generator-Button
-        document.getElementById('generate').addEventListener('click', function() {
-            generateRandomPokemon();
-        });
-
-        // Event-Listener für Sprachbuttons (jetzt Bilder)
-        document.querySelectorAll('.language-switcher img').forEach(img => { // Targeting images now
+        document.getElementById('generate').addEventListener('click', generateRandomPokemon);
+        document.querySelectorAll('.language-switcher img').forEach(img => {
             img.addEventListener('click', function() {
                 setLanguage(this.dataset.lang);
+                localStorage.setItem('language', this.dataset.lang);
             });
         });
+        document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
 
-         // Event-Listener für Dark Mode Toggle (jetzt Icon)
-         document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
-
-
-        // Lade Daten von der API bei Seitenstart
         window.addEventListener('load', function() {
-             // Lade Dark Mode Präferenz
              const savedDarkMode = localStorage.getItem('darkMode');
              const isDarkMode = savedDarkMode === 'enabled';
-             if (isDarkMode) {
-                  document.body.classList.add('dark-mode');
-             }
-             updateDarkModeIcon(isDarkMode); // Setze das korrekte Icon beim Laden
+             if (isDarkMode) document.body.classList.add('dark-mode');
+             updateDarkModeIcon(isDarkMode);
 
-
-             // Setze Start-Sprache (könnte auch aus localStorage geladen werden)
-             // Lade Sprache Präferenz
              const savedLang = localStorage.getItem('language');
-             if (savedLang && translations[savedLang]) {
-                  setLanguage(savedLang);
-             } else {
-                  setLanguage('de'); // Standardmäßig Deutsch setzen, wenn keine Präferenz gefunden
-             }
+             setLanguage((savedLang && translations[savedLang]) ? savedLang : 'de');
 
-             // Füge die Filter-Logik hinzu, nachdem die Elemente geladen sind
              addFilterLogic();
-
-
-             // Lade Pokémon-Daten
              fetchPokemonDataFromAPI();
         });
-
-        // Speichere Spracheinstellung beim Wechsel
-        document.querySelectorAll('.language-switcher img').forEach(img => {
-             img.addEventListener('click', function() {
-                 localStorage.setItem('language', this.dataset.lang);
-             });
-        });
-
-
     </script>
 </body>
 </html>
