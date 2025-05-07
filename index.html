@@ -791,7 +791,7 @@
                              data-shiny="${pokemon.shinyImage || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt'}"
                              onclick="toggleShiny(this)"
                              onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Fehler'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Fehler';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Fehler';">
-                        <span class="shiny-indicator"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                        <span class="shiny-indicator"><img src="sparkles-icon.png" alt="Sparkles Icon" width=32 height=32/></span>
                     </div>
                     <div class="pokemon-info">
                         <h3 class="pokemon-name"><a href="${pokemonDbUrl}" target="_blank" class="pokedex-link">#${pokemon.id} ${displayedName}</a></h3>
