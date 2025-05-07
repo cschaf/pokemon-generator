@@ -27,10 +27,10 @@
             --dark-details-text: #ccc;
             --dark-status-text: #ccc;
             --dark-attribution-text: #aaa;
-            --primary-color: #e3350d; /* Pokémon Rot/Orange */
-            --secondary-color: #3b5ca8; /* Pokémon Blau */
-            --accent-color: #ff7863; /* Hellere Akzentfarbe für Dark Mode Header */
-            --shiny-color: #FFD700; /* Gold für Shiny-Indikator */
+            --primary-color: #e3350d; /* Pokémon Red/Orange */
+            --secondary-color: #3b5ca8; /* Pokémon Blue */
+            --accent-color: #ff7863; /* Lighter accent for Dark Mode Header */
+            --shiny-color: #FFD700; /* Gold for Shiny indicator */
         }
 
         body {
@@ -122,6 +122,33 @@
         }
 
         .control-group { margin-bottom: 20px; }
+        .control-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .control-group-header label { margin-bottom: 0; }
+
+        /* Styles for the new toggle icon */
+        .toggle-all-icon {
+            font-size: 1.2em; /* Adjust size as needed */
+            color: var(--secondary-color);
+            cursor: pointer;
+            margin-left: 10px;
+            transition: color 0.2s;
+        }
+        .toggle-all-icon:hover {
+            color: var(--primary-color);
+        }
+        body.dark-mode .toggle-all-icon {
+            color: var(--accent-color);
+        }
+        body.dark-mode .toggle-all-icon:hover {
+            color: var(--primary-color);
+        }
+
+
         label { display: block; margin-bottom: 8px; font-weight: 600; }
         body.dark-mode label { color: var(--dark-text); }
 
@@ -145,8 +172,8 @@
 
         .checkbox-group {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 10px 15px; /* Increased gap slightly for better spacing of colored labels */
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjusted minmax for potentially longer labels */
+            gap: 10px 15px; 
             margin-top: 10px;
         }
 
@@ -159,29 +186,25 @@
             margin-bottom: 0; 
             font-weight: 400; 
             cursor: pointer; 
-            flex-grow: 1; /* Allow label to take available space */
-            display: block; /* Ensure padding and other block properties apply well */
+            flex-grow: 1; 
+            display: block; 
         }
         
-        /* Styling for Type Filter Labels */
         .type-filter-label {
             padding: 5px 10px;
             border-radius: 5px;
-            color: white !important; /* Ensure text is white for contrast on colored backgrounds */
+            color: white !important; 
             text-align: center;
-            font-weight: 600 !important; /* Make type names bold like on cards */
+            font-weight: 600 !important; 
             transition: outline 0.1s ease-in-out, opacity 0.2s;
-            border: 2px solid transparent; /* For consistent sizing with selected state */
+            border: 2px solid transparent; 
         }
 
-        /* Visual feedback for selected type filter labels */
         .checkbox-item input[type="checkbox"]:checked + label.type-filter-label {
             outline: 2px solid var(--primary-color);
-            /* Optional: Slightly change opacity or add a subtle shadow */
-            /* opacity: 0.85; */
         }
         body.dark-mode .checkbox-item input[type="checkbox"]:checked + label.type-filter-label {
-            outline-color: var(--accent-color); /* Use accent color for outline in dark mode */
+            outline-color: var(--accent-color); 
         }
 
 
@@ -234,13 +257,17 @@
             position: absolute;
             top: 8px;
             right: 8px;
+            content: "✨"; 
+            font-size: 1.5em; 
             color: var(--shiny-color);
-            font-size: 1.3em; 
             display: none;
             text-shadow: 0 0 4px rgba(0,0,0,0.6); 
             z-index: 5;
             pointer-events: none;
         }
+         .shiny-indicator.custom-icon { 
+            content: ""; 
+         }
         .shiny-indicator.active { display: inline-block; }
 
 
@@ -256,7 +283,7 @@
         }
         body.dark-mode .pokemon-details { color: var(--dark-details-text); }
         .pokemon-types { margin-top: 10px; }
-        .type-badge { /* This is for cards, .type-filter-label is for checkboxes */
+        .type-badge { 
             display: inline-block; padding: 4px 10px; border-radius: 5px;
             font-size: 0.85em; color: white; margin-right: 8px; margin-bottom: 5px;
             font-weight: 600; text-transform: capitalize;
@@ -297,7 +324,7 @@
         body.dark-mode .theme-switcher i { color: var(--dark-text); }
         .theme-switcher i:hover { transform: rotate(15deg); }
 
-        /* Type colors (used for card badges AND checkbox labels) */
+        /* Type colors */
         .type-normal { background-color: #A8A878; } .type-fire { background-color: #F08030; }
         .type-water { background-color: #6890F0; } .type-electric { background-color: #F8D030; }
         .type-grass { background-color: #78C850; } .type-ice { background-color: #98D8D8; }
@@ -313,7 +340,7 @@
             .top-right-icons { top: 10px; right: 10px; gap: 10px; }
             .language-switcher img, .theme-switcher i { font-size: 20px; width: 20px; }
             .controls { padding: 15px; }
-            .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px 10px; }
+            .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Adjusted for potentially longer gen labels */ }
             .type-filter-label { padding: 4px 8px; font-size: 0.9em;}
             button { padding: 10px 15px; }
             #results { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
@@ -326,9 +353,11 @@
             .type-badge { padding: 3px 8px; font-size: 0.8em; margin-right: 5px; }
             #status { margin: 15px 0; font-size: 0.9em; }
             .attribution { margin-top: 20px; font-size: 0.75em; }
+            .control-group-header { flex-direction: column; align-items: flex-start; }
+            .toggle-all-icon { margin-left: 0; margin-top: 5px; font-size: 1.3em; } 
         }
          @media (max-width: 480px) {
-             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } /* Adjusted for gen labels */
              .loading-progress-text { font-size: 0.8em; }
              .type-filter-label { padding: 3px 6px; font-size: 0.85em;}
          }
@@ -362,33 +391,37 @@
         </div>
 
         <div class="control-group">
-            <label data-i18n="generationLabel">Generation:</label>
+            <div class="control-group-header">
+                <label data-i18n="generationLabel">Generation:</label>
+                <i class="toggle-all-icon" data-group="gen-checkbox" title=""></i>
+            </div>
             <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="allGen" checked><label for="allGen" data-i18n="allLabel">Alle</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen1" class="gen-checkbox" value="1"><label for="gen1">Gen 1</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen2" class="gen-checkbox" value="2"><label for="gen2">Gen 2</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen3" class="gen-checkbox" value="3"><label for="gen3">Gen 3</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen4" class="gen-checkbox" value="4"><label for="gen4">Gen 4</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen5" class="gen-checkbox" value="5"><label for="gen5">Gen 5</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen6" class="gen-checkbox" value="6"><label for="gen6">Gen 6</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen7" class="gen-checkbox" value="7"><label for="gen7">Gen 7</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen8" class="gen-checkbox" value="8"><label for="gen8">Gen 8</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen9" class="gen-checkbox" value="9"><label for="gen9">Gen 9</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen1" class="gen-checkbox" value="1"><label for="gen1" data-i18n="gen1_label">Gen 1 (Kanto)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen2" class="gen-checkbox" value="2"><label for="gen2" data-i18n="gen2_label">Gen 2 (Johto)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen3" class="gen-checkbox" value="3"><label for="gen3" data-i18n="gen3_label">Gen 3 (Hoenn)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen4" class="gen-checkbox" value="4"><label for="gen4" data-i18n="gen4_label">Gen 4 (Sinnoh)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen5" class="gen-checkbox" value="5"><label for="gen5" data-i18n="gen5_label">Gen 5 (Unova)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen6" class="gen-checkbox" value="6"><label for="gen6" data-i18n="gen6_label">Gen 6 (Kalos)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen7" class="gen-checkbox" value="7"><label for="gen7" data-i18n="gen7_label">Gen 7 (Alola)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen8" class="gen-checkbox" value="8"><label for="gen8" data-i18n="gen8_label">Gen 8 (Galar)</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="gen9" class="gen-checkbox" value="9"><label for="gen9" data-i18n="gen9_label">Gen 9 (Paldea)</label></div>
             </div>
         </div>
 
         <div class="control-group">
-            <label data-i18n="typesLabel">Typen:</label>
+            <div class="control-group-header">
+                <label data-i18n="typesLabel">Typen:</label>
+                 <i class="toggle-all-icon" data-group="type-checkbox" title=""></i>
+            </div>
             <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="allTypes" checked><label for="allTypes" data-i18n="allLabel">Alle</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="normal" class="type-checkbox"><label for="normal" data-i18n="type_normal">Normal</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="fire" class="type-checkbox"><label for="fire" data-i18n="type_fire">Feuer</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="water" class="type-checkbox"><label for="water" data-i18n="type_water">Wasser</labe></div>
+                <div class="checkbox-item"><input type="checkbox" id="water" class="type-checkbox"><label for="water" data-i18n="type_water">Wasser</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="electric" class="type-checkbox"><label for="electric" data-i18n="type_electric">Elektro</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="grass" class="type-checkbox"><label for="grass" data-i18n="type_grass">Pflanze</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="ice" class="type-checkbox"><label for="ice" data-i18n="type_ice">Eis</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="fighting" class="type-checkbox"><label for="fighting" data-i18n="type_fighting">Kampf</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="poison" class="type-checkbox"><label for="poison" data-i18n="type_poison">Gift</labe></div>
+                <div class="checkbox-item"><input type="checkbox" id="poison" class="type-checkbox"><label for="poison" data-i18n="type_poison">Gift</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="ground" class="type-checkbox"><label for="ground" data-i18n="type_ground">Boden</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="flying" class="type-checkbox"><label for="flying" data-i18n="type_flying">Flug</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="psychic" class="type-checkbox"><label for="psychic" data-i18n="type_psychic">Psycho</label></div>
@@ -403,9 +436,11 @@
         </div>
 
         <div class="control-group">
-            <label data-i18n="evolutionPositionLabel">Evolution (Position in Kette):</label>
+            <div class="control-group-header">
+                <label data-i18n="evolutionPositionLabel">Evolution (Position in Kette):</label>
+                <i class="toggle-all-icon" data-group="evo-position-checkbox" title=""></i>
+            </div>
             <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="allEvolutions" checked><label for="allEvolutions" data-i18n="allLabel">Alle</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="basic" class="evo-position-checkbox" value="0"><label for="basic" data-i18n="evo_basic">Grundform</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="stage1" class="evo-position-checkbox" value="1"><label for="stage1" data-i18n="evo_stage1">Erste Entwicklung</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="stage2" class="evo-position-checkbox" value="2"><label for="stage2" data-i18n="evo_stage2">Zweite Entwicklung</label></div>
@@ -413,9 +448,11 @@
         </div>
 
         <div class="control-group">
-            <label data-i18n="evolutionChainLengthLabel">Anzahl Entwicklungstufen (Gesamtlänge der Reihe):</label>
+            <div class="control-group-header">
+                <label data-i18n="evolutionChainLengthLabel">Anzahl Entwicklungstufen (Gesamtlänge der Reihe):</label>
+                <i class="toggle-all-icon" data-group="chain-length-checkbox" title=""></i>
+            </div>
             <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="allChainLengths" checked><label for="allChainLengths" data-i18n="allLabel">Alle</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="chainLength1" class="chain-length-checkbox" value="1"><label for="chainLength1" data-i18n="chain_length1">Keine Entwicklung (1 Stufe)</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="chainLength2" class="chain-length-checkbox" value="2"><label for="chainLength2" data-i18n="chain_length2">Eine Entwicklung (2 Stufen)</label></div>
                 <div class="checkbox-item"><input type="checkbox" id="chainLength3" class="chain-length-checkbox" value="3"><label for="chainLength3" data-i18n="chain_length3">Zwei Entwicklungen (3 Stufen)</label></div>
@@ -423,10 +460,13 @@
         </div>
 
         <div class="control-group">
-            <label data-i18n="specialPokemonLabel">Spezielle Pokémon:</label>
+             <div class="control-group-header">
+                <label data-i18n="specialPokemonLabel">Spezielle Pokémon:</label>
+                <i class="toggle-all-icon" data-group="special-checkbox" title=""></i>
+            </div>
             <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="includeLegendary" checked><label for="includeLegendary" data-i18n="includeLegendaryLabel">Legendäre Pokémon</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="includeMythical" checked><label for="includeMythical" data-i18n="includeMythicalLabel">Mysteriöse Pokémon</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="includeLegendary" class="special-checkbox" checked><label for="includeLegendary" data-i18n="includeLegendaryLabel">Legendäre Pokémon</label></div>
+                <div class="checkbox-item"><input type="checkbox" id="includeMythical" class="special-checkbox" checked><label for="includeMythical" data-i18n="includeMythicalLabel">Mysteriöse Pokémon</label></div>
             </div>
         </div>
 
@@ -442,21 +482,38 @@
         const pokemonData = [];
         const evolutionChains = new Map(); 
         let isLoading = false;
-        const POKEMON_LIMIT = 1300;
+        const POKEMON_LIMIT = 1300; 
         const BASE_API_URL = 'https://pokeapi.co/api/v2/';
         const POKEMONDB_URL = 'https://pokemondb.net/pokedex/';
-        const CACHE_KEY = 'pokemonGeneratorCache_v1'; 
+        const CACHE_KEY = 'pokemonGeneratorCache_v2'; 
 
         const loadingProgressContainer = document.getElementById('loading-progress-container');
         const loadingProgressBarElement = document.getElementById('loading-progress-bar');
         const loadingProgressTextElement = document.getElementById('loading-progress-text');
+
+        // Define Font Awesome classes for toggle states
+        const ICON_SELECT_ALL = 'fa-solid fa-square-check';
+        const ICON_DESELECT_ALL = 'fa-solid fa-square-minus';
 
         const translations = {
             de: {
                 appTitle: "Pokémon Generator",
                 siteDescription: "Dieser Generator ermöglicht es dir, zufällige Pokémon basierend auf verschiedenen Filtern wie Generation, Typ und Evolutionsstufe zu generieren. Klicke auf ein Pokémon-Bild, um zwischen normaler und Shiny-Form zu wechseln. Klicke auf die Pokédex-Nummer oder den Namen, um weitere Details auf Pokémon Database zu finden.",
                 countLabel: "Anzahl der zu generierenden Pokémon:",
-                generationLabel: "Generation:", allLabel: "Alle", typesLabel: "Typen:",
+                generationLabel: "Generation:", 
+                typesLabel: "Typen:",
+                tooltipSelectAll: "Alle auswählen", 
+                tooltipDeselectAll: "Alle abwählen", 
+                // Generation labels with regions (German)
+                gen1_label: "Gen 1 (Kanto)",
+                gen2_label: "Gen 2 (Johto)",
+                gen3_label: "Gen 3 (Hoenn)",
+                gen4_label: "Gen 4 (Sinnoh)",
+                gen5_label: "Gen 5 (Einall)", // German name for Unova
+                gen6_label: "Gen 6 (Kalos)",
+                gen7_label: "Gen 7 (Alola)",
+                gen8_label: "Gen 8 (Galar)",
+                gen9_label: "Gen 9 (Paldea)",
                 type_normal: "Normal", type_fire: "Feuer", type_water: "Wasser", type_electric: "Elektro", type_grass: "Pflanze", type_ice: "Eis", type_fighting: "Kampf", type_poison: "Gift", type_ground: "Boden", type_flying: "Flug", type_psychic: "Psycho", type_bug: "Käfer", type_rock: "Gestein", type_ghost: "Geist", type_dragon: "Drache", type_dark: "Unlicht", type_steel: "Stahl", type_fairy: "Fee",
                 evolutionPositionLabel: "Evolution (Position in Kette):",
                 evo_basic: "Grundform", evo_stage1: "Erste Entwicklung", evo_stage2: "Zweite Entwicklung",
@@ -479,7 +536,20 @@
                 appTitle: "Pokémon Generator",
                 siteDescription: "This generator allows you to generate random Pokémon based on various filters such as generation, type, and evolution stage. Click on a Pokémon image to toggle between normal and shiny forms. Click on the Pokédex number or name to find more details on Pokémon Database.",
                 countLabel: "Number of Pokémon to generate:",
-                generationLabel: "Generation:", allLabel: "All", typesLabel: "Types:",
+                generationLabel: "Generation:", 
+                typesLabel: "Types:",
+                tooltipSelectAll: "Select All", 
+                tooltipDeselectAll: "Deselect All",
+                // Generation labels with regions (English)
+                gen1_label: "Gen 1 (Kanto)",
+                gen2_label: "Gen 2 (Johto)",
+                gen3_label: "Gen 3 (Hoenn)",
+                gen4_label: "Gen 4 (Sinnoh)",
+                gen5_label: "Gen 5 (Unova)",
+                gen6_label: "Gen 6 (Kalos)",
+                gen7_label: "Gen 7 (Alola)",
+                gen8_label: "Gen 8 (Galar)",
+                gen9_label: "Gen 9 (Paldea)",
                 type_normal: "Normal", type_fire: "Fire", type_water: "Water", type_electric: "Electric", type_grass: "Grass", type_ice: "Ice", type_fighting: "Fighting", type_poison: "Poison", type_ground: "Ground", type_flying: "Flying", type_psychic: "Psychic", type_bug: "Bug", type_rock: "Rock", type_ghost: "Ghost", type_dragon: "Dragon", type_dark: "Dark", type_steel: "Steel", type_fairy: "Fairy",
                 evolutionPositionLabel: "Evolution (Position in chain):",
                 evo_basic: "Basic Form", evo_stage1: "First Evolution", evo_stage2: "Second Evolution",
@@ -501,6 +571,30 @@
         };
         let currentLang = 'de';
 
+        // Function to update the toggle icon for a specific group
+        function updateToggleIcon(groupClass) {
+            const iconElement = document.querySelector(`.toggle-all-icon[data-group="${groupClass}"]`);
+            if (!iconElement) return;
+
+            const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
+            if (checkboxesInGroup.length === 0) { 
+                iconElement.className = 'toggle-all-icon'; 
+                iconElement.title = '';
+                return;
+            }
+            
+            const allSelected = Array.from(checkboxesInGroup).every(cb => cb.checked);
+
+            if (allSelected) {
+                iconElement.className = `toggle-all-icon ${ICON_DESELECT_ALL}`;
+                iconElement.title = translations[currentLang].tooltipDeselectAll;
+            } else {
+                iconElement.className = `toggle-all-icon ${ICON_SELECT_ALL}`;
+                iconElement.title = translations[currentLang].tooltipSelectAll;
+            }
+        }
+
+
         function setLanguage(lang) {
             currentLang = lang;
             document.documentElement.lang = lang;
@@ -510,20 +604,41 @@
                     if (key === "attributionText" || key === "siteDescription") {
                          element.innerHTML = translations[lang][key];
                     } else {
-                        element.textContent = translations[lang][key];
+                        // Check if this element is a generation label
+                        if (key.startsWith("gen") && key.endsWith("_label")) {
+                             element.textContent = translations[lang][key];
+                        } else if (element.tagName === 'LABEL' && element.htmlFor && translations[lang][`type_${element.htmlFor}`]) {
+                            // This handles type labels specifically if they don't have data-i18n
+                            // but it's better to add data-i18n to them directly.
+                            // For now, we rely on the specific loop below for types.
+                            element.textContent = translations[lang][key]; // Fallback if it's a generic label
+                        }
+                        else {
+                             element.textContent = translations[lang][key];
+                        }
                     }
                 }
             });
+            
             document.title = translations[lang].appTitle;
 
+            // Update type checkbox labels
             document.querySelectorAll('.type-checkbox').forEach(checkbox => {
                  const label = document.querySelector(`label[for="${checkbox.id}"]`);
                  if (label && translations[lang] && translations[lang][`type_${checkbox.id}`]) {
                       label.textContent = translations[lang][`type_${checkbox.id}`];
                  }
             });
-            // After text update, ensure styles are applied to type labels
+            // Update generation checkbox labels (already handled by the main [data-i18n] loop if keys are set on labels)
+            // We ensure this by adding data-i18n to the generation labels in HTML
+
             initializeTypeCheckboxStyles();
+
+            document.querySelectorAll('.toggle-all-icon').forEach(icon => {
+                if (icon.dataset.group) {
+                    updateToggleIcon(icon.dataset.group);
+                }
+            });
 
 
             const statusElement = document.getElementById('status');
@@ -716,30 +831,45 @@
 
         function filterPokemon() {
             let filtered = [...pokemonData];
-            if (!document.getElementById('allGen').checked) {
-                const selectedGens = Array.from(document.querySelectorAll('.gen-checkbox:checked')).map(cb => parseInt(cb.value));
-                filtered = selectedGens.length > 0 ? filtered.filter(p => p.generation !== null && selectedGens.includes(p.generation)) : [];
+
+            const selectedGens = Array.from(document.querySelectorAll('.gen-checkbox:checked')).map(cb => parseInt(cb.value));
+            if (selectedGens.length === 0 && document.querySelectorAll('.gen-checkbox').length > 0) return []; 
+            if (selectedGens.length > 0) { 
+                 filtered = filtered.filter(p => p.generation !== null && selectedGens.includes(p.generation));
             }
-            if (!document.getElementById('allTypes').checked) {
-                const selectedTypes = Array.from(document.querySelectorAll('.type-checkbox:checked')).map(cb => cb.id);
-                filtered = selectedTypes.length > 0 ? filtered.filter(p => p.types.some(type => selectedTypes.includes(type))) : [];
+
+            const selectedTypes = Array.from(document.querySelectorAll('.type-checkbox:checked')).map(cb => cb.id);
+            if (selectedTypes.length === 0 && document.querySelectorAll('.type-checkbox').length > 0) return [];
+            if (selectedTypes.length > 0) {
+                filtered = filtered.filter(p => p.types.some(type => selectedTypes.includes(type)));
             }
-            if (!document.getElementById('allEvolutions').checked) {
-                const selectedPositions = new Set();
-                if (document.getElementById('basic').checked) selectedPositions.add(0);
-                if (document.getElementById('stage1').checked) selectedPositions.add(1);
-                if (document.getElementById('stage2').checked) selectedPositions.add(2);
-                filtered = selectedPositions.size > 0 ? filtered.filter(p => selectedPositions.has(p.evolutionStage)) : [];
+
+            const selectedEvoPositions = Array.from(document.querySelectorAll('.evo-position-checkbox:checked')).map(cb => parseInt(cb.value));
+            if (selectedEvoPositions.length === 0 && document.querySelectorAll('.evo-position-checkbox').length > 0) return [];
+            if (selectedEvoPositions.length > 0) {
+                filtered = filtered.filter(p => selectedEvoPositions.includes(p.evolutionStage));
             }
-            if (!document.getElementById('allChainLengths').checked) {
-                 const selectedLengths = new Set();
-                 if (document.getElementById('chainLength1').checked) selectedLengths.add(1);
-                 if (document.getElementById('chainLength2').checked) selectedLengths.add(2);
-                 if (document.getElementById('chainLength3').checked) selectedLengths.add(3);
-                 filtered = selectedLengths.size > 0 ? filtered.filter(p => selectedLengths.has(p.totalStages)) : [];
+            
+            const selectedChainLengths = Array.from(document.querySelectorAll('.chain-length-checkbox:checked')).map(cb => parseInt(cb.value));
+            if (selectedChainLengths.length === 0 && document.querySelectorAll('.chain-length-checkbox').length > 0) return [];
+            if (selectedChainLengths.length > 0) {
+                 filtered = filtered.filter(p => selectedChainLengths.includes(p.totalStages));
             }
-            if (!document.getElementById('includeLegendary').checked) filtered = filtered.filter(p => !p.isLegendary);
-            if (!document.getElementById('includeMythical').checked) filtered = filtered.filter(p => !p.isMythical);
+
+            const includeLegendary = document.getElementById('includeLegendary').checked;
+            const includeMythical = document.getElementById('includeMythical').checked;
+
+            const specialCheckboxesExist = document.querySelectorAll('.special-checkbox').length > 0;
+            if (specialCheckboxesExist && !includeLegendary && !includeMythical) {
+                 filtered = filtered.filter(p => !p.isLegendary && !p.isMythical);
+            } else {
+                if (document.getElementById('includeLegendary') && !includeLegendary) {
+                    filtered = filtered.filter(p => !p.isLegendary);
+                }
+                if (document.getElementById('includeMythical') && !includeMythical) {
+                    filtered = filtered.filter(p => !p.isMythical);
+                }
+            }
             return filtered;
         }
 
@@ -777,7 +907,7 @@
 
                 let evolutionText = `${translations[currentLang].cardEvolution}: Unbekannt`;
                  if (pokemon.evolutionStage !== -1 && pokemon.totalStages !== undefined && pokemon.totalStages > 0) {
-                      const numberOfEvolutions = pokemon.totalStages - 1;
+                      const numberOfEvolutions = pokemon.totalStages - 1; 
                       evolutionText = `${translations[currentLang].cardEvolution}: ${pokemon.evolutionStage}/${numberOfEvolutions}`;
                       if (pokemon.evolutionStage === 0 && pokemon.totalStages === 1) evolutionText += ` ${translations[currentLang].cardEvolutionNoEvo}`;
                  } else if (pokemon.evolutionStage !== -1) { 
@@ -791,7 +921,9 @@
                              data-shiny="${pokemon.shinyImage || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt'}"
                              onclick="toggleShiny(this)"
                              onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Fehler'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Fehler';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Fehler';">
-                        <span class="shiny-indicator"><img src="sparkles-icon.png" alt="Sparkles Icon" width=32 height=32/></span>
+                        <span class="shiny-indicator ${pokemon.shinyImage && pokemon.shinyImage.includes('sparkles-icon.png') ? 'custom-icon' : ''}">
+                           ${pokemon.shinyImage && pokemon.shinyImage.includes('sparkles-icon.png') ? '<img src="sparkles-icon.png" alt="Sparkles Icon" width=32 height=32/>' : '✨'}
+                        </span>
                     </div>
                     <div class="pokemon-info">
                         <h3 class="pokemon-name"><a href="${pokemonDbUrl}" target="_blank" class="pokedex-link">#${pokemon.id} ${displayedName}</a></h3>
@@ -831,53 +963,52 @@
             document.querySelectorAll('input.type-checkbox').forEach(checkbox => {
                 const label = document.querySelector(`label[for="${checkbox.id}"]`);
                 if (label) {
-                    // Ensure old type classes are removed if this function is ever called multiple times
                     label.className = label.className.replace(/type-\w+/g, '').trim(); 
-                    
                     label.classList.add('type-filter-label');
-                    label.classList.add(`type-${checkbox.id}`); // e.g., type-fire
+                    label.classList.add(`type-${checkbox.id}`);
                 }
             });
         }
 
-        function addFilterLogic() {
-            const filterGroups = [
-                { allId: 'allGen', specificClass: 'gen-checkbox' },
-                { allId: 'allTypes', specificClass: 'type-checkbox' },
-                { allId: 'allEvolutions', specificClass: 'evo-position-checkbox' },
-                { allId: 'allChainLengths', specificClass: 'chain-length-checkbox' }
-            ];
+        function initializeToggleAllIcons() {
+            document.querySelectorAll('.toggle-all-icon').forEach(icon => {
+                const groupClass = icon.dataset.group;
+                if (!groupClass) return;
 
-            filterGroups.forEach(group => {
-                const allCheckbox = document.getElementById(group.allId);
-                const specificCheckboxes = document.querySelectorAll('.' + group.specificClass);
+                icon.addEventListener('click', function() {
+                    const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
+                    if (checkboxesInGroup.length === 0) return;
+                    
+                    const allCurrentlySelected = Array.from(checkboxesInGroup).every(cb => cb.checked);
+                    
+                    checkboxesInGroup.forEach(cb => {
+                        cb.checked = !allCurrentlySelected; 
+                    });
+                    updateToggleIcon(groupClass); 
+                });
 
-                if (!allCheckbox || specificCheckboxes.length === 0) {
-                    return;
-                }
-
-                specificCheckboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        if (this.checked) {
-                            allCheckbox.checked = false;
-                        } else {
-                            const anySpecificChecked = Array.from(specificCheckboxes).some(cb => cb.checked);
-                            if (!anySpecificChecked) {
-                                allCheckbox.checked = true;
-                            }
-                        }
+                const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
+                checkboxesInGroup.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => {
+                        updateToggleIcon(groupClass);
                     });
                 });
-
-                allCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        specificCheckboxes.forEach(cb => {
-                            cb.checked = false;
-                        });
-                    }
-                });
             });
         }
+        
+        function setDefaultFiltersChecked() {
+            const filterGroupsClasses = ['.gen-checkbox', '.type-checkbox', '.evo-position-checkbox', '.chain-length-checkbox', '.special-checkbox'];
+            filterGroupsClasses.forEach(groupClass => {
+                document.querySelectorAll(groupClass).forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+                const iconForGroup = document.querySelector(`.toggle-all-icon[data-group="${groupClass.substring(1)}"]`);
+                if (iconForGroup) {
+                    updateToggleIcon(groupClass.substring(1));
+                }
+            });
+        }
+
 
         document.getElementById('generate').addEventListener('click', generateRandomPokemon);
         document.querySelectorAll('.language-switcher img').forEach(img => {
@@ -895,10 +1026,13 @@
              updateDarkModeIcon(isDarkMode);
 
              const savedLang = localStorage.getItem('language');
+             
+             setDefaultFiltersChecked(); 
+             initializeToggleAllIcons(); 
+
              setLanguage((savedLang && translations[savedLang]) ? savedLang : 'de'); 
              
-             initializeTypeCheckboxStyles(); // Apply styles to type checkboxes
-             addFilterLogic(); 
+             initializeTypeCheckboxStyles(); 
              fetchPokemonDataFromAPI(); 
         });
     </script>
