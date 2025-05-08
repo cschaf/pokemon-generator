@@ -44,6 +44,8 @@ All Pokémon data and images are provided by the [PokeAPI](https://pokeapi.co/).
 
 * The code for this generator is licensed under the MIT License. See the `LICENSE` file in the repository root for details.
 
+* The images for all Pokémon types are provided by [partywhale](https://github.com/partywhale/pokemon-type-icons).
+
 ## Development
 
 This project's code was created with the assistance of **Gemini 2.5 Flash**, a large language model by Google.
