@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="appTitle">Pokémon Generator</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"> <!-- Updated FontAwesome version -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,6 +20,11 @@
             --light-attribution-text: #888;
             --light-filter-group-bg: #f9f9f9; 
             --light-section-title-color: var(--secondary-color);
+            --light-sticky-btn-bg: var(--secondary-color);
+            --light-sticky-btn-text: white;
+            --light-sticky-btn-hover-bg: #2a4a87;
+            --light-sort-icon-color: #555;
+            --light-sort-icon-active-color: var(--secondary-color);
 
 
             --dark-bg: #1a1a1a;
@@ -33,11 +38,21 @@
             --dark-attribution-text: #aaa;
             --dark-filter-group-bg: #303030; 
             --dark-section-title-color: var(--accent-color);
+            --dark-sticky-btn-bg: var(--accent-color);
+            --dark-sticky-btn-text: var(--dark-bg);
+            --dark-sticky-btn-hover-bg: var(--primary-color);
+            --dark-sort-icon-color: #bbb;
+            --dark-sort-icon-active-color: var(--accent-color);
+
 
             --primary-color: #e3350d; 
             --secondary-color: #3b5ca8; 
             --accent-color: #ff7863; 
             --shiny-color: #FFD700; 
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -59,8 +74,9 @@
         h1 {
             color: var(--primary-color);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px; 
             font-weight: 700;
+            font-size: 2.2em; 
         }
 
         body.dark-mode h1 {
@@ -262,11 +278,11 @@
             align-items: center;
         }
         
-        .type-icon { /* For filter icons AND card icons (if not overridden by .type-icon-card) */
+        .type-icon { 
             width: 20px; 
             height: 20px;
             margin-right: 6px; 
-            vertical-align: middle; /* Good for inline-flex context too */
+            vertical-align: middle; 
         }
         .type-filter-label { 
             padding: 3px 0px; 
@@ -329,19 +345,23 @@
             color: var(--dark-section-title-color);
         }
 
-
-        #locked-pokemon-results, #results {
+        /* Regular results grid */
+        #results {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 25px;
-        }
-        #results { 
             margin-top: 0; 
         }
         #locked-pokemon-section-container:not([style*="display: none"]) + #results {
              margin-top: 30px;
         }
 
+        /* Locked Pokémon results grid - smaller cards */
+        #locked-pokemon-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 15px; 
+        }
 
         .pokemon-card {
             background-color: var(--light-card-bg);
@@ -419,8 +439,23 @@
         .pokemon-name {
             margin: 0 0 8px 0; color: var(--light-text);
             font-size: 1.1em; font-weight: 700;
+            word-break: break-word; 
         }
         body.dark-mode .pokemon-name { color: var(--dark-text); }
+        
+        .pokedex-link {
+            color: inherit; 
+            text-decoration: none; 
+            transition: color 0.2s, text-decoration 0.2s;
+        }
+        .pokedex-link:hover {
+            text-decoration: underline; 
+            color: var(--secondary-color); 
+        }
+        body.dark-mode .pokedex-link:hover {
+             color: var(--accent-color); 
+        }
+
         .pokemon-details {
             font-size: 0.9em; color: var(--light-details-text);
             margin: 0 0 5px 0;
@@ -429,20 +464,20 @@
         
         .pokemon-types { 
             margin-top: 10px; 
-            display: flex; /* For horizontal layout of type items */
-            flex-wrap: wrap; /* Allow wrapping */
-            gap: 10px; /* Space between individual type items */
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px 10px; 
         }
-        .pokemon-type-item { /* NEW: Container for icon + name on card */
+        .pokemon-type-item { 
             display: inline-flex;
             align-items: center;
         }
-        .pokemon-type-item .type-icon { /* Reusing .type-icon, adjusted for card context */
+        .pokemon-type-item .type-icon { 
             width: 18px;
             height: 18px;
-            margin-right: 4px; /* Space between icon and text */
+            margin-right: 4px; 
         }
-        .pokemon-type-name { /* NEW: For type name text on card */
+        .pokemon-type-name { 
             font-size: 0.9em;
             color: var(--light-details-text);
             text-transform: capitalize;
@@ -451,6 +486,17 @@
         body.dark-mode .pokemon-type-name {
             color: var(--dark-details-text);
         }
+
+        /* Styles for smaller locked cards */
+        #locked-pokemon-results .pokemon-image { height: 100px; }
+        #locked-pokemon-results .pokemon-info { padding: 10px; }
+        #locked-pokemon-results .pokemon-name { font-size: 0.95em; margin-bottom: 5px; }
+        #locked-pokemon-results .pokemon-details { font-size: 0.8em; margin-bottom: 3px;}
+        #locked-pokemon-results .pokemon-types { margin-top: 6px; gap: 4px 6px; }
+        #locked-pokemon-results .pokemon-type-item .type-icon { width: 14px; height: 14px; margin-right: 3px; }
+        #locked-pokemon-results .pokemon-type-name { font-size: 0.8em; }
+        #locked-pokemon-results .lock-icon { font-size: 1.2em; top: 5px; left: 5px; }
+        #locked-pokemon-results .shiny-indicator { font-size: 1.2em; top: 5px; right: 5px; }
 
 
         #status {
@@ -467,10 +513,20 @@
         .attribution a { color: inherit; text-decoration: underline; }
         .attribution a:hover { text-decoration: none; }
 
-        .top-right-icons {
-            position: absolute; top: 20px; right: 20px;
-            display: flex; align-items: center; gap: 15px; z-index: 10;
+        .page-actions-container { 
+            position: fixed; 
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-end; 
+            gap: 10px; 
         }
+        .top-right-icons-group { 
+             display: flex; align-items: center; gap: 15px;
+        }
+
         .language-switcher img {
             width: 28px; height: auto; cursor: pointer;
             border: 2px solid transparent; border-radius: 4px;
@@ -488,69 +544,216 @@
         body.dark-mode .theme-switcher i { color: var(--dark-text); }
         .theme-switcher i:hover { transform: rotate(15deg); }
 
-        /* Type colors for filter badges - not used for card display anymore */
-        .type-badge.type-normal { background-color: #A8A878; } .type-badge.type-fire { background-color: #F08030; }
-        .type-badge.type-water { background-color: #6890F0; } .type-badge.type-electric { background-color: #F8D030; }
-        .type-badge.type-grass { background-color: #78C850; } .type-badge.type-ice { background-color: #98D8D8; }
-        .type-badge.type-fighting { background-color: #C03028; } .type-badge.type-poison { background-color: #A040A0; }
-        .type-badge.type-ground { background-color: #E0C068; } .type-badge.type-flying { background-color: #A890F0; }
-        .type-badge.type-psychic { background-color: #F85888; } .type-badge.type-bug { background-color: #A8B820; }
-        .type-badge.type-rock { background-color: #B8A038; } .type-badge.type-ghost { background-color: #705898; }
-        .type-badge.type-dragon { background-color: #7038F8; } .type-badge.type-dark { background-color: #705848; }
-        .type-badge.type-steel { background-color: #B8B8D0; } .type-badge.type-fairy { background-color: #EE99AC; }
+        #stickyGenerateBtn {
+            display: none; 
+            padding: 8px 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+            background-color: var(--light-sticky-btn-bg);
+            color: var(--light-sticky-btn-text);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: background-color 0.3s, transform 0.1s ease-in-out, color 0.3s;
+        }
+        #stickyGenerateBtn:hover {
+            background-color: var(--light-sticky-btn-hover-bg);
+            transform: translateY(-1px);
+        }
+        #stickyGenerateBtn:disabled {
+            background-color: #ccc !important; 
+            color: #666 !important;
+            cursor: not-allowed;
+            transform: translateY(0);
+        }
+        body.dark-mode #stickyGenerateBtn {
+            background-color: var(--dark-sticky-btn-bg);
+            color: var(--dark-sticky-btn-text);
+            box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+        }
+         body.dark-mode #stickyGenerateBtn:hover {
+            background-color: var(--dark-sticky-btn-hover-bg);
+            color: white; 
+        }
 
+        #sorting-controls {
+            display: none; /* Hidden by default */
+            background-color: var(--light-controls-bg);
+            padding: 5px 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        body.dark-mode #sorting-controls {
+            background-color: var(--dark-controls-bg);
+            box-shadow: 0 1px 5px rgba(255,255,255,0.1);
+        }
+        .sort-icon {
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 3px 5px;
+            color: var(--light-sort-icon-color);
+            transition: color 0.2s;
+            position: relative; /* For positioning the direction arrow */
+            border-radius: 3px; /* Slight rounding for hover */
+        }
+        .sort-icon:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .sort-icon.active {
+            color: var(--light-sort-icon-active-color);
+        }
+        body.dark-mode .sort-icon {
+            color: var(--dark-sort-icon-color);
+        }
+        body.dark-mode .sort-icon:hover {
+             background-color: rgba(255, 255, 255, 0.1);
+        }
+        body.dark-mode .sort-icon.active {
+            color: var(--dark-sort-icon-active-color);
+        }
+        #sort-direction {
+             font-size: 0.9em; /* Smaller direction arrow */
+             margin-left: -3px; /* Tuck it closer to the active icon */
+        }
+
+
+        #scrollToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            border: none;
+            outline: none;
+            background-color: var(--secondary-color);
+            color: white;
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 50%;
+            font-size: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: background-color 0.3s, transform 0.2s, color 0.3s;
+        }
+        #scrollToTopBtn:hover {
+            background-color: #2a4a87;
+            transform: translateY(-2px);
+        }
+        body.dark-mode #scrollToTopBtn {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+             box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+        }
+        body.dark-mode #scrollToTopBtn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
 
         @media (max-width: 768px) {
+            h1 { font-size: 1.8em; margin-bottom: 20px;}
             body { padding: 15px; }
-            .top-right-icons { top: 10px; right: 10px; gap: 10px; }
-            .language-switcher img, .theme-switcher i { font-size: 20px; width: 20px; }
+            .page-actions-container { top: 10px; right: 10px; gap: 8px;}
+            .top-right-icons-group { gap: 10px; }
+            .language-switcher img, .theme-switcher i { font-size: 22px; width: 22px; } 
+            #stickyGenerateBtn { padding: 6px 10px; font-size: 0.8em; }
+            #sorting-controls { gap: 5px; padding: 4px 8px; }
+            .sort-icon { font-size: 1em; padding: 2px 4px;}
+            #sort-direction { font-size: 0.8em; }
+
+            #scrollToTopBtn { bottom: 15px; right: 15px; padding: 8px 10px; font-size: 16px; }
+
             .controls { padding: 15px; }
-            .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-            button#generate { padding: 10px 15px; }
-            #locked-pokemon-results, #results { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-            .pokemon-card { border-radius: 8px; }
-            .pokemon-image { height: 120px; }
-            .shiny-indicator { font-size: 1.1em; top: 5px; right: 5px; }
-            .lock-icon { font-size: 1.1em; top: 5px; left: 5px; }
-            .pokemon-info { padding: 10px; }
-            .pokemon-name { font-size: 1em; }
-            .pokemon-details { font-size: 0.85em; }
+            .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } 
+            button#generate { padding: 10px 15px; font-size: 1em; }
             
-            .pokemon-types { gap: 8px; }
-            .pokemon-type-item .type-icon { width: 16px; height: 16px; margin-right: 3px; }
-            .pokemon-type-name { font-size: 0.85em; }
+            /* Regular cards on mobile */
+            #results { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+            #results .pokemon-image { height: 110px; }
+            #results .pokemon-info { padding: 10px; }
+            #results .pokemon-name { font-size: 0.9em; }
+            #results .pokemon-details { font-size: 0.8em; }
+            #results .pokemon-type-item .type-icon { width: 15px; height: 15px;}
+            #results .pokemon-type-name { font-size: 0.8em; }
+            #results .lock-icon, #results .shiny-indicator { font-size: 1em; }
+
+
+            /* Locked cards on mobile - even smaller */
+            #locked-pokemon-results { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+            #locked-pokemon-results .pokemon-image { height: 80px; }
+            #locked-pokemon-results .pokemon-info { padding: 8px; }
+            #locked-pokemon-results .pokemon-name { font-size: 0.8em; margin-bottom: 3px; }
+            #locked-pokemon-results .pokemon-details { font-size: 0.7em; margin-bottom: 2px;}
+            #locked-pokemon-results .pokemon-types { margin-top: 4px; gap: 3px 5px; }
+            #locked-pokemon-results .pokemon-type-item .type-icon { width: 12px; height: 12px; margin-right: 2px; }
+            #locked-pokemon-results .pokemon-type-name { font-size: 0.7em; }
+            #locked-pokemon-results .lock-icon { font-size: 1em; top: 4px; left: 4px; }
+            #locked-pokemon-results .shiny-indicator { font-size: 1em; top: 4px; right: 4px; }
+
 
             #status { margin: 15px 0; font-size: 0.9em; }
             .attribution { margin-top: 20px; font-size: 0.75em; }
-            .toggle-all-icon { margin-left: 8px; margin-top: 0; font-size: 1.1em; } 
-            .collapse-icon { margin-left: 10px; }
+            .toggle-all-icon { margin-left: 8px; margin-top: 0; font-size: 1em; } 
+            .collapse-icon { margin-left: 8px; font-size: 0.8em;}
             #locked-pokemon-section-container h2 { font-size: 1.2em; }
         }
          @media (max-width: 480px) {
-             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); } 
-             .loading-progress-text { font-size: 0.8em; }
-             .checkbox-item label { font-size: 0.9em; } 
-             .type-icon { width: 18px; height: 18px; margin-right: 4px; } /* Filter icon size */
-            
-             .pokemon-type-item .type-icon { width: 14px; height: 14px; }
-             .pokemon-type-name { font-size: 0.8em; }
-
+             h1 { font-size: 1.6em; margin-bottom: 15px;}
+             body { padding: 10px; }
+             .page-actions-container { top: 8px; right: 8px; gap: 6px;}
+             .top-right-icons-group { gap: 8px; }
+             .language-switcher img, .theme-switcher i { font-size: 20px; width: 20px; } 
+             #stickyGenerateBtn { padding: 5px 8px; font-size: 0.75em; }
+             #sorting-controls { flex-wrap: wrap; justify-content: flex-end; } /* Allow wrap on very small */
+             #scrollToTopBtn { bottom: 10px; right: 10px; padding: 6px 8px; font-size: 14px; }
+             
+             .controls { padding: 10px; }
              .control-group { padding: 8px 10px; }
+             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px 8px; } 
+             .checkbox-item label { font-size: 0.85em; }
+             .type-icon { width: 16px; height: 16px; margin-right: 4px; } 
+
+             /* Regular cards on small mobile */
+            #results { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            #results .pokemon-image { height: 100px; }
+
+             /* Locked cards on small mobile */
+            #locked-pokemon-results { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+            #locked-pokemon-results .pokemon-image { height: 70px; }
+            #locked-pokemon-results .pokemon-name { font-size: 0.75em; }
+            #locked-pokemon-results .pokemon-details { font-size: 0.65em; }
+            #locked-pokemon-results .pokemon-type-item .type-icon { width: 11px; height: 11px; }
+            #locked-pokemon-results .pokemon-type-name { font-size: 0.65em; }
+             
+             .loading-progress-text { font-size: 0.8em; }
          }
     </style>
 </head>
 <body>
     <h1 data-i18n="appTitle">Pokémon Generator</h1>
 
-     <div class="top-right-icons">
-         <div class="language-switcher">
-            <img src="https://flagcdn.com/de.svg" data-lang="de" alt="Deutsche Flagge" class="active">
-            <img src="https://flagcdn.com/us.svg" data-lang="en" alt="US Flagge">
+    <div class="page-actions-container">
+        <div class="top-right-icons-group">
+            <div class="language-switcher">
+                <img src="https://flagcdn.com/de.svg" data-lang="de" alt="Deutsche Flagge" class="active">
+                <img src="https://flagcdn.com/us.svg" data-lang="en" alt="US Flagge">
+            </div>
+            <div class="theme-switcher">
+                <i id="darkModeToggle" class="fas fa-moon"></i>
+            </div>
         </div>
-         <div class="theme-switcher">
-             <i id="darkModeToggle" class="fas fa-moon"></i>
-         </div>
-     </div>
+        <button id="stickyGenerateBtn" data-i18n="generateButton">Pokémon generieren!</button>
+        <div id="sorting-controls" style="display: none;"> <!-- Initially hidden -->
+            <span class="sort-icon" data-sort="id" title="Sort by ID"><i class="fa-solid fa-hashtag"></i></span>
+            <span class="sort-icon" data-sort="name" title="Sort by Name"><i class="fa-solid fa-arrow-down-a-z"></i></span>
+            <span class="sort-icon" data-sort="type" title="Sort by Type"><i class="fa-solid fa-leaf"></i></span> <!-- Example icon for type -->
+            <span class="sort-icon" data-sort="random" title="Sort Randomly"><i class="fa-solid fa-shuffle"></i></span>
+            <i id="sort-direction" class="fas"></i> <!-- Direction icon -->
+        </div>
+    </div>
+
 
      <div class="description" data-i18n="siteDescription"></div>
 
@@ -562,13 +765,14 @@
 
     <div class="controls">
         <div class="control-group"> <label for="count" data-i18n="countLabel">Anzahl neuer Pokémon zum Generieren:</label>
-            <input type="number" id="count" class="count-input" min="0" max="100" value="10"> <!-- min changed to 0 -->
+            <input type="number" id="count" class="count-input" min="0" max="100" value="10"> 
         </div>
 
         <div class="global-collapse-controls">
             <button id="toggleAllFiltersBtn" data-i18n="expandAllLabel">Alle ausklappen</button>
         </div>
 
+        <!-- Filter Groups (Collapsible) -->
         <div class="control-group collapsible"> 
             <div class="control-group-header">
                 <div class="label-and-toggle">
@@ -591,7 +795,6 @@
                 </div>
             </div>
         </div>
-
         <div class="control-group collapsible"> 
             <div class="control-group-header">
                 <div class="label-and-toggle">
@@ -623,7 +826,6 @@
                 </div>
             </div>
         </div>
-
         <div class="control-group collapsible"> 
             <div class="control-group-header">
                 <div class="label-and-toggle">
@@ -640,7 +842,6 @@
                 </div>
             </div>
         </div>
-
         <div class="control-group collapsible"> 
             <div class="control-group-header">
                 <div class="label-and-toggle">
@@ -657,7 +858,6 @@
                 </div>
             </div>
         </div>
-
         <div class="control-group collapsible"> 
              <div class="control-group-header">
                 <div class="label-and-toggle">
@@ -673,6 +873,7 @@
                 </div>
             </div>
         </div>
+        <!-- End Filter Groups -->
 
         <button id="generate" data-i18n="generateButton">Pokémon generieren!</button>
         <div id="status"></div>
@@ -684,6 +885,8 @@
     </div>
 
     <div id="results"></div>
+
+    <button id="scrollToTopBtn" title="Nach oben scrollen"><i class="fas fa-arrow-up"></i></button>
 
     <div class="attribution" data-i18n="attributionText"></div>
 
@@ -699,7 +902,9 @@
         const LOCKED_POKEMON_CACHE_KEY = 'lockedPokemonIds_v1';
 
         let lockedPokemonIds = new Set();
-        let countForNewPokemons = 10; // Default, will be updated from input
+        let countForNewPokemons = 10; 
+        let currentSortCriteria = 'id'; // 'id', 'name', 'type', 'random'
+        let currentSortDirection = 'asc'; // 'asc', 'desc'
 
         const loadingProgressContainer = document.getElementById('loading-progress-container');
         const loadingProgressBarElement = document.getElementById('loading-progress-bar');
@@ -707,6 +912,12 @@
         const lockedPokemonSectionContainer = document.getElementById('locked-pokemon-section-container');
         const lockedPokemonResultsContainer = document.getElementById('locked-pokemon-results');
         const resultsContainer = document.getElementById('results');
+        const controlsDiv = document.querySelector('.controls');
+        const mainGenerateBtn = document.getElementById('generate');
+        const stickyGenerateBtn = document.getElementById('stickyGenerateBtn');
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+        const sortingControls = document.getElementById('sorting-controls');
+        const sortDirectionIcon = document.getElementById('sort-direction');
 
 
         const ICON_SELECT_ALL = 'fa-solid fa-square-check';
@@ -720,7 +931,7 @@
                 countLabel: "Anzahl neuer Pokémon zum Generieren:",
                 generationLabel: "Generation:", 
                 typesLabel: "Typen:",
-                typesLabelShort: "Typ", // For alt text of type icons
+                typesLabelShort: "Typ", 
                 tooltipSelectAll: "Alle auswählen", 
                 tooltipDeselectAll: "Alle abwählen", 
                 tooltipLock: "Pokémon sperren",
@@ -741,13 +952,12 @@
                 loadedFromCache: "Pokémon-Daten aus Cache geladen!",
                 progressText: (loaded, total) => `${loaded} / ${total} Pokémon verarbeitet`,
                 loadingError: "Fehler beim Laden der Pokémon-Daten:",
-                status_locked_only: (locked) => `${locked} Pokémon gesperrt. Keine neuen Pokémon angefordert.`,
-                status_locked_and_generated: (locked, generated, totalPossible) => `${locked} Pokémon gesperrt. ${generated} neue Pokémon von ${totalPossible} passenden generiert.`,
+                status_locked_only: (locked) => `${locked} Pokémon gesperrt. Es wurden keine neuen Pokémon angefordert.`,
+                status_locked_and_generated: (locked, generated, totalPossible) => `${locked} Pokémon gesperrt. ${generated} von ${totalPossible} passenden neuen Pokémon generiert.`,
                 status_locked_no_new_match: (locked) => `${locked} Pokémon gesperrt. Keine weiteren neuen Pokémon entsprechen den Filtern.`,
-                status_locked_no_new_needed: (locked, generated) => `${locked} Pokémon gesperrt. ${generated} neue Pokémon generiert (alle passenden angezeigt).`,
-                status_generated_only: (generated, totalPossible) => `${generated} neue Pokémon von ${totalPossible} passenden generiert.`,
+                status_generated_only: (generated, totalPossible) => `${generated} von ${totalPossible} passenden neuen Pokémon generiert.`,
                 status_no_new_match: "Keine neuen Pokémon entsprechen deinen Filtern.",
-                status_no_pokemon_at_all: "Keine Pokémon (gesperrt oder neu) entsprechen den Filtern.",
+                status_no_pokemon_at_all: "Keine Pokémon (gesperrt oder neu) entsprechen deinen Filtern.",
                 status_initial_prompt: "Wähle Filter und generiere Pokémon!",
                 cardGeneration: "Generation", cardEvolution: "Entwicklung", cardEvolutionNoEvo: "(Keine Entwicklung)", cardEvolutionStage: "Stufe", cardTotalStages: "Stufen gesamt:",
                 darkModeToggle: "Dark Mode umschalten",
@@ -759,7 +969,7 @@
                 countLabel: "Number of new Pokémon to generate:",
                 generationLabel: "Generation:", 
                 typesLabel: "Types:",
-                typesLabelShort: "Type", // For alt text of type icons
+                typesLabelShort: "Type", 
                 tooltipSelectAll: "Select All", 
                 tooltipDeselectAll: "Deselect All",
                 tooltipLock: "Lock Pokémon",
@@ -781,10 +991,9 @@
                 progressText: (loaded, total) => `${loaded} / ${total} Pokémon processed`,
                 loadingError: "Error loading Pokémon data:",
                 status_locked_only: (locked) => `${locked} Pokémon locked. No new Pokémon requested.`,
-                status_locked_and_generated: (locked, generated, totalPossible) => `${locked} Pokémon locked. ${generated} new Pokémon generated (from ${totalPossible} matching).`,
+                status_locked_and_generated: (locked, generated, totalPossible) => `${locked} Pokémon locked. ${generated} of ${totalPossible} matching new Pokémon generated.`,
                 status_locked_no_new_match: (locked) => `${locked} Pokémon locked. No additional new Pokémon match filters.`,
-                status_locked_no_new_needed: (locked, generated) => `${locked} Pokémon locked. ${generated} new Pokémon generated (all matching displayed).`,
-                status_generated_only: (generated, totalPossible) => `${generated} new Pokémon generated (from ${totalPossible} matching).`,
+                status_generated_only: (generated, totalPossible) => `${generated} of ${totalPossible} matching new Pokémon generated.`,
                 status_no_new_match: "No new Pokémon match your filters.",
                 status_no_pokemon_at_all: "No Pokémon (locked or new) match your filters.",
                 status_initial_prompt: "Select filters and generate Pokémon!",
@@ -832,8 +1041,7 @@
                 if (icon.dataset.group) updateToggleIcon(icon.dataset.group);
             });
             
-            // Update status message and cards based on new language
-            if (pokemonData.length > 0 && !isLoading) { // Only if data is loaded and not currently loading
+            if (pokemonData.length > 0 && !isLoading) { 
                  generateRandomPokemon(); 
             } else if (isLoading && loadingProgressContainer.style.display === 'none'){
                 document.getElementById('status').textContent = translations[currentLang].loadingData;
@@ -882,8 +1090,9 @@
         async function fetchPokemonDataFromAPI() {
             const statusElement = document.getElementById('status');
             isLoading = true;
-            document.getElementById('generate').disabled = true;
-            statusElement.textContent = translations[currentLang].loadingData; // Set loading text early
+            mainGenerateBtn.disabled = true;
+            stickyGenerateBtn.disabled = true;
+            statusElement.textContent = translations[currentLang].loadingData; 
 
             const cachedDataJSON = localStorage.getItem(CACHE_KEY);
             if (cachedDataJSON) {
@@ -891,9 +1100,10 @@
                     const cachedData = JSON.parse(cachedDataJSON);
                     if (cachedData.pokemon && cachedData.pokemon.length > 0) {
                         pokemonData.push(...cachedData.pokemon);
-                        // statusElement.textContent = translations[currentLang].loadedFromCache; // Will be set by generateRandomPokemon
                         if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
-                        isLoading = false; document.getElementById('generate').disabled = false;
+                        isLoading = false; 
+                        mainGenerateBtn.disabled = false;
+                        stickyGenerateBtn.disabled = false;
                         validateLockedPokemonIds(); 
                         generateRandomPokemon(); return; 
                     }
@@ -962,7 +1172,9 @@
                 catch (e) { console.error("Error saving Pokémon data to cache:", e); }
             } catch (error) { console.error("Fehler beim Laden der Pokémon-Daten:", error); statusElement.textContent = `${translations[currentLang].loadingError} ${error.message}`; } 
             finally { 
-                isLoading = false; document.getElementById('generate').disabled = false; 
+                isLoading = false; 
+                mainGenerateBtn.disabled = false;
+                stickyGenerateBtn.disabled = false;
                 if (loadingProgressContainer) loadingProgressContainer.style.display = 'none'; 
                 validateLockedPokemonIds();
                 generateRandomPokemon(); 
@@ -1024,7 +1236,7 @@
                 const typeNameTranslated = translations[currentLang][`type_${type}`] || capitalizeFirstLetter(type);
                 const typeAltText = `${typeNameTranslated} ${translations[currentLang].typesLabelShort || 'Type'}`;
                 return `
-                    <div class="pokemon-type-item">
+                    <div class="pokemon-type-item" title="${typeNameTranslated}">
                         <img src="${TYPE_ICON_BASE_URL}${type}.svg" class="type-icon" alt="${typeAltText}">
                         <span class="pokemon-type-name">${typeNameTranslated}</span>
                     </div>`;
@@ -1046,11 +1258,13 @@
             card.innerHTML = `
                 <div class="pokemon-image">
                     <i class="fas ${lockIconClass} lock-icon" data-pokemon-id="${pokemon.id}" title="${lockIconTitle}"></i>
-                    <img src="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}" alt="${pokemon.name}"
-                            data-normal="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}"
-                            data-shiny="${pokemon.shinyImage || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt'}"
-                            onclick="toggleShiny(this)"
-                            onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Fehler'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Fehler';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Fehler';">
+                    <img src="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}" 
+                         alt="${pokemon.name}"
+                         loading="lazy"  
+                         data-normal="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}"
+                         data-shiny="${pokemon.shinyImage || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt'}"
+                         onclick="toggleShiny(this)"
+                         onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Fehler'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Fehler';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Fehler';">
                     <span class="shiny-indicator ${pokemon.shinyImage && pokemon.shinyImage.includes('sparkles-icon.png') ? 'custom-icon' : ''}">
                         ${pokemon.shinyImage && pokemon.shinyImage.includes('sparkles-icon.png') ? '<img src="sparkles-icon.png" alt="Sparkles Icon" width=32 height=32/>' : '✨'}
                     </span>
@@ -1080,7 +1294,7 @@
                 document.getElementById('status').textContent = translations[currentLang].loadingData; 
                 return; 
             }
-            if (pokemonData.length === 0) { // Data not loaded yet
+            if (pokemonData.length === 0) { 
                 document.getElementById('status').textContent = translations[currentLang].status_initial_prompt;
                 return;
             }
@@ -1092,6 +1306,7 @@
             lockedPokemonResultsContainer.innerHTML = "";
             resultsContainer.innerHTML = "";
 
+            // Display Locked Pokemon (always sorted by ID)
             let displayedLockedPokemons = [];
             if (lockedPokemonIds.size > 0) {
                 lockedPokemonIds.forEach(id => {
@@ -1108,6 +1323,7 @@
                 lockedPokemonSectionContainer.style.display = 'none';
             }
             
+            // Prepare and Generate New Pokemon List
             const filteredCandidates = filterPokemon();
             const availableForRandom = filteredCandidates.filter(p => !lockedPokemonIds.has(p.id));
             
@@ -1116,14 +1332,24 @@
                 if (countForNewPokemons >= availableForRandom.length) {
                     newRandomPokemonList = [...availableForRandom];
                 } else {
-                    newRandomPokemonList = [...availableForRandom].sort(() => 0.5 - Math.random()).slice(0, countForNewPokemons);
+                    // Select random ones *first* if not sorting randomly later
+                    if (currentSortCriteria !== 'random') {
+                         newRandomPokemonList = [...availableForRandom].sort(() => 0.5 - Math.random()).slice(0, countForNewPokemons);
+                    } else {
+                         newRandomPokemonList = [...availableForRandom]; // Will be shuffled later
+                    }
                 }
             }
+
+            // Sort the New Pokemon List
+            sortPokemonList(newRandomPokemonList);
             
-            newRandomPokemonList.sort((a,b) => a.id - b.id).forEach(p => {
+            // Display New Pokemon
+            newRandomPokemonList.forEach(p => {
                 resultsContainer.appendChild(createPokemonCard(p));
             });
 
+            // Update Status Message
             const numLocked = displayedLockedPokemons.length;
             const numGenerated = newRandomPokemonList.length;
             const numTotalPossibleNew = availableForRandom.length;
@@ -1133,28 +1359,74 @@
             } else if (numLocked > 0 && countForNewPokemons === 0) {
                 statusElement.textContent = translations[currentLang].status_locked_only(numLocked);
             } else if (numLocked > 0 && numGenerated > 0) {
-                if (numGenerated < countForNewPokemons && numGenerated === numTotalPossibleNew) { // Got all possible, but less than requested
-                     statusElement.textContent = translations[currentLang].status_locked_no_new_needed(numLocked, numGenerated);
-                } else {
-                     statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numGenerated, numTotalPossibleNew);
-                }
+                 statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numGenerated, numTotalPossibleNew);
             } else if (numLocked > 0 && numGenerated === 0 && countForNewPokemons > 0) {
                 statusElement.textContent = translations[currentLang].status_locked_no_new_match(numLocked);
             } else if (numLocked === 0 && numGenerated > 0) {
-                 if (numGenerated < countForNewPokemons && numGenerated === numTotalPossibleNew) { // Got all possible, but less than requested
-                     statusElement.textContent = translations[currentLang].status_generated_only(numGenerated, numTotalPossibleNew) + " (" + (translations[currentLang].status_locked_no_new_needed(0,0).split('.')[1] || "all matching displayed").trim() + ")";
-                 } else {
-                    statusElement.textContent = translations[currentLang].status_generated_only(numGenerated, numTotalPossibleNew);
-                 }
+                statusElement.textContent = translations[currentLang].status_generated_only(numGenerated, numTotalPossibleNew);
             } else if (numLocked === 0 && numGenerated === 0 && countForNewPokemons > 0) {
-                if (filterPokemon().length === 0) { // No pokemon match filters at all
+                if (filterPokemon().length === 0) { 
                     statusElement.textContent = translations[currentLang].status_no_pokemon_at_all;
-                } else { // Pokemon match filters, but none are new/available
+                } else { 
                     statusElement.textContent = translations[currentLang].status_no_new_match;
                 }
             } else {
-                statusElement.textContent = translations[currentLang].status_initial_prompt; // Fallback
+                statusElement.textContent = translations[currentLang].status_initial_prompt; 
             }
+            
+            updateSortIcons();
+            handleScroll(); 
+        }
+
+        function sortPokemonList(list) {
+            if (!list || list.length === 0) return;
+
+            const directionMultiplier = currentSortDirection === 'asc' ? 1 : -1;
+
+            switch (currentSortCriteria) {
+                case 'id':
+                    list.sort((a, b) => (a.id - b.id) * directionMultiplier);
+                    break;
+                case 'name':
+                    list.sort((a, b) => {
+                         const nameA = currentLang === 'de' && a.germanName ? a.germanName : a.name;
+                         const nameB = currentLang === 'de' && b.germanName ? b.germanName : b.name;
+                         return nameA.localeCompare(nameB, currentLang) * directionMultiplier;
+                    });
+                    break;
+                case 'type':
+                    list.sort((a, b) => {
+                        const typeA = a.types.length > 0 ? a.types[0] : '';
+                        const typeB = b.types.length > 0 ? b.types[0] : '';
+                        // Sorting by internal English type name for consistency
+                        return typeA.localeCompare(typeB) * directionMultiplier;
+                    });
+                    break;
+                case 'random':
+                    // Fisher-Yates (Knuth) Shuffle
+                    for (let i = list.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [list[i], list[j]] = [list[j], list[i]];
+                    }
+                    break;
+                default: // Default to ID Ascending
+                     list.sort((a, b) => a.id - b.id);
+            }
+        }
+
+        function updateSortIcons() {
+             document.querySelectorAll('.sort-icon').forEach(icon => {
+                icon.classList.remove('active');
+                if (icon.dataset.sort === currentSortCriteria) {
+                    icon.classList.add('active');
+                }
+             });
+
+             if (currentSortCriteria === 'random') {
+                 sortDirectionIcon.className = 'fas'; // Clear direction icon
+             } else {
+                 sortDirectionIcon.className = `fas ${currentSortDirection === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short'}`;
+             }
         }
 
 
@@ -1261,15 +1533,65 @@
                 });
             }
         }
+        
+        function handleScroll() {
+            const showSticky = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) && pokemonData.length > 0;
+            
+            if (scrollToTopBtn) {
+                scrollToTopBtn.style.display = showSticky ? "block" : "none";
+            }
 
+            if (controlsDiv && stickyGenerateBtn && mainGenerateBtn && sortingControls) {
+                const controlsBottom = controlsDiv.getBoundingClientRect().bottom;
+                const showTopControls = controlsBottom < 50 && pokemonData.length > 0;
+                
+                stickyGenerateBtn.style.display = showTopControls ? "block" : "none";
+                sortingControls.style.display = showTopControls ? "flex" : "none"; // Use flex for display
+                
+                const isDisabled = isLoading || pokemonData.length === 0;
+                stickyGenerateBtn.disabled = isDisabled; 
+                mainGenerateBtn.disabled = isDisabled; 
+            }
+        }
+
+        // --- Initialize Event Listeners ---
         document.getElementById('count').addEventListener('input', () => {
             countForNewPokemons = parseInt(document.getElementById('count').value) || 0;
         });
-        document.getElementById('generate').addEventListener('click', generateRandomPokemon);
+        mainGenerateBtn.addEventListener('click', generateRandomPokemon);
+        stickyGenerateBtn.addEventListener('click', generateRandomPokemon);
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
         document.querySelectorAll('.language-switcher img').forEach(img => {
             img.addEventListener('click', function() { setLanguage(this.dataset.lang); localStorage.setItem('language', this.dataset.lang); });
         });
         document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+        
+        // Sorting Controls Event Listeners
+        document.querySelectorAll('.sort-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const newSortCriteria = this.dataset.sort;
+
+                if (newSortCriteria === currentSortCriteria && newSortCriteria !== 'random') {
+                    // Toggle direction if same criteria (except random)
+                    currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+                } else {
+                    // Switch to new criteria, default to ascending
+                    currentSortCriteria = newSortCriteria;
+                    currentSortDirection = 'asc'; 
+                }
+                
+                // No direction toggle needed for random, it just shuffles
+                
+                updateSortIcons(); 
+                generateRandomPokemon(); // Regenerate and sort the #results list
+            });
+        });
+
+        window.addEventListener('scroll', handleScroll);
+
 
         window.addEventListener('load', function() {
              const savedDarkMode = localStorage.getItem('darkMode');
@@ -1293,7 +1615,12 @@
              initializeToggleAllIcons(); 
              initializeCollapsibles(); 
              setLanguage((savedLang && translations[savedLang]) ? savedLang : 'de'); 
+             
+             document.getElementById('status').textContent = translations[currentLang].status_initial_prompt;
+             updateSortIcons(); // Set initial sort icon state
+
              fetchPokemonDataFromAPI(); 
+             handleScroll(); 
         });
     </script>
 </body>
