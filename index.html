@@ -18,6 +18,8 @@
             --light-details-text: #666;
             --light-status-text: #666;
             --light-attribution-text: #888;
+            --light-filter-group-bg: #f9f9f9; /* New for filter group background */
+
             --dark-bg: #1a1a1a;
             --dark-text: #eee;
             --dark-controls-bg: #2a2a2a;
@@ -27,6 +29,8 @@
             --dark-details-text: #ccc;
             --dark-status-text: #ccc;
             --dark-attribution-text: #aaa;
+            --dark-filter-group-bg: #303030; /* New for filter group background in dark mode */
+
             --primary-color: #e3350d; /* Pokémon Red/Orange */
             --secondary-color: #3b5ca8; /* Pokémon Blue */
             --accent-color: #ff7863; /* Lighter accent for Dark Mode Header */
@@ -120,22 +124,63 @@
             background-color: var(--dark-controls-bg);
             box-shadow: 0 4px 10px rgba(255, 255, 255, 0.08);
         }
-
-        .control-group { margin-bottom: 20px; }
-        .control-group-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
+        
+        .global-collapse-controls {
+            margin-bottom: 15px;
+            text-align: right;
         }
-        .control-group-header label { margin-bottom: 0; }
+        #toggleAllFiltersBtn {
+            padding: 6px 12px;
+            font-size: 0.9em;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        body.dark-mode #toggleAllFiltersBtn {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+        }
 
-        /* Styles for the new toggle icon */
+
+        .control-group { 
+            margin-bottom: 10px; 
+            border: 1px solid var(--light-border);
+            border-radius: 8px;
+            padding: 10px 15px; /* Padding for the group */
+            background-color: var(--light-filter-group-bg);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode .control-group {
+            border-color: var(--dark-border);
+            background-color: var(--dark-filter-group-bg);
+        }
+        
+        .control-group-header {
+            display: flex; 
+            align-items: center;
+            /* margin-bottom: 8px; /* Handled by collapsible content padding */
+            cursor: pointer; 
+            /* padding: 5px 0; /* Removed, handled by control-group padding */
+        }
+        .control-group-header .label-and-toggle { /* Wrapper for label and toggle-all */
+            display: flex;
+            align-items: center;
+            flex-grow: 1; /* Allows this part to take available space */
+        }
+
+        .control-group-header label { 
+            margin-bottom: 0; 
+            /* flex-grow: 1; /* Removed, handled by parent wrapper */
+        }
+
         .toggle-all-icon {
-            font-size: 1.2em; /* Adjust size as needed */
+            font-size: 1.1em; 
             color: var(--secondary-color);
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 10px; /* Space from label */
+            /* margin-right: 5px; /* Removed, collapse icon is next */
             transition: color 0.2s;
         }
         .toggle-all-icon:hover {
@@ -148,33 +193,63 @@
             color: var(--primary-color);
         }
 
+        .collapse-icon {
+            /* margin-left: auto; /* Removed, will be positioned by flex order */
+            margin-left: 10px; /* Space from toggle-all or label */
+            font-size: 0.9em;
+            transition: transform 0.3s ease-in-out;
+        }
+        .control-group.is-closed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding-top 0.3s ease-out, padding-bottom 0.3s ease-out, margin-top 0.3s ease-out;
+            padding-top: 10px; 
+            padding-bottom: 5px; /* Reduced bottom padding */
+            margin-top: 5px; /* Small margin when open */
+        }
+        .control-group.is-closed .collapsible-content {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0; 
+        }
+
 
         label { display: block; margin-bottom: 8px; font-weight: 600; }
         body.dark-mode label { color: var(--dark-text); }
 
-        select, input[type="number"] {
+        select, input[type="number"].count-input { /* Added class to target count input specifically if needed */
             width: 100%;
             padding: 10px;
             border: 1px solid var(--light-border);
             border-radius: 5px;
-            margin-bottom: 15px;
-            background-color: var(--light-controls-bg);
+            /* margin-bottom: 15px; /* Removed, handled by control-group margin */
+            background-color: var(--light-bg); /* Match body bg for less emphasis */
             color: var(--light-text);
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
             box-sizing: border-box;
         }
 
-        body.dark-mode select, body.dark-mode input[type="number"] {
+        body.dark-mode select, body.dark-mode input[type="number"].count-input {
             border-color: var(--dark-border);
-            background-color: var(--dark-border);
+            background-color: var(--dark-bg);
             color: var(--dark-text);
         }
+        /* Specific styling for the count input group if it's not collapsible */
+        .control-group:not(.collapsible) {
+            background-color: transparent; /* No special background */
+            border: none;
+            padding: 0 0 15px 0; /* Only bottom padding */
+        }
+
 
         .checkbox-group {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjusted minmax for potentially longer labels */
-            gap: 10px 15px; 
-            margin-top: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); /* Adjusted for icons */
+            gap: 8px 12px; 
         }
 
         .checkbox-item { display: flex; align-items: center; }
@@ -187,37 +262,39 @@
             font-weight: 400; 
             cursor: pointer; 
             flex-grow: 1; 
-            display: block; 
+            display: flex; 
+            align-items: center;
         }
         
-        .type-filter-label {
-            padding: 5px 10px;
+        .type-icon {
+            width: 20px; 
+            height: 20px;
+            margin-right: 6px; 
+            vertical-align: middle;
+        }
+        .type-filter-label { 
+            padding: 3px 0px; 
             border-radius: 5px;
-            color: white !important; 
-            text-align: center;
-            font-weight: 600 !important; 
-            transition: outline 0.1s ease-in-out, opacity 0.2s;
+            text-align: left; 
+            font-weight: 400 !important; 
+            transition: outline 0.1s ease-in-out;
             border: 2px solid transparent; 
         }
-
-        .checkbox-item input[type="checkbox"]:checked + label.type-filter-label {
-            outline: 2px solid var(--primary-color);
-        }
-        body.dark-mode .checkbox-item input[type="checkbox"]:checked + label.type-filter-label {
-            outline-color: var(--accent-color); 
-        }
+        .checkbox-item input[type="checkbox"]:checked + label { }
+        .checkbox-item input[type="checkbox"].type-checkbox:checked + label .type-filter-label { }
+        body.dark-mode .checkbox-item input[type="checkbox"]:checked + label { }
 
 
-        button {
+        button#generate { /* Specific ID for generate button */
             background-color: var(--secondary-color); color: white; border: none;
             padding: 12px 20px; border-radius: 5px; cursor: pointer;
             font-size: 16px; font-weight: 600;
             transition: background-color 0.3s, transform 0.1s ease-in-out;
-            width: 100%; box-sizing: border-box;
+            width: 100%; box-sizing: border-box; margin-top: 20px; 
         }
-        button:hover { background-color: #2a4b8d; transform: translateY(-2px); }
-        button:active { transform: translateY(0); }
-        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        button#generate:hover { background-color: #c02d0a; transform: translateY(-2px); }
+        button#generate:active { transform: translateY(0); }
+        button#generate:disabled { background-color: #ccc; cursor: not-allowed; }
 
         #results {
             display: grid;
@@ -324,7 +401,7 @@
         body.dark-mode .theme-switcher i { color: var(--dark-text); }
         .theme-switcher i:hover { transform: rotate(15deg); }
 
-        /* Type colors */
+        /* Type colors for card badges */
         .type-normal { background-color: #A8A878; } .type-fire { background-color: #F08030; }
         .type-water { background-color: #6890F0; } .type-electric { background-color: #F8D030; }
         .type-grass { background-color: #78C850; } .type-ice { background-color: #98D8D8; }
@@ -340,9 +417,8 @@
             .top-right-icons { top: 10px; right: 10px; gap: 10px; }
             .language-switcher img, .theme-switcher i { font-size: 20px; width: 20px; }
             .controls { padding: 15px; }
-            .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Adjusted for potentially longer gen labels */ }
-            .type-filter-label { padding: 4px 8px; font-size: 0.9em;}
-            button { padding: 10px 15px; }
+            .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            button#generate { padding: 10px 15px; }
             #results { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
             .pokemon-card { border-radius: 8px; }
             .pokemon-image { height: 120px; }
@@ -353,13 +429,15 @@
             .type-badge { padding: 3px 8px; font-size: 0.8em; margin-right: 5px; }
             #status { margin: 15px 0; font-size: 0.9em; }
             .attribution { margin-top: 20px; font-size: 0.75em; }
-            .control-group-header { flex-direction: column; align-items: flex-start; }
-            .toggle-all-icon { margin-left: 0; margin-top: 5px; font-size: 1.3em; } 
+            .toggle-all-icon { margin-left: 8px; margin-top: 0; font-size: 1.1em; } 
+            .collapse-icon { margin-left: 10px; }
         }
          @media (max-width: 480px) {
-             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } /* Adjusted for gen labels */
+             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); } 
              .loading-progress-text { font-size: 0.8em; }
-             .type-filter-label { padding: 3px 6px; font-size: 0.85em;}
+             .checkbox-item label { font-size: 0.9em; } 
+             .type-icon { width: 18px; height: 18px; margin-right: 4px; }
+             .control-group { padding: 8px 10px; }
          }
     </style>
 </head>
@@ -385,88 +463,116 @@
     </div>
 
     <div class="controls">
-        <div class="control-group">
-            <label for="count" data-i18n="countLabel">Anzahl der zu generierenden Pokémon:</label>
-            <input type="number" id="count" min="1" max="100" value="10">
+        <div class="control-group"> <label for="count" data-i18n="countLabel">Anzahl der zu generierenden Pokémon:</label>
+            <input type="number" id="count" class="count-input" min="1" max="100" value="10">
         </div>
 
-        <div class="control-group">
+        <div class="global-collapse-controls">
+            <button id="toggleAllFiltersBtn" data-i18n="expandAllLabel">Alle ausklappen</button>
+        </div>
+
+        <div class="control-group collapsible"> 
             <div class="control-group-header">
-                <label data-i18n="generationLabel">Generation:</label>
-                <i class="toggle-all-icon" data-group="gen-checkbox" title=""></i>
+                <div class="label-and-toggle">
+                    <label data-i18n="generationLabel">Generation:</label>
+                    <i class="toggle-all-icon" data-group="gen-checkbox" title=""></i>
+                </div>
+                <i class="fas fa-chevron-down collapse-icon"></i>
             </div>
-            <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="gen1" class="gen-checkbox" value="1"><label for="gen1" data-i18n="gen1_label">Gen 1 (Kanto)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen2" class="gen-checkbox" value="2"><label for="gen2" data-i18n="gen2_label">Gen 2 (Johto)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen3" class="gen-checkbox" value="3"><label for="gen3" data-i18n="gen3_label">Gen 3 (Hoenn)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen4" class="gen-checkbox" value="4"><label for="gen4" data-i18n="gen4_label">Gen 4 (Sinnoh)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen5" class="gen-checkbox" value="5"><label for="gen5" data-i18n="gen5_label">Gen 5 (Unova)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen6" class="gen-checkbox" value="6"><label for="gen6" data-i18n="gen6_label">Gen 6 (Kalos)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen7" class="gen-checkbox" value="7"><label for="gen7" data-i18n="gen7_label">Gen 7 (Alola)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen8" class="gen-checkbox" value="8"><label for="gen8" data-i18n="gen8_label">Gen 8 (Galar)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="gen9" class="gen-checkbox" value="9"><label for="gen9" data-i18n="gen9_label">Gen 9 (Paldea)</label></div>
+            <div class="collapsible-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" id="gen1" class="gen-checkbox" value="1"><label for="gen1" data-i18n="gen1_label">Gen 1 (Kanto)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen2" class="gen-checkbox" value="2"><label for="gen2" data-i18n="gen2_label">Gen 2 (Johto)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen3" class="gen-checkbox" value="3"><label for="gen3" data-i18n="gen3_label">Gen 3 (Hoenn)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen4" class="gen-checkbox" value="4"><label for="gen4" data-i18n="gen4_label">Gen 4 (Sinnoh)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen5" class="gen-checkbox" value="5"><label for="gen5" data-i18n="gen5_label">Gen 5 (Unova)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen6" class="gen-checkbox" value="6"><label for="gen6" data-i18n="gen6_label">Gen 6 (Kalos)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen7" class="gen-checkbox" value="7"><label for="gen7" data-i18n="gen7_label">Gen 7 (Alola)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen8" class="gen-checkbox" value="8"><label for="gen8" data-i18n="gen8_label">Gen 8 (Galar)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="gen9" class="gen-checkbox" value="9"><label for="gen9" data-i18n="gen9_label">Gen 9 (Paldea)</label></div>
+                </div>
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group collapsible"> 
             <div class="control-group-header">
-                <label data-i18n="typesLabel">Typen:</label>
-                 <i class="toggle-all-icon" data-group="type-checkbox" title=""></i>
+                <div class="label-and-toggle">
+                    <label data-i18n="typesLabel">Typen:</label>
+                    <i class="toggle-all-icon" data-group="type-checkbox" title=""></i>
+                </div>
+                <i class="fas fa-chevron-down collapse-icon"></i>
             </div>
-            <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="normal" class="type-checkbox"><label for="normal" data-i18n="type_normal">Normal</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="fire" class="type-checkbox"><label for="fire" data-i18n="type_fire">Feuer</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="water" class="type-checkbox"><label for="water" data-i18n="type_water">Wasser</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="electric" class="type-checkbox"><label for="electric" data-i18n="type_electric">Elektro</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="grass" class="type-checkbox"><label for="grass" data-i18n="type_grass">Pflanze</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="ice" class="type-checkbox"><label for="ice" data-i18n="type_ice">Eis</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="fighting" class="type-checkbox"><label for="fighting" data-i18n="type_fighting">Kampf</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="poison" class="type-checkbox"><label for="poison" data-i18n="type_poison">Gift</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="ground" class="type-checkbox"><label for="ground" data-i18n="type_ground">Boden</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="flying" class="type-checkbox"><label for="flying" data-i18n="type_flying">Flug</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="psychic" class="type-checkbox"><label for="psychic" data-i18n="type_psychic">Psycho</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="bug" class="type-checkbox"><label for="bug" data-i18n="type_bug">Käfer</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="rock" class="type-checkbox"><label for="rock" data-i18n="type_rock">Gestein</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="ghost" class="type-checkbox"><label for="ghost" data-i18n="type_ghost">Geist</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="dragon" class="type-checkbox"><label for="dragon" data-i18n="type_dragon">Drache</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="dark" class="type-checkbox"><label for="dark" data-i18n="type_dark">Unlicht</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="steel" class="type-checkbox"><label for="steel" data-i18n="type_steel">Stahl</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="fairy" class="type-checkbox"><label for="fairy" data-i18n="type_fairy">Fee</label></div>
+            <div class="collapsible-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" id="normal" class="type-checkbox"><label for="normal"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/normal.svg" class="type-icon" alt="Normal type icon"><span class="type-filter-label" data-i18n="type_normal">Normal</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="fire" class="type-checkbox"><label for="fire"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/fire.svg" class="type-icon" alt="Fire type icon"><span class="type-filter-label" data-i18n="type_fire">Feuer</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="water" class="type-checkbox"><label for="water"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/water.svg" class="type-icon" alt="Water type icon"><span class="type-filter-label" data-i18n="type_water">Wasser</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="electric" class="type-checkbox"><label for="electric"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/electric.svg" class="type-icon" alt="Electric type icon"><span class="type-filter-label" data-i18n="type_electric">Elektro</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="grass" class="type-checkbox"><label for="grass"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/grass.svg" class="type-icon" alt="Grass type icon"><span class="type-filter-label" data-i18n="type_grass">Pflanze</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="ice" class="type-checkbox"><label for="ice"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/ice.svg" class="type-icon" alt="Ice type icon"><span class="type-filter-label" data-i18n="type_ice">Eis</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="fighting" class="type-checkbox"><label for="fighting"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/fighting.svg" class="type-icon" alt="Fighting type icon"><span class="type-filter-label" data-i18n="type_fighting">Kampf</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="poison" class="type-checkbox"><label for="poison"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/poison.svg" class="type-icon" alt="Poison type icon"><span class="type-filter-label" data-i18n="type_poison">Gift</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="ground" class="type-checkbox"><label for="ground"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/ground.svg" class="type-icon" alt="Ground type icon"><span class="type-filter-label" data-i18n="type_ground">Boden</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="flying" class="type-checkbox"><label for="flying"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/flying.svg" class="type-icon" alt="Flying type icon"><span class="type-filter-label" data-i18n="type_flying">Flug</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="psychic" class="type-checkbox"><label for="psychic"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/psychic.svg" class="type-icon" alt="Psychic type icon"><span class="type-filter-label" data-i18n="type_psychic">Psycho</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="bug" class="type-checkbox"><label for="bug"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/bug.svg" class="type-icon" alt="Bug type icon"><span class="type-filter-label" data-i18n="type_bug">Käfer</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="rock" class="type-checkbox"><label for="rock"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/rock.svg" class="type-icon" alt="Rock type icon"><span class="type-filter-label" data-i18n="type_rock">Gestein</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="ghost" class="type-checkbox"><label for="ghost"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/ghost.svg" class="type-icon" alt="Ghost type icon"><span class="type-filter-label" data-i18n="type_ghost">Geist</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="dragon" class="type-checkbox"><label for="dragon"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/dragon.svg" class="type-icon" alt="Dragon type icon"><span class="type-filter-label" data-i18n="type_dragon">Drache</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="dark" class="type-checkbox"><label for="dark"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/dark.svg" class="type-icon" alt="Dark type icon"><span class="type-filter-label" data-i18n="type_dark">Unlicht</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="steel" class="type-checkbox"><label for="steel"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/steel.svg" class="type-icon" alt="Steel type icon"><span class="type-filter-label" data-i18n="type_steel">Stahl</span></label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="fairy" class="type-checkbox"><label for="fairy"><img src="https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/fairy.svg" class="type-icon" alt="Fairy type icon"><span class="type-filter-label" data-i18n="type_fairy">Fee</span></label></div>
+                </div>
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group collapsible"> 
             <div class="control-group-header">
-                <label data-i18n="evolutionPositionLabel">Evolution (Position in Kette):</label>
-                <i class="toggle-all-icon" data-group="evo-position-checkbox" title=""></i>
+                <div class="label-and-toggle">
+                    <label data-i18n="evolutionPositionLabel">Evolution (Position in Kette):</label>
+                    <i class="toggle-all-icon" data-group="evo-position-checkbox" title=""></i>
+                </div>
+                <i class="fas fa-chevron-down collapse-icon"></i>
             </div>
-            <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="basic" class="evo-position-checkbox" value="0"><label for="basic" data-i18n="evo_basic">Grundform</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="stage1" class="evo-position-checkbox" value="1"><label for="stage1" data-i18n="evo_stage1">Erste Entwicklung</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="stage2" class="evo-position-checkbox" value="2"><label for="stage2" data-i18n="evo_stage2">Zweite Entwicklung</label></div>
+            <div class="collapsible-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" id="basic" class="evo-position-checkbox" value="0"><label for="basic" data-i18n="evo_basic">Grundform</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="stage1" class="evo-position-checkbox" value="1"><label for="stage1" data-i18n="evo_stage1">Erste Entwicklung</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="stage2" class="evo-position-checkbox" value="2"><label for="stage2" data-i18n="evo_stage2">Zweite Entwicklung</label></div>
+                </div>
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group collapsible"> 
             <div class="control-group-header">
-                <label data-i18n="evolutionChainLengthLabel">Anzahl Entwicklungstufen (Gesamtlänge der Reihe):</label>
-                <i class="toggle-all-icon" data-group="chain-length-checkbox" title=""></i>
+                <div class="label-and-toggle">
+                    <label data-i18n="evolutionChainLengthLabel">Anzahl Entwicklungstufen (Gesamtlänge der Reihe):</label>
+                    <i class="toggle-all-icon" data-group="chain-length-checkbox" title=""></i>
+                </div>
+                <i class="fas fa-chevron-down collapse-icon"></i>
             </div>
-            <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="chainLength1" class="chain-length-checkbox" value="1"><label for="chainLength1" data-i18n="chain_length1">Keine Entwicklung (1 Stufe)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="chainLength2" class="chain-length-checkbox" value="2"><label for="chainLength2" data-i18n="chain_length2">Eine Entwicklung (2 Stufen)</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="chainLength3" class="chain-length-checkbox" value="3"><label for="chainLength3" data-i18n="chain_length3">Zwei Entwicklungen (3 Stufen)</label></div>
+            <div class="collapsible-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" id="chainLength1" class="chain-length-checkbox" value="1"><label for="chainLength1" data-i18n="chain_length1">Keine Entwicklung (1 Stufe)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="chainLength2" class="chain-length-checkbox" value="2"><label for="chainLength2" data-i18n="chain_length2">Eine Entwicklung (2 Stufen)</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="chainLength3" class="chain-length-checkbox" value="3"><label for="chainLength3" data-i18n="chain_length3">Zwei Entwicklungen (3 Stufen)</label></div>
+                </div>
             </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group collapsible"> 
              <div class="control-group-header">
-                <label data-i18n="specialPokemonLabel">Spezielle Pokémon:</label>
-                <i class="toggle-all-icon" data-group="special-checkbox" title=""></i>
+                <div class="label-and-toggle">
+                    <label data-i18n="specialPokemonLabel">Spezielle Pokémon:</label>
+                    <i class="toggle-all-icon" data-group="special-checkbox" title=""></i>
+                </div>
+                <i class="fas fa-chevron-down collapse-icon"></i>
             </div>
-            <div class="checkbox-group">
-                <div class="checkbox-item"><input type="checkbox" id="includeLegendary" class="special-checkbox" checked><label for="includeLegendary" data-i18n="includeLegendaryLabel">Legendäre Pokémon</label></div>
-                <div class="checkbox-item"><input type="checkbox" id="includeMythical" class="special-checkbox" checked><label for="includeMythical" data-i18n="includeMythicalLabel">Mysteriöse Pokémon</label></div>
+            <div class="collapsible-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-item"><input type="checkbox" id="includeLegendary" class="special-checkbox" checked><label for="includeLegendary" data-i18n="includeLegendaryLabel">Legendäre Pokémon</label></div>
+                    <div class="checkbox-item"><input type="checkbox" id="includeMythical" class="special-checkbox" checked><label for="includeMythical" data-i18n="includeMythicalLabel">Mysteriöse Pokémon</label></div>
+                </div>
             </div>
         </div>
 
@@ -485,15 +591,15 @@
         const POKEMON_LIMIT = 1300; 
         const BASE_API_URL = 'https://pokeapi.co/api/v2/';
         const POKEMONDB_URL = 'https://pokemondb.net/pokedex/';
-        const CACHE_KEY = 'pokemonGeneratorCache_v2'; 
+        const CACHE_KEY = 'pokemonGeneratorCache_v4'; // Cache key updated
 
         const loadingProgressContainer = document.getElementById('loading-progress-container');
         const loadingProgressBarElement = document.getElementById('loading-progress-bar');
         const loadingProgressTextElement = document.getElementById('loading-progress-text');
 
-        // Define Font Awesome classes for toggle states
         const ICON_SELECT_ALL = 'fa-solid fa-square-check';
         const ICON_DESELECT_ALL = 'fa-solid fa-square-minus';
+        let allFiltersExpanded = true; // Track global collapse state
 
         const translations = {
             de: {
@@ -504,16 +610,9 @@
                 typesLabel: "Typen:",
                 tooltipSelectAll: "Alle auswählen", 
                 tooltipDeselectAll: "Alle abwählen", 
-                // Generation labels with regions (German)
-                gen1_label: "Gen 1 (Kanto)",
-                gen2_label: "Gen 2 (Johto)",
-                gen3_label: "Gen 3 (Hoenn)",
-                gen4_label: "Gen 4 (Sinnoh)",
-                gen5_label: "Gen 5 (Einall)", // German name for Unova
-                gen6_label: "Gen 6 (Kalos)",
-                gen7_label: "Gen 7 (Alola)",
-                gen8_label: "Gen 8 (Galar)",
-                gen9_label: "Gen 9 (Paldea)",
+                expandAllLabel: "Alle ausklappen",
+                collapseAllLabel: "Alle einklappen",
+                gen1_label: "Gen 1 (Kanto)", gen2_label: "Gen 2 (Johto)", gen3_label: "Gen 3 (Hoenn)", gen4_label: "Gen 4 (Sinnoh)", gen5_label: "Gen 5 (Einall)", gen6_label: "Gen 6 (Kalos)", gen7_label: "Gen 7 (Alola)", gen8_label: "Gen 8 (Galar)", gen9_label: "Gen 9 (Paldea)",
                 type_normal: "Normal", type_fire: "Feuer", type_water: "Wasser", type_electric: "Elektro", type_grass: "Pflanze", type_ice: "Eis", type_fighting: "Kampf", type_poison: "Gift", type_ground: "Boden", type_flying: "Flug", type_psychic: "Psycho", type_bug: "Käfer", type_rock: "Gestein", type_ghost: "Geist", type_dragon: "Drache", type_dark: "Unlicht", type_steel: "Stahl", type_fairy: "Fee",
                 evolutionPositionLabel: "Evolution (Position in Kette):",
                 evo_basic: "Grundform", evo_stage1: "Erste Entwicklung", evo_stage2: "Zweite Entwicklung",
@@ -540,16 +639,9 @@
                 typesLabel: "Types:",
                 tooltipSelectAll: "Select All", 
                 tooltipDeselectAll: "Deselect All",
-                // Generation labels with regions (English)
-                gen1_label: "Gen 1 (Kanto)",
-                gen2_label: "Gen 2 (Johto)",
-                gen3_label: "Gen 3 (Hoenn)",
-                gen4_label: "Gen 4 (Sinnoh)",
-                gen5_label: "Gen 5 (Unova)",
-                gen6_label: "Gen 6 (Kalos)",
-                gen7_label: "Gen 7 (Alola)",
-                gen8_label: "Gen 8 (Galar)",
-                gen9_label: "Gen 9 (Paldea)",
+                expandAllLabel: "Expand All",
+                collapseAllLabel: "Collapse All",
+                gen1_label: "Gen 1 (Kanto)", gen2_label: "Gen 2 (Johto)", gen3_label: "Gen 3 (Hoenn)", gen4_label: "Gen 4 (Sinnoh)", gen5_label: "Gen 5 (Unova)", gen6_label: "Gen 6 (Kalos)", gen7_label: "Gen 7 (Alola)", gen8_label: "Gen 8 (Galar)", gen9_label: "Gen 9 (Paldea)",
                 type_normal: "Normal", type_fire: "Fire", type_water: "Water", type_electric: "Electric", type_grass: "Grass", type_ice: "Ice", type_fighting: "Fighting", type_poison: "Poison", type_ground: "Ground", type_flying: "Flying", type_psychic: "Psychic", type_bug: "Bug", type_rock: "Rock", type_ghost: "Ghost", type_dragon: "Dragon", type_dark: "Dark", type_steel: "Steel", type_fairy: "Fairy",
                 evolutionPositionLabel: "Evolution (Position in chain):",
                 evo_basic: "Basic Form", evo_stage1: "First Evolution", evo_stage2: "Second Evolution",
@@ -571,29 +663,18 @@
         };
         let currentLang = 'de';
 
-        // Function to update the toggle icon for a specific group
         function updateToggleIcon(groupClass) {
             const iconElement = document.querySelector(`.toggle-all-icon[data-group="${groupClass}"]`);
             if (!iconElement) return;
-
             const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
             if (checkboxesInGroup.length === 0) { 
                 iconElement.className = 'toggle-all-icon'; 
-                iconElement.title = '';
-                return;
+                iconElement.title = ''; return;
             }
-            
             const allSelected = Array.from(checkboxesInGroup).every(cb => cb.checked);
-
-            if (allSelected) {
-                iconElement.className = `toggle-all-icon ${ICON_DESELECT_ALL}`;
-                iconElement.title = translations[currentLang].tooltipDeselectAll;
-            } else {
-                iconElement.className = `toggle-all-icon ${ICON_SELECT_ALL}`;
-                iconElement.title = translations[currentLang].tooltipSelectAll;
-            }
+            iconElement.className = `toggle-all-icon ${allSelected ? ICON_DESELECT_ALL : ICON_SELECT_ALL}`;
+            iconElement.title = translations[currentLang][allSelected ? 'tooltipDeselectAll' : 'tooltipSelectAll'];
         }
-
 
         function setLanguage(lang) {
             currentLang = lang;
@@ -604,56 +685,34 @@
                     if (key === "attributionText" || key === "siteDescription") {
                          element.innerHTML = translations[lang][key];
                     } else {
-                        // Check if this element is a generation label
-                        if (key.startsWith("gen") && key.endsWith("_label")) {
-                             element.textContent = translations[lang][key];
-                        } else if (element.tagName === 'LABEL' && element.htmlFor && translations[lang][`type_${element.htmlFor}`]) {
-                            // This handles type labels specifically if they don't have data-i18n
-                            // but it's better to add data-i18n to them directly.
-                            // For now, we rely on the specific loop below for types.
-                            element.textContent = translations[lang][key]; // Fallback if it's a generic label
-                        }
-                        else {
-                             element.textContent = translations[lang][key];
-                        }
+                         element.textContent = translations[lang][key];
                     }
                 }
             });
-            
+            // Update global collapse button text
+            const toggleAllFiltersButton = document.getElementById('toggleAllFiltersBtn');
+            if (toggleAllFiltersButton) {
+                toggleAllFiltersButton.textContent = translations[currentLang][allFiltersExpanded ? 'collapseAllLabel' : 'expandAllLabel'];
+                toggleAllFiltersButton.setAttribute('data-i18n', allFiltersExpanded ? 'collapseAllLabel' : 'expandAllLabel'); // Update for future direct translations
+            }
+
             document.title = translations[lang].appTitle;
-
-            // Update type checkbox labels
-            document.querySelectorAll('.type-checkbox').forEach(checkbox => {
-                 const label = document.querySelector(`label[for="${checkbox.id}"]`);
-                 if (label && translations[lang] && translations[lang][`type_${checkbox.id}`]) {
-                      label.textContent = translations[lang][`type_${checkbox.id}`];
-                 }
-            });
-            // Update generation checkbox labels (already handled by the main [data-i18n] loop if keys are set on labels)
-            // We ensure this by adding data-i18n to the generation labels in HTML
-
-            initializeTypeCheckboxStyles();
-
             document.querySelectorAll('.toggle-all-icon').forEach(icon => {
-                if (icon.dataset.group) {
-                    updateToggleIcon(icon.dataset.group);
-                }
+                if (icon.dataset.group) updateToggleIcon(icon.dataset.group);
             });
-
-
             const statusElement = document.getElementById('status');
             const otherLang = currentLang === 'de' ? 'en' : 'de';
-            if (statusElement.textContent.includes(translations[otherLang].loadedFromCache.split(' ')[2])) {
+            if (statusElement.textContent.includes(translations[otherLang]?.loadedFromCache?.split(' ')[2] || "XXX")) { 
                 statusElement.textContent = translations[lang].loadedFromCache;
             } else if (pokemonData.length > 0 && (statusElement.textContent.includes("Pokémon") || statusElement.textContent.includes("Pokemon"))) {
                  statusElement.textContent = `${pokemonData.length} Pokémon ${lang === 'de' ? 'geladen!' : 'loaded!'}`;
-            } else if (statusElement.textContent.includes(translations[otherLang].generatedStatus(0,0).split(" ")[1])) { 
+            } else if (statusElement.textContent.includes(translations[otherLang]?.generatedStatus(0,0)?.split(" ")[1] || "YYY")) { 
                  const parts = statusElement.textContent.match(/(\d+)\s.*?\s(\d+)/);
                  if (parts && parts.length === 3) {
                     const generatedCount = parseInt(parts[1]);
                     statusElement.textContent = translations[lang].generatedStatus(generatedCount, filterPokemon().length); 
                  }
-            } else if (statusElement.textContent.includes(translations[otherLang].noPokemonFound.split(" ")[0])) { 
+            } else if (statusElement.textContent.includes(translations[otherLang]?.noPokemonFound?.split(" ")[0] || "ZZZ")) { 
                  statusElement.textContent = translations[lang].noPokemonFound;
             } else if (isLoading && loadingProgressContainer.style.display === 'none') {
                  statusElement.textContent = translations[lang].loadingData;
@@ -701,7 +760,6 @@
             const statusElement = document.getElementById('status');
             isLoading = true;
             document.getElementById('generate').disabled = true;
-
             const cachedDataJSON = localStorage.getItem(CACHE_KEY);
             if (cachedDataJSON) {
                 try {
@@ -709,56 +767,35 @@
                     if (cachedData.pokemon && cachedData.pokemon.length > 0) {
                         pokemonData.push(...cachedData.pokemon);
                         statusElement.textContent = translations[currentLang].loadedFromCache;
-                        console.log(`Loaded ${pokemonData.length} Pokémon from cache.`);
                         if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
-                        isLoading = false;
-                        document.getElementById('generate').disabled = false;
-                        generateRandomPokemon();
-                        return; 
+                        isLoading = false; document.getElementById('generate').disabled = false;
+                        generateRandomPokemon(); return; 
                     }
-                } catch (e) {
-                    console.error("Error parsing cached Pokémon data:", e);
-                    localStorage.removeItem(CACHE_KEY);
-                }
+                } catch (e) { console.error("Error parsing cached Pokémon data:", e); localStorage.removeItem(CACHE_KEY); }
             }
-
             statusElement.textContent = translations[currentLang].loadingData;
             if (loadingProgressContainer) loadingProgressContainer.style.display = 'block';
             if (loadingProgressBarElement) loadingProgressBarElement.style.width = '0%';
             if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(0, POKEMON_LIMIT);
-
-            let loadedCount = 0;
-            let totalToLoad = 0;
-            let nonDefaultCount = 0;
-            let errorInFetchCount = 0;
-
+            let loadedCount = 0, totalToLoad = 0, nonDefaultCount = 0, errorInFetchCount = 0;
             try {
                 const response = await fetch(`${BASE_API_URL}pokemon?limit=${POKEMON_LIMIT}`);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 totalToLoad = data.results.length;
-                console.log(`Attempting to process ${totalToLoad} entries from API list.`);
                 if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(0, totalToLoad);
-
                 const pokemonDetailsPromises = data.results.map(async (p) => {
                     let pokemonDetail = null;
                     try {
                         const detailResponse = await fetch(p.url);
                         if (!detailResponse.ok) throw new Error(`Detail fetch for ${p.name} failed: ${detailResponse.status}`);
                         const detailData = await detailResponse.json();
-                        
-                        if (detailData.is_default === false) {
-                            nonDefaultCount++;
-                            return null;
-                        }
-
+                        if (detailData.is_default === false) { nonDefaultCount++; return null; }
                         const speciesResponse = await fetch(detailData.species.url);
                         if (!speciesResponse.ok) throw new Error(`Species fetch for ${p.name} failed: ${speciesResponse.status}`);
                         const speciesData = await speciesResponse.json();
-
                         const generationUrl = speciesData.generation ? speciesData.generation.url : null;
                         let generation = generationUrl ? parseInt(generationUrl.match(/\/generation\/(\d+)\//)?.[1] || 0) : null;
-
                         let evolutionChainData = null, totalStages = 0;
                         if (speciesData.evolution_chain && speciesData.evolution_chain.url) {
                             const chainUrl = speciesData.evolution_chain.url;
@@ -766,19 +803,14 @@
                             else {
                                 try {
                                     const chainResponse = await fetch(chainUrl);
-                                    if (chainResponse.ok) {
-                                        evolutionChainData = await chainResponse.json();
-                                        evolutionChains.set(chainUrl, evolutionChainData);
-                                    }
+                                    if (chainResponse.ok) { evolutionChainData = await chainResponse.json(); evolutionChains.set(chainUrl, evolutionChainData); }
                                 } catch (chainError) { console.warn(`Evo chain fetch error for ${p.name}:`, chainError); }
                             }
                             if (evolutionChainData) totalStages = countStagesInChain(evolutionChainData.chain);
                         } else if (!speciesData.evolves_from_species) totalStages = 1;
-
                         let evolutionStage = -1;
                         if (evolutionChainData) evolutionStage = getEvolutionStage(detailData.name, evolutionChainData.chain);
                         else if (!speciesData.evolves_from_species) evolutionStage = 0;
-                        
                         pokemonDetail = {
                             id: detailData.id, name: detailData.name,
                             germanName: speciesData.names.find(name => name.language.name === 'de')?.name || null,
@@ -788,10 +820,8 @@
                             generation, evolutionStage, totalStages,
                             isLegendary: speciesData.is_legendary, isMythical: speciesData.is_mythical
                         };
-                    } catch (error) { 
-                        console.warn(`Error processing ${p.name}: ${error.message}`);
-                        errorInFetchCount++;
-                    } finally {
+                    } catch (error) { console.warn(`Error processing ${p.name}: ${error.message}`); errorInFetchCount++; } 
+                    finally {
                         loadedCount++;
                         const progressPercent = totalToLoad > 0 ? (loadedCount / totalToLoad) * 100 : 0;
                         if (loadingProgressBarElement) loadingProgressBarElement.style.width = `${progressPercent}%`;
@@ -799,101 +829,56 @@
                     }
                     return pokemonDetail;
                 });
-
                 const results = await Promise.all(pokemonDetailsPromises);
                 pokemonData.push(...results.filter(p => p !== null));
                 pokemonData.sort((a, b) => a.id - b.id);
-                
-                console.log(`Total entries processed from API list: ${totalToLoad}`);
-                console.log(`Filtered out as non-default forms: ${nonDefaultCount}`);
-                console.log(`Failed to process due to errors: ${errorInFetchCount}`);
-                console.log(`Successfully processed and added to pokemonData: ${pokemonData.length}`);
-                
-                try {
-                    const dataToCache = { pokemon: pokemonData };
-                    localStorage.setItem(CACHE_KEY, JSON.stringify(dataToCache));
-                    console.log("Pokémon data saved to cache.");
-                } catch (e) {
-                    console.error("Error saving Pokémon data to cache:", e);
-                }
-
+                try { localStorage.setItem(CACHE_KEY, JSON.stringify({ pokemon: pokemonData })); } 
+                catch (e) { console.error("Error saving Pokémon data to cache:", e); }
                 statusElement.textContent = `${pokemonData.length} Pokémon ${currentLang === 'de' ? 'geladen!' : 'loaded!'}`;
-            } catch (error) {
-                console.error("Fehler beim Laden der Pokémon-Daten von der PokeAPI:", error);
-                statusElement.textContent = `${translations[currentLang].loadingError} ${error.message}`;
-            } finally {
-                isLoading = false;
-                document.getElementById('generate').disabled = false;
-                if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
-                generateRandomPokemon();
-            }
+            } catch (error) { console.error("Fehler beim Laden der Pokémon-Daten:", error); statusElement.textContent = `${translations[currentLang].loadingError} ${error.message}`; } 
+            finally { isLoading = false; document.getElementById('generate').disabled = false; if (loadingProgressContainer) loadingProgressContainer.style.display = 'none'; generateRandomPokemon(); }
         }
 
         function filterPokemon() {
             let filtered = [...pokemonData];
-
             const selectedGens = Array.from(document.querySelectorAll('.gen-checkbox:checked')).map(cb => parseInt(cb.value));
             if (selectedGens.length === 0 && document.querySelectorAll('.gen-checkbox').length > 0) return []; 
-            if (selectedGens.length > 0) { 
-                 filtered = filtered.filter(p => p.generation !== null && selectedGens.includes(p.generation));
-            }
-
+            if (selectedGens.length > 0) filtered = filtered.filter(p => p.generation !== null && selectedGens.includes(p.generation));
+            
             const selectedTypes = Array.from(document.querySelectorAll('.type-checkbox:checked')).map(cb => cb.id);
             if (selectedTypes.length === 0 && document.querySelectorAll('.type-checkbox').length > 0) return [];
-            if (selectedTypes.length > 0) {
-                filtered = filtered.filter(p => p.types.some(type => selectedTypes.includes(type)));
-            }
+            if (selectedTypes.length > 0) filtered = filtered.filter(p => p.types.some(type => selectedTypes.includes(type)));
 
             const selectedEvoPositions = Array.from(document.querySelectorAll('.evo-position-checkbox:checked')).map(cb => parseInt(cb.value));
             if (selectedEvoPositions.length === 0 && document.querySelectorAll('.evo-position-checkbox').length > 0) return [];
-            if (selectedEvoPositions.length > 0) {
-                filtered = filtered.filter(p => selectedEvoPositions.includes(p.evolutionStage));
-            }
+            if (selectedEvoPositions.length > 0) filtered = filtered.filter(p => selectedEvoPositions.includes(p.evolutionStage));
             
             const selectedChainLengths = Array.from(document.querySelectorAll('.chain-length-checkbox:checked')).map(cb => parseInt(cb.value));
             if (selectedChainLengths.length === 0 && document.querySelectorAll('.chain-length-checkbox').length > 0) return [];
-            if (selectedChainLengths.length > 0) {
-                 filtered = filtered.filter(p => selectedChainLengths.includes(p.totalStages));
-            }
+            if (selectedChainLengths.length > 0) filtered = filtered.filter(p => selectedChainLengths.includes(p.totalStages));
 
             const includeLegendary = document.getElementById('includeLegendary').checked;
             const includeMythical = document.getElementById('includeMythical').checked;
-
             const specialCheckboxesExist = document.querySelectorAll('.special-checkbox').length > 0;
-            if (specialCheckboxesExist && !includeLegendary && !includeMythical) {
-                 filtered = filtered.filter(p => !p.isLegendary && !p.isMythical);
-            } else {
-                if (document.getElementById('includeLegendary') && !includeLegendary) {
-                    filtered = filtered.filter(p => !p.isLegendary);
-                }
-                if (document.getElementById('includeMythical') && !includeMythical) {
-                    filtered = filtered.filter(p => !p.isMythical);
-                }
+            if (specialCheckboxesExist && !includeLegendary && !includeMythical) filtered = filtered.filter(p => !p.isLegendary && !p.isMythical);
+            else {
+                if (document.getElementById('includeLegendary') && !includeLegendary) filtered = filtered.filter(p => !p.isLegendary);
+                if (document.getElementById('includeMythical') && !includeMythical) filtered = filtered.filter(p => !p.isMythical);
             }
             return filtered;
         }
 
         function generateRandomPokemon() {
             if (isLoading && loadingProgressContainer && loadingProgressContainer.style.display !== 'none') return;
-            if (isLoading) { 
-                 document.getElementById('status').textContent = translations[currentLang].loadingData;
-                 return;
-            }
-
+            if (isLoading) { document.getElementById('status').textContent = translations[currentLang].loadingData; return; }
             const count = parseInt(document.getElementById('count').value) || 10;
             const filteredPokemon = filterPokemon();
             const statusElement = document.getElementById('status');
             const resultsContainer = document.getElementById('results');
             resultsContainer.innerHTML = "";
-
-            if (filteredPokemon.length === 0) {
-                statusElement.textContent = translations[currentLang].noPokemonFound;
-                return;
-            }
-
+            if (filteredPokemon.length === 0) { statusElement.textContent = translations[currentLang].noPokemonFound; return; }
             let selectedPokemon = count >= filteredPokemon.length ? [...filteredPokemon] : [...filteredPokemon].sort(() => 0.5 - Math.random()).slice(0, count);
             selectedPokemon.sort((a, b) => a.id - b.id);
-
             selectedPokemon.forEach(pokemon => {
                 const card = document.createElement('div');
                 card.className = 'pokemon-card';
@@ -904,7 +889,6 @@
                     pokemon.isLegendary ? translations[currentLang].includeLegendaryLabel : null,
                     pokemon.isMythical ? translations[currentLang].includeMythicalLabel : null
                 ].filter(Boolean).join(', ');
-
                 let evolutionText = `${translations[currentLang].cardEvolution}: Unbekannt`;
                  if (pokemon.evolutionStage !== -1 && pokemon.totalStages !== undefined && pokemon.totalStages > 0) {
                       const numberOfEvolutions = pokemon.totalStages - 1; 
@@ -913,7 +897,6 @@
                  } else if (pokemon.evolutionStage !== -1) { 
                       evolutionText = `${translations[currentLang].cardEvolution}: ${translations[currentLang].cardEvolutionStage} ${pokemon.evolutionStage}`;
                  }
-
                 card.innerHTML = `
                     <div class="pokemon-image">
                         <img src="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}" alt="${pokemon.name}"
@@ -943,15 +926,9 @@
             const shinySrc = imgElement.dataset.shiny;
             const imageContainer = imgElement.parentElement;
             const indicator = imageContainer.querySelector('.shiny-indicator');
-
             if (shinySrc && shinySrc !== 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt' && shinySrc !== 'https://placehold.co/120x120/e0e0e0/333?text=Fehler') {
-                 if (currentSrc === normalSrc) {
-                    imgElement.src = shinySrc;
-                    if (indicator) indicator.classList.add('active');
-                 } else {
-                    imgElement.src = normalSrc;
-                    if (indicator) indicator.classList.remove('active');
-                 }
+                 if (currentSrc === normalSrc) { imgElement.src = shinySrc; if (indicator) indicator.classList.add('active'); } 
+                 else { imgElement.src = normalSrc; if (indicator) indicator.classList.remove('active'); }
             }
         }
 
@@ -959,39 +936,21 @@
             return string ? string.charAt(0).toUpperCase() + string.slice(1) : '';
         }
         
-        function initializeTypeCheckboxStyles() {
-            document.querySelectorAll('input.type-checkbox').forEach(checkbox => {
-                const label = document.querySelector(`label[for="${checkbox.id}"]`);
-                if (label) {
-                    label.className = label.className.replace(/type-\w+/g, '').trim(); 
-                    label.classList.add('type-filter-label');
-                    label.classList.add(`type-${checkbox.id}`);
-                }
-            });
-        }
-
         function initializeToggleAllIcons() {
             document.querySelectorAll('.toggle-all-icon').forEach(icon => {
                 const groupClass = icon.dataset.group;
                 if (!groupClass) return;
-
-                icon.addEventListener('click', function() {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation(); 
                     const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
                     if (checkboxesInGroup.length === 0) return;
-                    
                     const allCurrentlySelected = Array.from(checkboxesInGroup).every(cb => cb.checked);
-                    
-                    checkboxesInGroup.forEach(cb => {
-                        cb.checked = !allCurrentlySelected; 
-                    });
+                    checkboxesInGroup.forEach(cb => { cb.checked = !allCurrentlySelected; });
                     updateToggleIcon(groupClass); 
                 });
-
                 const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
                 checkboxesInGroup.forEach(checkbox => {
-                    checkbox.addEventListener('change', () => {
-                        updateToggleIcon(groupClass);
-                    });
+                    checkbox.addEventListener('change', () => { updateToggleIcon(groupClass); });
                 });
             });
         }
@@ -999,23 +958,65 @@
         function setDefaultFiltersChecked() {
             const filterGroupsClasses = ['.gen-checkbox', '.type-checkbox', '.evo-position-checkbox', '.chain-length-checkbox', '.special-checkbox'];
             filterGroupsClasses.forEach(groupClass => {
-                document.querySelectorAll(groupClass).forEach(checkbox => {
-                    checkbox.checked = true;
-                });
+                document.querySelectorAll(groupClass).forEach(checkbox => { checkbox.checked = true; });
                 const iconForGroup = document.querySelector(`.toggle-all-icon[data-group="${groupClass.substring(1)}"]`);
-                if (iconForGroup) {
-                    updateToggleIcon(groupClass.substring(1));
-                }
+                if (iconForGroup) updateToggleIcon(groupClass.substring(1));
             });
         }
 
+        function initializeCollapsibles() {
+            document.querySelectorAll('.control-group.collapsible .control-group-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const controlGroup = this.closest('.control-group.collapsible');
+                    if (!controlGroup) return; // Should not happen
+                    const content = controlGroup.querySelector('.collapsible-content');
+                    if (!content) return;
+
+                    controlGroup.classList.toggle('is-closed');
+                    if (controlGroup.classList.contains('is-closed')) {
+                        content.style.maxHeight = '0';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+                 const controlGroup = header.closest('.control-group.collapsible');
+                 const content = controlGroup.querySelector('.collapsible-content');
+                 if (content) { // Ensure content exists
+                    if (!controlGroup.classList.contains('is-closed')) {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    } else {
+                        content.style.maxHeight = '0';
+                    }
+                 }
+            });
+
+            // Global toggle button
+            const toggleAllFiltersButton = document.getElementById('toggleAllFiltersBtn');
+            if (toggleAllFiltersButton) {
+                toggleAllFiltersButton.addEventListener('click', function() {
+                    allFiltersExpanded = !allFiltersExpanded; // Toggle state
+                    this.textContent = translations[currentLang][allFiltersExpanded ? 'collapseAllLabel' : 'expandAllLabel'];
+                    this.setAttribute('data-i18n', allFiltersExpanded ? 'collapseAllLabel' : 'expandAllLabel');
+
+                    document.querySelectorAll('.control-group.collapsible').forEach(group => {
+                        const content = group.querySelector('.collapsible-content');
+                        if (content) {
+                            if (allFiltersExpanded) { // If we want to expand all
+                                group.classList.remove('is-closed');
+                                content.style.maxHeight = content.scrollHeight + "px";
+                            } else { // If we want to collapse all
+                                group.classList.add('is-closed');
+                                content.style.maxHeight = '0';
+                            }
+                        }
+                    });
+                });
+            }
+        }
 
         document.getElementById('generate').addEventListener('click', generateRandomPokemon);
         document.querySelectorAll('.language-switcher img').forEach(img => {
-            img.addEventListener('click', function() {
-                setLanguage(this.dataset.lang);
-                localStorage.setItem('language', this.dataset.lang);
-            });
+            img.addEventListener('click', function() { setLanguage(this.dataset.lang); localStorage.setItem('language', this.dataset.lang); });
         });
         document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
 
@@ -1024,15 +1025,11 @@
              const isDarkMode = savedDarkMode === 'enabled';
              if (isDarkMode) document.body.classList.add('dark-mode');
              updateDarkModeIcon(isDarkMode);
-
              const savedLang = localStorage.getItem('language');
-             
              setDefaultFiltersChecked(); 
              initializeToggleAllIcons(); 
-
+             initializeCollapsibles(); 
              setLanguage((savedLang && translations[savedLang]) ? savedLang : 'de'); 
-             
-             initializeTypeCheckboxStyles(); 
              fetchPokemonDataFromAPI(); 
         });
     </script>
