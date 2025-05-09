@@ -238,6 +238,30 @@
         .attribution a { color: inherit; text-decoration: underline; }
         .attribution a:hover { text-decoration: none; }
 
+        #clearCacheBtn {
+            padding: 8px 15px; /* Slightly larger padding */
+            font-size: 0.9em;
+            background-color: var(--light-details-text); 
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500; /* Added for a bit more presence */
+        }
+        #clearCacheBtn:hover {
+            background-color: var(--primary-color);
+        }
+        body.dark-mode #clearCacheBtn {
+            background-color: var(--dark-details-text);
+            color: var(--dark-text); /* Ensure contrast in dark mode */
+        }
+        body.dark-mode #clearCacheBtn:hover {
+            background-color: var(--accent-color);
+            color: var(--dark-bg);
+        }
+
+
         /* Sticky/Fixed UI Elements */
         .page-actions-container { position: fixed; top: 15px; right: 15px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
         .top-right-icons-group { display: flex; align-items: center; gap: 15px; }
@@ -248,11 +272,13 @@
         .theme-switcher i { font-size: 28px; cursor: pointer; color: var(--light-text); transition: color 0.3s, transform 0.1s ease-in-out; }
         body.dark-mode .theme-switcher i { color: var(--dark-text); }
         .theme-switcher i:hover { transform: rotate(15deg); }
+
         #stickyGenerateBtn { display: none; padding: 8px 15px; font-size: 0.9em; font-weight: 600; background-color: var(--light-sticky-btn-bg); color: var(--light-sticky-btn-text); border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: background-color 0.3s, transform 0.1s ease-in-out, color 0.3s; }
         #stickyGenerateBtn:hover { background-color: var(--light-sticky-btn-hover-bg); transform: translateY(-1px); }
         #stickyGenerateBtn:disabled { background-color: #ccc !important; color: #666 !important; cursor: not-allowed; transform: translateY(0); }
         body.dark-mode #stickyGenerateBtn { background-color: var(--dark-sticky-btn-bg); color: var(--dark-sticky-btn-text); box-shadow: 0 2px 8px rgba(255,255,255,0.1); }
         body.dark-mode #stickyGenerateBtn:hover { background-color: var(--dark-sticky-btn-hover-bg); color: white; }
+        
         #sorting-controls { display: none; background-color: var(--light-controls-bg); padding: 5px 10px; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; }
         body.dark-mode #sorting-controls { background-color: var(--dark-controls-bg); box-shadow: 0 1px 5px rgba(255,255,255,0.1); }
         .sort-icon { cursor: pointer; font-size: 1.1em; padding: 3px 5px; color: var(--light-sort-icon-color); transition: color 0.2s; position: relative; border-radius: 3px; }
@@ -262,6 +288,7 @@
         body.dark-mode .sort-icon:hover { background-color: rgba(255, 255, 255, 0.1); }
         body.dark-mode .sort-icon.active { color: var(--dark-sort-icon-active-color); }
         #sort-direction { font-size: 0.9em; margin-left: -3px; }
+
         #scrollToTopBtn { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 999; border: none; outline: none; background-color: var(--secondary-color); color: white; cursor: pointer; padding: 10px 12px; border-radius: 50%; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: background-color 0.3s, transform 0.2s, color 0.3s; }
         #scrollToTopBtn:hover { background-color: #2a4a87; transform: translateY(-2px); }
         body.dark-mode #scrollToTopBtn { background-color: var(--accent-color); color: var(--dark-bg); box-shadow: 0 2px 8px rgba(255,255,255,0.1); }
@@ -274,11 +301,13 @@
             .page-actions-container { top: 10px; right: 10px; gap: 8px;}
             .top-right-icons-group { gap: 10px; }
             .language-switcher img, .theme-switcher i { font-size: 22px; width: 22px; }
-            #stickyGenerateBtn { padding: 6px 10px; font-size: 0.8em; }
-            #sorting-controls { gap: 5px; padding: 4px 8px; }
-            .sort-icon { font-size: 1em; padding: 2px 4px;}
-            #sort-direction { font-size: 0.8em; }
-            #scrollToTopBtn { bottom: 15px; right: 15px; padding: 8px 10px; font-size: 16px; }
+            
+            #stickyGenerateBtn { padding: 7px 12px; font-size: 0.85em; } /* Slightly larger */
+            #sorting-controls { gap: 6px; padding: 5px 9px; } /* Slightly larger */
+            .sort-icon { font-size: 1.05em; padding: 3px 5px;} /* Slightly larger */
+            #sort-direction { font-size: 0.85em; } /* Slightly larger */
+            #scrollToTopBtn { bottom: 15px; right: 15px; padding: 9px 11px; font-size: 17px; } /* Slightly larger */
+
             .controls { padding: 15px; }
             .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
             button#generate { padding: 10px 15px; font-size: 1em; }
@@ -302,6 +331,7 @@
             #locked-pokemon-results .shiny-indicator { font-size: 1em; top: 4px; right: 4px; }
             #status { margin: 15px 0; font-size: 0.9em; }
             .attribution { margin-top: 20px; font-size: 0.75em; }
+            #clearCacheBtn { font-size: 0.85em; padding: 6px 12px; } /* Adjusted for consistency */
             .toggle-all-icon { margin-left: 8px; margin-top: 0; font-size: 1em; }
             .collapse-icon { margin-left: 8px; font-size: 0.8em;}
             #locked-pokemon-section-container h2 { font-size: 1.2em; }
@@ -314,9 +344,12 @@
              .page-actions-container { top: 8px; right: 8px; gap: 6px;}
              .top-right-icons-group { gap: 8px; }
              .language-switcher img, .theme-switcher i { font-size: 20px; width: 20px; }
-             #stickyGenerateBtn { padding: 5px 8px; font-size: 0.75em; }
-             #sorting-controls { flex-wrap: wrap; justify-content: flex-end; }
-             #scrollToTopBtn { bottom: 10px; right: 10px; padding: 6px 8px; font-size: 14px; }
+             
+             #stickyGenerateBtn { padding: 8px 12px; font-size: 0.9em; } /* Increased size */
+             #sorting-controls { flex-wrap: wrap; justify-content: flex-end; gap: 5px; padding: 6px 10px; } /* Increased padding/gap */
+             .sort-icon { font-size: 1.1em; padding: 4px 6px; } /* Increased size */
+             #scrollToTopBtn { bottom: 10px; right: 10px; padding: 10px 12px; font-size: 18px; } /* Increased size */
+
              .controls { padding: 10px; }
              .control-group, .instructions-container { padding: 8px 10px; }
              .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px 8px; }
@@ -330,6 +363,7 @@
             #locked-pokemon-results .pokemon-details { font-size: 0.65em; }
             #locked-pokemon-results .pokemon-type-item .type-icon { width: 11px; height: 11px; }
             #locked-pokemon-results .pokemon-type-name { font-size: 0.65em; }
+            #clearCacheBtn { font-size: 0.85em; padding: 6px 10px; } /* Adjusted for consistency */
              .loading-progress-text { font-size: 0.8em; }
              .instructions-header .title { font-size: 0.95em; }
              .instructions-content { font-size: 0.85em; }
@@ -519,12 +553,20 @@
     <button id="scrollToTopBtn" title="Nach oben scrollen"><i class="fas fa-arrow-up"></i></button>
 
     <div class="attribution" data-i18n="attributionText"></div>
+    <div style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+        <button id="clearCacheBtn" data-i18n="clearCacheButton">Alle App-Daten löschen</button>
+    </div>
+
 
     <script>
         const pokemonData = [];
+        let displayedPokemonList = []; 
+        let hasGeneratedAtLeastOnce = false; 
+
         const evolutionChains = new Map(); 
         let isLoading = false;
         const POKEMON_LIMIT = 1300; 
+        const MIN_EXPECTED_POKEMON_COUNT = 1000; 
         const BASE_API_URL = 'https://pokeapi.co/api/v2/';
         const POKEMONDB_URL = 'https://pokemondb.net/pokedex/';
         const TYPE_ICON_BASE_URL = 'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/';
@@ -533,8 +575,8 @@
 
         let lockedPokemonIds = new Set();
         let countForNewPokemons = 10; 
-        let currentSortCriteria = 'id'; // 'id', 'name', 'type', 'random'
-        let currentSortDirection = 'asc'; // 'asc', 'desc'
+        let currentSortCriteria = 'id'; 
+        let currentSortDirection = 'asc'; 
 
         const loadingProgressContainer = document.getElementById('loading-progress-container');
         const loadingProgressBarElement = document.getElementById('loading-progress-bar');
@@ -548,6 +590,7 @@
         const scrollToTopBtn = document.getElementById('scrollToTopBtn');
         const sortingControls = document.getElementById('sorting-controls');
         const sortDirectionIcon = document.getElementById('sort-direction');
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
 
 
         const ICON_SELECT_ALL = 'fa-solid fa-square-check';
@@ -557,7 +600,6 @@
         const translations = {
             de: {
                 appTitle: "Pokémon Generator",
-                // siteDescription: "...", // Removed, now part of instructions
                 instructionsTitle: "Anleitung",
                 instructionsIntro: "Willkommen beim Pokémon Generator! Hier kannst du zufällige Pokémon basierend auf deinen Filtern entdecken.",
                 usageTitle: "So funktioniert's:",
@@ -599,13 +641,16 @@
                 status_no_new_match: "Keine neuen Pokémon entsprechen deinen Filtern.",
                 status_no_pokemon_at_all: "Keine Pokémon (gesperrt oder neu) entsprechen deinen Filtern.",
                 status_initial_prompt: "Wähle Filter und generiere Pokémon!",
+                status_initial_prompt_append_generate: "Drücke 'Pokémon generieren!', um neue zu erhalten.",
                 cardGeneration: "Generation", cardEvolution: "Entwicklung", cardEvolutionNoEvo: "(Keine Entwicklung)", cardEvolutionStage: "Stufe", cardTotalStages: "Stufen gesamt:",
                 darkModeToggle: "Dark Mode umschalten",
-                attributionText: 'Daten und Bilder bereitgestellt von der <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. Alle Rechte vorbehalten. Alle Bilder der Pokémon-Typen wurden von <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a> bereitgestellt.'
+                attributionText: 'Daten und Bilder bereitgestellt von der <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. Alle Rechte vorbehalten. Alle Bilder der Pokémon-Typen wurden von <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a> bereitgestellt.',
+                clearCacheButton: "Alle App-Daten löschen",
+                confirmClearCache: "Möchtest du wirklich alle lokal gespeicherten Daten dieser App (Cache, Einstellungen, etc.) löschen? Die Seite wird danach neu geladen.",
+                cacheCleared: "Alle lokalen Daten gelöscht. Die Seite wird neu geladen."
             },
             en: {
                 appTitle: "Pokémon Generator",
-                // siteDescription: "...", // Removed
                 instructionsTitle: "Instructions",
                 instructionsIntro: "Welcome to the Pokémon Generator! Discover random Pokémon based on your selected filters.",
                 usageTitle: "How it works:",
@@ -647,9 +692,13 @@
                 status_no_new_match: "No new Pokémon match your filters.",
                 status_no_pokemon_at_all: "No Pokémon (locked or new) match your filters.",
                 status_initial_prompt: "Select filters and generate Pokémon!",
+                status_initial_prompt_append_generate: "Press 'Generate Pokémon!' to get new ones.",
                 cardGeneration: "Generation", cardEvolution: "Evolution", cardEvolutionNoEvo: "(No evolution)", cardEvolutionStage: "Stage", cardTotalStages: "Total stages:",
                 darkModeToggle: "Toggle Dark Mode",
-                attributionText: 'Data and images provided by the <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. All Rights Reserved. The images for all Pokémon types are provided by <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a>.'
+                attributionText: 'Data and images provided by the <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. All Rights Reserved. The images for all Pokémon types are provided by <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a>.',
+                clearCacheButton: "Clear All App Data",
+                confirmClearCache: "Are you sure you want to delete all locally stored data for this app (cache, settings, etc.)? The page will reload afterwards.",
+                cacheCleared: "All local data cleared. The page will reload."
             }
         };
         let currentLang = 'de';
@@ -673,10 +722,7 @@
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key] && typeof translations[lang][key] !== 'function') { 
-                    // Check if element expects HTML (e.g., usage steps with icons)
-                    if (key.startsWith('usageStep')) {
-                         element.innerHTML = translations[lang][key];
-                    } else if (key === "attributionText" || key === "instructionsIntro") {
+                    if (key.startsWith('usageStep') || key === "attributionText" || key === "instructionsIntro") {
                          element.innerHTML = translations[lang][key];
                     } else {
                          element.textContent = translations[lang][key];
@@ -695,14 +741,12 @@
             });
             
             if (pokemonData.length > 0 && !isLoading) { 
-                 generateRandomPokemon(); 
+                 renderAllPokemon(); 
             } else if (isLoading && loadingProgressContainer.style.display === 'none'){
-                document.getElementById('status').textContent = translations[currentLang].loadingData;
-            } else if (document.getElementById('status').textContent === "" && !isLoading && pokemonData.length === 0) {
+                document.getElementById('status').textContent = translations[currentLang].loadingData; 
+            } else if (document.getElementById('status').textContent === "" && !isLoading && pokemonData.length === 0) { 
                 document.getElementById('status').textContent = translations[currentLang].status_initial_prompt;
             }
-
-
             document.querySelectorAll('.language-switcher img').forEach(img => {
                 img.classList.toggle('active', img.dataset.lang === lang);
             });
@@ -751,16 +795,23 @@
             if (cachedDataJSON) {
                 try {
                     const cachedData = JSON.parse(cachedDataJSON);
-                    if (cachedData.pokemon && cachedData.pokemon.length > 0) {
+                    if (cachedData.pokemon && cachedData.pokemon.length >= MIN_EXPECTED_POKEMON_COUNT) {
                         pokemonData.push(...cachedData.pokemon);
                         if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
                         isLoading = false; 
                         mainGenerateBtn.disabled = false;
                         stickyGenerateBtn.disabled = false;
                         validateLockedPokemonIds(); 
-                        generateRandomPokemon(); return; 
+                        renderAllPokemon(); 
+                        return; 
+                    } else {
+                        console.warn(`Cached Pokémon data is incomplete (${cachedData.pokemon ? cachedData.pokemon.length : 0} found, expected >= ${MIN_EXPECTED_POKEMON_COUNT}). Forcing API refresh.`);
+                        localStorage.removeItem(CACHE_KEY); // Remove incomplete cache
                     }
-                } catch (e) { console.error("Error parsing cached Pokémon data:", e); localStorage.removeItem(CACHE_KEY); }
+                } catch (e) { 
+                    console.error("Error parsing cached Pokémon data:", e); 
+                    localStorage.removeItem(CACHE_KEY); // Remove corrupted cache
+                }
             }
             
             if (loadingProgressContainer) loadingProgressContainer.style.display = 'block';
@@ -830,7 +881,7 @@
                 stickyGenerateBtn.disabled = false;
                 if (loadingProgressContainer) loadingProgressContainer.style.display = 'none'; 
                 validateLockedPokemonIds();
-                generateRandomPokemon(); 
+                renderAllPokemon(); 
             }
         }
 
@@ -940,102 +991,114 @@
             return card;
         }
 
-
-        function generateRandomPokemon() {
+        function handleNewGenerationRequest() {
             if (isLoading && loadingProgressContainer && loadingProgressContainer.style.display !== 'none') return;
-            if (isLoading) { 
-                document.getElementById('status').textContent = translations[currentLang].loadingData; 
-                return; 
+            if (isLoading) {
+                document.getElementById('status').textContent = translations[currentLang].loadingData;
+                return;
             }
-            if (pokemonData.length === 0) { 
+            if (pokemonData.length === 0) {
                 document.getElementById('status').textContent = translations[currentLang].status_initial_prompt;
                 return;
             }
             
+            hasGeneratedAtLeastOnce = true; 
             validateLockedPokemonIds(); 
             countForNewPokemons = parseInt(document.getElementById('count').value) || 0;
-            const statusElement = document.getElementById('status');
             
+            const filteredCandidates = filterPokemon();
+            const availableForRandom = filteredCandidates.filter(p => !lockedPokemonIds.has(p.id));
+            
+            displayedPokemonList = []; 
+
+            if (availableForRandom.length > 0 && countForNewPokemons > 0) {
+                if (countForNewPokemons >= availableForRandom.length) {
+                    displayedPokemonList = [...availableForRandom];
+                } else {
+                    let tempShuffledList = [...availableForRandom].sort(() => 0.5 - Math.random());
+                    displayedPokemonList = tempShuffledList.slice(0, countForNewPokemons);
+                }
+            }
+            renderAllPokemon(); 
+        }
+
+        function renderAllPokemon() {
             lockedPokemonResultsContainer.innerHTML = "";
             resultsContainer.innerHTML = "";
+            const statusElement = document.getElementById('status');
 
-            // Display Locked Pokemon (always sorted by ID)
-            let displayedLockedPokemons = [];
+            let actualDisplayedLockedPokemons = [];
             if (lockedPokemonIds.size > 0) {
                 lockedPokemonIds.forEach(id => {
                     const pokemon = pokemonData.find(p => p.id === id);
                     if (pokemon) {
-                        displayedLockedPokemons.push(pokemon);
+                        actualDisplayedLockedPokemons.push(pokemon);
                     }
                 });
-                displayedLockedPokemons.sort((a,b) => a.id - b.id).forEach(p => {
+                actualDisplayedLockedPokemons.sort((a,b) => a.id - b.id).forEach(p => {
                     lockedPokemonResultsContainer.appendChild(createPokemonCard(p));
                 });
                 lockedPokemonSectionContainer.style.display = 'block';
             } else {
                 lockedPokemonSectionContainer.style.display = 'none';
             }
-            
-            // Prepare and Generate New Pokemon List
-            const filteredCandidates = filterPokemon();
-            const availableForRandom = filteredCandidates.filter(p => !lockedPokemonIds.has(p.id));
-            
-            let newRandomPokemonList = [];
-            if (availableForRandom.length > 0 && countForNewPokemons > 0) {
-                if (countForNewPokemons >= availableForRandom.length) {
-                    newRandomPokemonList = [...availableForRandom];
-                } else {
-                    if (currentSortCriteria !== 'random') {
-                         newRandomPokemonList = [...availableForRandom].sort(() => 0.5 - Math.random()).slice(0, countForNewPokemons);
-                    } else {
-                         newRandomPokemonList = [...availableForRandom]; 
-                    }
-                }
-            }
 
-            // Sort the New Pokemon List
-            sortPokemonList(newRandomPokemonList);
-            
-            // Display New Pokemon
-            resultsContainer.innerHTML = ""; // Clear previous results
-            newRandomPokemonList.forEach(p => {
+            sortPokemonList(displayedPokemonList); 
+
+            displayedPokemonList.forEach(p => {
                 resultsContainer.appendChild(createPokemonCard(p));
             });
 
-            // Update Status Message
-            const numLocked = displayedLockedPokemons.length;
-            const numGenerated = newRandomPokemonList.length;
-            const numTotalPossibleNew = availableForRandom.length;
+            const numLocked = actualDisplayedLockedPokemons.length;
+            const numCurrentlyDisplayed = displayedPokemonList.length; 
+            const filteredCandidatesForStatus = filterPokemon();
+            const numTotalPossibleNew = filteredCandidatesForStatus.filter(p => !lockedPokemonIds.has(p.id)).length;
+            const countInputValue = parseInt(document.getElementById('count').value) || 0;
 
-            if (numLocked === 0 && numGenerated === 0 && countForNewPokemons === 0) {
+            if (isLoading) {
+                // Status handled by fetchPokemonDataFromAPI
+            } else if (pokemonData.length === 0) {
                 statusElement.textContent = translations[currentLang].status_initial_prompt;
-            } else if (numLocked > 0 && countForNewPokemons === 0) {
-                statusElement.textContent = translations[currentLang].status_locked_only(numLocked);
-            } else if (numLocked > 0 && numGenerated > 0) {
-                 statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numGenerated, numTotalPossibleNew);
-            } else if (numLocked > 0 && numGenerated === 0 && countForNewPokemons > 0) {
-                statusElement.textContent = translations[currentLang].status_locked_no_new_match(numLocked);
-            } else if (numLocked === 0 && numGenerated > 0) {
-                statusElement.textContent = translations[currentLang].status_generated_only(numGenerated, numTotalPossibleNew);
-            } else if (numLocked === 0 && numGenerated === 0 && countForNewPokemons > 0) {
-                if (filterPokemon().length === 0) { 
-                    statusElement.textContent = translations[currentLang].status_no_pokemon_at_all;
-                } else { 
-                    statusElement.textContent = translations[currentLang].status_no_new_match;
+            } else if (!hasGeneratedAtLeastOnce) {
+                if (numLocked > 0) {
+                    let initialMsg = translations[currentLang].status_locked_only(numLocked);
+                    if (translations[currentLang].status_initial_prompt_append_generate) {
+                         initialMsg += " " + translations[currentLang].status_initial_prompt_append_generate;
+                    }
+                    statusElement.textContent = initialMsg;
+                } else {
+                    statusElement.textContent = translations[currentLang].status_initial_prompt;
                 }
-            } else {
-                statusElement.textContent = translations[currentLang].status_initial_prompt; 
+            } else { 
+                if (numLocked > 0 && countInputValue === 0 && numCurrentlyDisplayed === 0) {
+                    statusElement.textContent = translations[currentLang].status_locked_only(numLocked);
+                } else if (numLocked > 0 && numCurrentlyDisplayed > 0) {
+                    statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numCurrentlyDisplayed, numTotalPossibleNew);
+                } else if (numLocked > 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
+                    statusElement.textContent = translations[currentLang].status_locked_no_new_match(numLocked);
+                } else if (numLocked === 0 && numCurrentlyDisplayed > 0) {
+                    statusElement.textContent = translations[currentLang].status_generated_only(numCurrentlyDisplayed, numTotalPossibleNew);
+                } else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
+                    if (filteredCandidatesForStatus.length === 0 && pokemonData.length > 0 && document.querySelectorAll('.gen-checkbox:checked, .type-checkbox:checked, .evo-position-checkbox:checked, .chain-length-checkbox:checked').length > 0) {
+                        statusElement.textContent = translations[currentLang].status_no_pokemon_at_all;
+                    } else {
+                        statusElement.textContent = translations[currentLang].status_no_new_match;
+                    }
+                } else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue === 0) {
+                     statusElement.textContent = translations[currentLang].status_initial_prompt; 
+                } else {
+                    statusElement.textContent = translations[currentLang].status_initial_prompt; 
+                }
             }
             
             updateSortIcons();
-            handleScroll(); 
+            handleScroll();
         }
+
 
         function sortPokemonList(list) {
             if (!list || list.length === 0) return;
-
             const directionMultiplier = currentSortDirection === 'asc' ? 1 : -1;
-
             switch (currentSortCriteria) {
                 case 'id':
                     list.sort((a, b) => (a.id - b.id) * directionMultiplier);
@@ -1059,12 +1122,8 @@
                         const j = Math.floor(Math.random() * (i + 1));
                         [list[i], list[j]] = [list[j], list[i]];
                     }
-                    // Apply requested count *after* shuffling if list is larger
-                    if (list.length > countForNewPokemons && countForNewPokemons >= 0) {
-                        list.splice(countForNewPokemons);
-                    }
                     break;
-                default: // Default to ID Ascending
+                default: 
                      list.sort((a, b) => a.id - b.id);
             }
         }
@@ -1078,7 +1137,7 @@
              });
 
              if (currentSortCriteria === 'random') {
-                 sortDirectionIcon.className = 'fas'; // Clear direction icon
+                 sortDirectionIcon.className = 'fas'; 
              } else {
                  sortDirectionIcon.className = `fas ${currentSortDirection === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short'}`;
              }
@@ -1098,13 +1157,20 @@
         }
 
         function toggleLockPokemon(pokemonId) {
-            if (lockedPokemonIds.has(pokemonId)) {
+            const pokemonToToggle = pokemonData.find(p => p.id === pokemonId);
+            if (!pokemonToToggle) return;
+
+            if (lockedPokemonIds.has(pokemonId)) { 
                 lockedPokemonIds.delete(pokemonId);
-            } else {
+            } else { 
                 lockedPokemonIds.add(pokemonId);
+                const indexInDisplayed = displayedPokemonList.findIndex(p => p.id === pokemonId);
+                if (indexInDisplayed > -1) {
+                    displayedPokemonList.splice(indexInDisplayed, 1);
+                }
             }
             localStorage.setItem(LOCKED_POKEMON_CACHE_KEY, JSON.stringify(Array.from(lockedPokemonIds)));
-            generateRandomPokemon(); 
+            renderAllPokemon(); 
         }
 
 
@@ -1141,40 +1207,24 @@
         }
 
         function initializeCollapsibles() {
-            // Target both filter groups and the instruction container
             document.querySelectorAll('.collapsible').forEach(collapsibleContainer => {
                  const header = collapsibleContainer.querySelector('.control-group-header, .instructions-header');
                  const content = collapsibleContainer.querySelector('.collapsible-content, .instructions-content');
-
-                 if (!header || !content) return; // Skip if structure is wrong
-
+                 if (!header || !content) return;
                  header.addEventListener('click', function() {
                     collapsibleContainer.classList.toggle('is-closed');
-                    if (collapsibleContainer.classList.contains('is-closed')) {
-                        content.style.maxHeight = '0';
-                    } else {
-                        // Use scrollHeight for accurate content height calculation
-                        content.style.maxHeight = content.scrollHeight + "px"; 
-                    }
+                    content.style.maxHeight = collapsibleContainer.classList.contains('is-closed') ? '0' : content.scrollHeight + "px";
                  });
-
-                 // Set initial max-height based on closed/open state
-                 if (!collapsibleContainer.classList.contains('is-closed')) {
-                     content.style.maxHeight = content.scrollHeight + "px";
-                 } else {
-                     content.style.maxHeight = '0';
-                 }
+                 content.style.maxHeight = collapsibleContainer.classList.contains('is-closed') ? '0' : content.scrollHeight + "px";
             });
 
-            // Global Toggle Button (only for filter groups)
             const toggleAllFiltersButton = document.getElementById('toggleAllFiltersBtn');
             if (toggleAllFiltersButton) {
                 toggleAllFiltersButton.addEventListener('click', function() {
                     allFiltersExpanded = !allFiltersExpanded; 
                     this.textContent = translations[currentLang][allFiltersExpanded ? 'collapseAllLabel' : 'expandAllLabel'];
                     this.setAttribute('data-i18n', allFiltersExpanded ? 'collapseAllLabel' : 'expandAllLabel');
-
-                    document.querySelectorAll('.control-group.collapsible').forEach(group => { // Only target filter groups
+                    document.querySelectorAll('.control-group.collapsible').forEach(group => {
                         const content = group.querySelector('.collapsible-content');
                         if (content) {
                             if (allFiltersExpanded) { 
@@ -1199,10 +1249,10 @@
 
             if (controlsDiv && stickyGenerateBtn && mainGenerateBtn && sortingControls) {
                 const controlsBottom = controlsDiv.getBoundingClientRect().bottom;
-                const showTopControls = controlsBottom < 50 && pokemonData.length > 0 && !isLoading; 
+                const showTopControls = controlsBottom < 50 && pokemonData.length > 0 && !isLoading && hasGeneratedAtLeastOnce; 
                 
                 stickyGenerateBtn.style.display = showTopControls ? "block" : "none";
-                sortingControls.style.display = showTopControls ? "flex" : "none"; 
+                sortingControls.style.display = showTopControls && displayedPokemonList.length > 0 ? "flex" : "none"; 
                 
                 const isDisabled = isLoading || pokemonData.length === 0;
                 stickyGenerateBtn.disabled = isDisabled; 
@@ -1211,36 +1261,43 @@
         }
 
         // --- Initialize Event Listeners ---
-        document.getElementById('count').addEventListener('input', () => {
-            countForNewPokemons = parseInt(document.getElementById('count').value) || 0;
-        });
-        mainGenerateBtn.addEventListener('click', generateRandomPokemon);
-        stickyGenerateBtn.addEventListener('click', generateRandomPokemon);
+        document.getElementById('count').addEventListener('input', () => {});
+        mainGenerateBtn.addEventListener('click', handleNewGenerationRequest);
+        stickyGenerateBtn.addEventListener('click', handleNewGenerationRequest);
         scrollToTopBtn.addEventListener('click', () => {
             window.scrollTo({top: 0, behavior: 'smooth'});
         });
 
         document.querySelectorAll('.language-switcher img').forEach(img => {
-            img.addEventListener('click', function() { setLanguage(this.dataset.lang); localStorage.setItem('language', this.dataset.lang); });
+            img.addEventListener('click', function() { 
+                setLanguage(this.dataset.lang); 
+                localStorage.setItem('language', this.dataset.lang); 
+            });
         });
         document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
         
-        // Sorting Controls Event Listeners
         document.querySelectorAll('.sort-icon').forEach(icon => {
             icon.addEventListener('click', function() {
                 const newSortCriteria = this.dataset.sort;
-
                 if (newSortCriteria === currentSortCriteria && newSortCriteria !== 'random') {
                     currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
                 } else {
                     currentSortCriteria = newSortCriteria;
                     currentSortDirection = 'asc'; 
                 }
-                
-                updateSortIcons(); 
-                generateRandomPokemon(); 
+                renderAllPokemon(); 
             });
         });
+        
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', () => {
+                if (window.confirm(translations[currentLang].confirmClearCache)) {
+                    localStorage.clear(); // Clears ALL localStorage for this origin
+                    alert(translations[currentLang].cacheCleared);
+                    window.location.reload();
+                }
+            });
+        }
 
         window.addEventListener('scroll', handleScroll);
 
@@ -1260,26 +1317,22 @@
                     lockedPokemonIds = new Set();
                 }
              }
-             countForNewPokemons = parseInt(document.getElementById('count').value) || 10; 
-
-             const savedLang = localStorage.getItem('language');
+             
+             const savedLang = localStorage.getItem('language') || 'de'; // Default to 'de' if not set
              setDefaultFiltersChecked(); 
              initializeToggleAllIcons(); 
-             initializeCollapsibles(); // Will now also handle instructions collapse
-             setLanguage((savedLang && translations[savedLang]) ? savedLang : 'de'); 
+             initializeCollapsibles(); 
+             setLanguage(translations[savedLang] ? savedLang : 'de'); 
              
-             document.getElementById('status').textContent = translations[currentLang].status_initial_prompt;
              updateSortIcons(); 
-
              fetchPokemonDataFromAPI(); 
-             handleScroll(); 
         });
     </script>
     <!-- PWA Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js') // Path relative to index.html
+                navigator.serviceWorker.register('./sw.js') 
                     .then(registration => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
                     })
