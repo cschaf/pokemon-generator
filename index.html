@@ -572,6 +572,7 @@
         const TYPE_ICON_BASE_URL = 'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/';
         const CACHE_KEY = 'pokemonGeneratorCache_v4'; 
         const LOCKED_POKEMON_CACHE_KEY = 'lockedPokemonIds_v1';
+		const FILTER_STATE_CACHE_KEY = 'pokemonGeneratorFilterState_v1';
 
         let lockedPokemonIds = new Set();
         let countForNewPokemons = 10; 
@@ -703,6 +704,58 @@
         };
         let currentLang = 'de';
 
+		function saveFilterState() {
+			const filterState = {};
+			const filterCheckboxes = document.querySelectorAll(
+				'.gen-checkbox, .type-checkbox, .evo-position-checkbox, .chain-length-checkbox, .special-checkbox'
+			);
+
+			filterCheckboxes.forEach(checkbox => {
+				filterState[checkbox.id] = checkbox.checked;
+			});
+
+			try {
+				localStorage.setItem(FILTER_STATE_CACHE_KEY, JSON.stringify(filterState));
+			} catch (e) {
+				console.error("Error saving filter state to localStorage:", e);
+			}
+		}
+		
+		function loadFilterState() {
+			const savedStateJSON = localStorage.getItem(FILTER_STATE_CACHE_KEY);
+			if (savedStateJSON) {
+				try {
+					const savedState = JSON.parse(savedStateJSON);
+					const allFilterCheckboxes = document.querySelectorAll(
+						'.gen-checkbox, .type-checkbox, .evo-position-checkbox, .chain-length-checkbox, .special-checkbox'
+					);
+
+					allFilterCheckboxes.forEach(checkbox => {
+						if (savedState.hasOwnProperty(checkbox.id)) {
+							checkbox.checked = savedState[checkbox.id];
+						}
+						// If a checkbox ID from the current HTML isn't in the saved state,
+						// it will retain the state set by setDefaultFiltersChecked().
+					});
+
+					// After applying all saved checkbox states, update all toggle-all icons
+					const filterGroups = new Set();
+					document.querySelectorAll('.toggle-all-icon').forEach(icon => {
+						if (icon.dataset.group) {
+							filterGroups.add(icon.dataset.group);
+						}
+					});
+					filterGroups.forEach(groupClass => {
+						updateToggleIcon(groupClass);
+					});
+
+				} catch (e) {
+					console.error("Error loading or applying filter state from localStorage:", e);
+					// If an error occurs (e.g., corrupted data), remove the faulty item
+					localStorage.removeItem(FILTER_STATE_CACHE_KEY);
+				}
+			}
+		}
         function updateToggleIcon(groupClass) {
             const iconElement = document.querySelector(`.toggle-all-icon[data-group="${groupClass}"]`);
             if (!iconElement) return;
@@ -1179,23 +1232,30 @@
         }
         
         function initializeToggleAllIcons() {
-            document.querySelectorAll('.toggle-all-icon').forEach(icon => {
-                const groupClass = icon.dataset.group;
-                if (!groupClass) return;
-                icon.addEventListener('click', function(e) {
-                    e.stopPropagation(); 
-                    const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
-                    if (checkboxesInGroup.length === 0) return;
-                    const allCurrentlySelected = Array.from(checkboxesInGroup).every(cb => cb.checked);
-                    checkboxesInGroup.forEach(cb => { cb.checked = !allCurrentlySelected; });
-                    updateToggleIcon(groupClass); 
-                });
-                const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
-                checkboxesInGroup.forEach(checkbox => {
-                    checkbox.addEventListener('change', () => { updateToggleIcon(groupClass); });
-                });
-            });
-        }
+			document.querySelectorAll('.toggle-all-icon').forEach(icon => {
+				const groupClass = icon.dataset.group;
+				if (!groupClass) return;
+
+				icon.addEventListener('click', function(e) {
+					e.stopPropagation(); 
+					const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
+					if (checkboxesInGroup.length === 0) return;
+					const allCurrentlySelected = Array.from(checkboxesInGroup).every(cb => cb.checked);
+					checkboxesInGroup.forEach(cb => { cb.checked = !allCurrentlySelected; });
+					updateToggleIcon(groupClass); 
+					saveFilterState(); // <-- SAVE STATE HERE
+				});
+
+				const checkboxesInGroup = document.querySelectorAll(`.${groupClass}`);
+				checkboxesInGroup.forEach(checkbox => {
+					checkbox.addEventListener('change', () => { 
+						updateToggleIcon(groupClass); 
+						saveFilterState(); // <-- SAVE STATE HERE
+					});
+				});
+				// No initial updateToggleIcon call here, loadFilterState will handle it
+			});
+		}
         
         function setDefaultFiltersChecked() {
             const filterGroupsClasses = ['.gen-checkbox', '.type-checkbox', '.evo-position-checkbox', '.chain-length-checkbox', '.special-checkbox'];
@@ -1302,31 +1362,34 @@
         window.addEventListener('scroll', handleScroll);
 
 
-        window.addEventListener('load', function() {
-             const savedDarkMode = localStorage.getItem('darkMode');
-             const isDarkMode = savedDarkMode === 'enabled';
-             if (isDarkMode) document.body.classList.add('dark-mode');
-             updateDarkModeIcon(isDarkMode);
+		window.addEventListener('load', function() {
+			 const savedDarkMode = localStorage.getItem('darkMode');
+			 const isDarkMode = savedDarkMode === 'enabled';
+			 if (isDarkMode) document.body.classList.add('dark-mode');
+			 updateDarkModeIcon(isDarkMode);
 
-             const savedLockedIds = localStorage.getItem(LOCKED_POKEMON_CACHE_KEY);
-             if (savedLockedIds) {
-                try {
-                    lockedPokemonIds = new Set(JSON.parse(savedLockedIds).map(id => parseInt(id))); 
-                } catch (e) {
-                    console.error("Error loading locked Pokémon IDs:", e);
-                    lockedPokemonIds = new Set();
-                }
-             }
-             
-             const savedLang = localStorage.getItem('language') || 'de'; // Default to 'de' if not set
-             setDefaultFiltersChecked(); 
-             initializeToggleAllIcons(); 
-             initializeCollapsibles(); 
-             setLanguage(translations[savedLang] ? savedLang : 'de'); 
-             
-             updateSortIcons(); 
-             fetchPokemonDataFromAPI(); 
-        });
+			 const savedLockedIds = localStorage.getItem(LOCKED_POKEMON_CACHE_KEY);
+			 if (savedLockedIds) {
+				try {
+					lockedPokemonIds = new Set(JSON.parse(savedLockedIds).map(id => parseInt(id))); 
+				} catch (e) {
+					console.error("Error loading locked Pokémon IDs:", e);
+					lockedPokemonIds = new Set();
+				}
+			 }
+			 
+			 const savedLang = localStorage.getItem('language') || 'de'; 
+			 
+			 setDefaultFiltersChecked();  // 1. Set application defaults
+			 loadFilterState();           // 2. Load and apply user's saved filter state
+			 
+			 initializeToggleAllIcons();  // 3. Initialize toggle icons based on current state & add listeners
+			 initializeCollapsibles(); 
+			 setLanguage(translations[savedLang] ? savedLang : 'de'); 
+			 
+			 updateSortIcons(); 
+			 fetchPokemonDataFromAPI(); 
+		});
     </script>
     <!-- PWA Service Worker Registration -->
     <script>
