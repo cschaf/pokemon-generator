@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-         :root {
-            /* Color variables remain the same */
+        :root {
             --light-bg: #f5f5f5; --light-text: #333; --light-controls-bg: #fff; --light-border: #ddd; --light-card-bg: #fff; --light-image-bg: #f0f0f0; --light-details-text: #666; --light-status-text: #666; --light-attribution-text: #888; --light-filter-group-bg: #f9f9f9; --light-section-title-color: var(--secondary-color); --light-sticky-btn-bg: var(--secondary-color); --light-sticky-btn-text: white; --light-sticky-btn-hover-bg: #2a4a87; --light-sort-icon-color: #555; --light-sort-icon-active-color: var(--secondary-color); --light-instruction-bg: #eef2f7;
             --dark-bg: #1a1a1a; --dark-text: #eee; --dark-controls-bg: #2a2a2a; --dark-border: #555; --dark-card-bg: #3a3a3a; --dark-image-bg: #4a4a4a; --dark-details-text: #ccc; --dark-status-text: #ccc; --dark-attribution-text: #aaa; --dark-filter-group-bg: #303030; --dark-section-title-color: var(--accent-color); --dark-sticky-btn-bg: var(--accent-color); --dark-sticky-btn-text: var(--dark-bg); --dark-sticky-btn-hover-bg: var(--primary-color); --dark-sort-icon-color: #bbb; --dark-sort-icon-active-color: var(--accent-color); --dark-instruction-bg: #252a30;
             --primary-color: #e3350d; --secondary-color: #3b5ca8; --accent-color: #ff7863; --shiny-color: #FFD700;
@@ -77,6 +76,10 @@
         #results { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 0; }
         #locked-pokemon-section-container:not([style*="display: none"]) + #results,
         #team-builder-section-container:not([style*="display: none"]) + #results { margin-top: 30px; }
+        #name-filter-container { margin-bottom: 20px; }
+        #name-filter-container label { display: block; margin-bottom: 5px; font-weight: 600; }
+        #nameFilter { width: 100%; padding: 10px; border: 1px solid var(--light-border); border-radius: 5px; background-color: var(--light-bg); color: var(--light-text); box-sizing: border-box; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+        body.dark-mode #nameFilter { border-color: var(--dark-border); background-color: var(--dark-bg); color: var(--dark-text); }
         .pokemon-card { background-color: var(--light-card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; position: relative; }
         body.dark-mode .pokemon-card { background-color: var(--dark-card-bg); box-shadow: 0 4px 10px rgba(255, 255, 255, 0.08); }
         .pokemon-card:hover { transform: translateY(-5px); }
@@ -160,7 +163,6 @@
         #toggle-analysis-view-btn:hover { background-color: var(--light-sticky-btn-hover-bg); }
         body.dark-mode #toggle-analysis-view-btn { background-color: var(--dark-sticky-btn-bg); color: var(--dark-sticky-btn-text); }
         body.dark-mode #toggle-analysis-view-btn:hover { background-color: var(--dark-sticky-btn-hover-bg); }
-        
         #team-analysis-chart { width: auto; border-collapse: collapse; margin-top: 15px; font-size: 0.85em; table-layout: auto; }
         #team-analysis-chart th, #team-analysis-chart td { border: 1px solid var(--light-border); padding: 6px 4px; text-align: center; white-space: nowrap; }
         body.dark-mode #team-analysis-chart th, body.dark-mode #team-analysis-chart td { border-color: var(--dark-border); }
@@ -221,8 +223,8 @@
             #results { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; } #results .pokemon-image { height: 110px; } #results .pokemon-info { padding: 10px; } #results .pokemon-name { font-size: 0.9em; } #results .pokemon-details { font-size: 0.8em; } #results .pokemon-type-item .type-icon { width: 15px; height: 15px;} #results .pokemon-type-name { font-size: 0.8em; } #results .lock-icon, #results .shiny-indicator, #results .team-action-icon { font-size: 1em; } #results .team-action-icon { width: 26px; height: 26px; padding: 4px; }
             #locked-pokemon-results .pokemon-card .pokemon-image { height: 80px; } #locked-pokemon-results .pokemon-card .pokemon-info { padding: 8px; } #locked-pokemon-results .pokemon-card .pokemon-name { font-size: 0.8em; margin-bottom: 3px; }           #locked-pokemon-results .pokemon-card .pokemon-details { font-size: 0.7em; margin-bottom: 2px;}           #locked-pokemon-results .pokemon-card .pokemon-types { margin-top: 4px; gap: 3px 5px; }           #locked-pokemon-results .pokemon-card .pokemon-type-item .type-icon { width: 12px; height: 12px; margin-right: 2px; }           #locked-pokemon-results .pokemon-card .pokemon-type-name { font-size: 0.7em; }           #locked-pokemon-results .pokemon-card .lock-icon { font-size: 1em; top: 4px; left: 4px; }           #locked-pokemon-results .pokemon-card .shiny-indicator { font-size: 1em; top: 4px; right: 4px; }
             .pokemon-team-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } #team-builder-results .pokemon-card .team-remove-on-card-icon { font-size: 1.1em; } 
-            #team-analysis-chart { font-size: 0.8em; /* min-width: 500px; /* Beibehalten oder anpassen */ }
-            #team-analysis-chart .pokemon-header-cell img { max-width: 28px; max-height: 28px; } /* Kleiner für Tablet */
+            #team-analysis-chart { font-size: 0.8em; /* min-width: 500px; */ }
+            #team-analysis-chart .pokemon-header-cell img { max-width: 28px; max-height: 28px; } 
             #team-analysis-chart .pokemon-header-cell span { font-size: 0.75em; max-width: 40px; }
             #team-analysis-chart .type-icon-cell img.type-icon { width: 16px; height: 16px; }
             #team-analysis-chart th, #team-analysis-chart td { padding: 5px 3px; }
@@ -235,11 +237,11 @@
             #results { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); } #results .pokemon-image { height: 100px; }
             #locked-pokemon-results .pokemon-card .pokemon-image { height: 70px; } #locked-pokemon-results .pokemon-card .pokemon-name { font-size: 0.75em; } #locked-pokemon-results .pokemon-card .pokemon-details { font-size: 0.65em; } #locked-pokemon-results .pokemon-card .pokemon-type-item .type-icon { width: 11px; height: 11px; } #locked-pokemon-results .pokemon-card .pokemon-type-name { font-size: 0.65em; }
             .pokemon-team-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); } #team-builder-results .pokemon-card .team-remove-on-card-icon { font-size: 1em; }
-            #team-analysis-chart { font-size: 0.7em; min-width: auto; } /* Erlaube Schrumpfen, da scrollbar */
-            #team-analysis-chart th, #team-analysis-chart td { padding: 3px 1px; white-space: normal; min-width: 25px; } /* Kleinere Paddings, Umbruch erlauben */
-            #team-analysis-chart th.attacking-type-header { width: auto; padding: 3px 4px;} /* Automatische Breite für erste Spalte */
-            #team-analysis-chart .pokemon-header-cell img { max-width: 20px; max-height: 20px; } /* Noch kleinere Sprites */
-            #team-analysis-chart .pokemon-header-cell span { font-size: 0.7em; max-width: 35px; }
+            #team-analysis-chart { font-size: 0.7em; /* min-width: auto; */ } 
+            #team-analysis-chart th, #team-analysis-chart td { padding: 3px 1px; white-space: normal; min-width: 25px; } 
+            #team-analysis-chart th.attacking-type-header { width: auto; padding: 3px 4px;} 
+            #team-analysis-chart .pokemon-header-cell img { max-width: 20px; max-height: 20px; } 
+            #team-analysis-chart .pokemon-header-cell span { font-size: 0.7em; max-width: 30px; }
             #team-analysis-chart .type-icon-cell img.type-icon { width: 12px; height: 12px; }
             #team-analysis-chart .summary-col { padding: 3px 2px; }
             #clearCacheBtn { font-size: 0.85em; padding: 6px 10px; } .loading-progress-text { font-size: 0.8em; } .instructions-header .title { font-size: 0.95em; } .instructions-content { font-size: 0.85em; }
@@ -419,6 +421,11 @@
             </div>
         </div>
     </div>
+    
+    <div id="name-filter-container" style="margin-bottom: 20px; display: none;">
+        <label for="nameFilter" data-i18n="nameFilterLabel">Generierte Pokémon nach Namen filtern:</label>
+        <input type="text" id="nameFilter" placeholder="Pikachu, Glurak..." style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid var(--light-border); box-sizing: border-box;">
+    </div>
 
     <div id="results"></div>
     <button id="scrollToTopBtn" title="Nach oben scrollen"><i class="fas fa-arrow-up"></i></button>
@@ -473,6 +480,8 @@
         const teamAnalysisSimpleContainer = document.getElementById('team-analysis-simple');
         const teamAnalysisDetailedContainer = document.getElementById('team-analysis-detailed');
         const toggleAnalysisViewBtn = document.getElementById('toggle-analysis-view-btn');
+        const nameFilterContainer = document.getElementById('name-filter-container');
+        const nameFilterInput = document.getElementById('nameFilter');
 
 
         const ICON_SELECT_ALL = 'fa-solid fa-square-check';
@@ -525,6 +534,7 @@
                 status_initial_prompt: "Wähle Filter und generiere Pokémon!",
                 status_initial_prompt_append_generate: "Drücke 'Pokémon generieren!', um neue zu erhalten.",
                 noResultsInContainer: "Keine Pokémon entsprechen deinen aktuellen Filtern. Versuche, sie anzupassen!",
+                nameFilterLabel: "Generierte Pokémon nach Namen filtern:",
                 cardGeneration: "Generation", cardEvolution: "Entwicklung", cardEvolutionNoEvo: "(Keine Entwicklung)", cardEvolutionStage: "Stufe", cardTotalStages: "Stufen gesamt:",
                 darkModeToggle: "Dark Mode umschalten",
                 attributionText: 'Daten und Bilder bereitgestellt von der <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. Alle Rechte vorbehalten. Alle Bilder der Pokémon-Typen wurden von <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a> bereitgestellt.',
@@ -593,6 +603,7 @@
                 status_initial_prompt: "Select filters and generate Pokémon!",
                 status_initial_prompt_append_generate: "Press 'Generate Pokémon!' to get new ones.",
                 noResultsInContainer: "No Pokémon match your current filters. Try adjusting them!",
+                nameFilterLabel: "Filter generated Pokémon by name:",
                 cardGeneration: "Generation", cardEvolution: "Evolution", cardEvolutionNoEvo: "(No evolution)", cardEvolutionStage: "Stage", cardTotalStages: "Total stages:",
                 darkModeToggle: "Toggle Dark Mode",
                 attributionText: 'Data and images provided by the <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. All Rights Reserved. The images for all Pokémon types are provided by <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a>.',
@@ -969,6 +980,7 @@
             }
             
             hasGeneratedAtLeastOnce = true; 
+            if (nameFilterInput) nameFilterInput.value = ""; 
             validateLockedPokemonIds(); 
             countForNewPokemons = parseInt(document.getElementById('count').value) || 0;
             
@@ -1011,28 +1023,46 @@
 
             sortPokemonList(displayedPokemonList); 
 
-            if (displayedPokemonList.length > 0) {
-                displayedPokemonList.forEach(p => {
+            const nameFilterValue = nameFilterInput.value.toLowerCase().trim();
+            let finalFilteredList = displayedPokemonList;
+
+            if (nameFilterValue !== "") {
+                finalFilteredList = displayedPokemonList.filter(pokemon => {
+                    const nameDe = pokemon.germanName ? pokemon.germanName.toLowerCase() : '';
+                    const nameEn = pokemon.name.toLowerCase();
+                    return nameDe.includes(nameFilterValue) || nameEn.includes(nameFilterValue);
+                });
+            }
+            
+            if (finalFilteredList.length > 0) {
+                finalFilteredList.forEach(p => {
                     resultsContainer.appendChild(createPokemonCard(p));
                 });
             } else if (hasGeneratedAtLeastOnce && pokemonData.length > 0) { 
                 const noResultsDiv = document.createElement('div');
                 noResultsDiv.className = 'no-results-message';
-                noResultsDiv.textContent = translations[currentLang].noResultsInContainer;
+                if (displayedPokemonList.length > 0 && nameFilterValue !== "") { 
+                    let baseMsg = translations[currentLang].noResultsInContainer;
+                    if(currentLang === 'de') baseMsg = baseMsg.replace("deinen aktuellen Filtern", `dem Namen "${nameFilterInput.value}" und deinen Filtern`);
+                    else baseMsg = baseMsg.replace("your current filters", `the name "${nameFilterInput.value}" and your filters`);
+                    noResultsDiv.textContent = baseMsg;
+                } else { 
+                     noResultsDiv.textContent = translations[currentLang].noResultsInContainer;
+                }
                 resultsContainer.appendChild(noResultsDiv);
             }
             
+            nameFilterContainer.style.display = displayedPokemonList.length > 0 ? 'block' : 'none';
+            
             const numLocked = actualDisplayedLockedPokemons.length;
-            const numCurrentlyDisplayed = displayedPokemonList.length; 
+            const numCurrentlyDisplayedInResults = finalFilteredList.length;
             const filteredCandidatesForStatus = filterPokemon();
             const numTotalPossibleNew = filteredCandidatesForStatus.filter(p => !lockedPokemonIds.has(p.id) && !currentTeam.some(member => member.id === p.id)).length;
             const countInputValue = parseInt(document.getElementById('count').value) || 0;
 
-            if (isLoading) {
-                statusElement.textContent = translations[currentLang].loadingData;
-            } else if (pokemonData.length === 0) {
-                statusElement.textContent = translations[currentLang].status_initial_prompt;
-            } else if (!hasGeneratedAtLeastOnce) {
+            if (isLoading) { statusElement.textContent = translations[currentLang].loadingData; }
+            else if (pokemonData.length === 0) { statusElement.textContent = translations[currentLang].status_initial_prompt; }
+            else if (!hasGeneratedAtLeastOnce) {
                 let initialMsgParts = [];
                  if (numLocked > 0) {
                     let lockedMsg = translations[currentLang].status_locked_only(numLocked);
@@ -1042,25 +1072,22 @@
                 if (currentTeam.length > 0) {
                      initialMsgParts.push(`${currentTeam.length} im Team`); 
                 }
-                
                 let combinedMsg = initialMsgParts.join('. ');
                 if (initialMsgParts.length > 0) combinedMsg += ". "; 
-
                 if (translations[currentLang].status_initial_prompt_append_generate) {
                      combinedMsg += translations[currentLang].status_initial_prompt_append_generate;
                 }
                 statusElement.textContent = combinedMsg || translations[currentLang].status_initial_prompt;
-
             } else { 
-                if (numLocked > 0 && countInputValue === 0 && numCurrentlyDisplayed === 0) {
+                if (numLocked > 0 && countInputValue === 0 && numCurrentlyDisplayedInResults === 0) {
                     statusElement.textContent = translations[currentLang].status_locked_only(numLocked);
-                } else if (numLocked > 0 && numCurrentlyDisplayed > 0) {
-                    statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numCurrentlyDisplayed, numTotalPossibleNew);
-                } else if (numLocked > 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
+                } else if (numLocked > 0 && numCurrentlyDisplayedInResults > 0) {
+                    statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numCurrentlyDisplayedInResults, numTotalPossibleNew);
+                } else if (numLocked > 0 && numCurrentlyDisplayedInResults === 0 && countInputValue > 0) {
                     statusElement.textContent = translations[currentLang].status_locked_no_new_match(numLocked);
-                } else if (numLocked === 0 && numCurrentlyDisplayed > 0) {
-                    statusElement.textContent = translations[currentLang].status_generated_only(numCurrentlyDisplayed, numTotalPossibleNew);
-                } else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
+                } else if (numLocked === 0 && numCurrentlyDisplayedInResults > 0) {
+                    statusElement.textContent = translations[currentLang].status_generated_only(numCurrentlyDisplayedInResults, numTotalPossibleNew);
+                } else if (numLocked === 0 && numCurrentlyDisplayedInResults === 0 && countInputValue > 0) {
                     const activeFilters = document.querySelectorAll('.gen-checkbox:checked, .type-checkbox:checked, .evo-position-checkbox:checked, .chain-length-checkbox:checked').length > 0 ||
                                           !document.getElementById('includeLegendary').checked ||
                                           !document.getElementById('includeMythical').checked;
@@ -1069,12 +1096,13 @@
                     } else {
                          statusElement.textContent = translations[currentLang].status_no_new_match; 
                     }
-                } else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue === 0) {
+                } else if (numLocked === 0 && numCurrentlyDisplayedInResults === 0 && countInputValue === 0) {
                      statusElement.textContent = translations[currentLang].status_initial_prompt; 
                 } else {
-                    if (numCurrentlyDisplayed === 0 && countInputValue > 0) { 
-                         statusElement.textContent = ""; 
-                    } else if (numCurrentlyDisplayed === 0 && countInputValue === 0) {
+                    if (numCurrentlyDisplayedInResults === 0 && countInputValue > 0 && nameFilterValue !== "") { 
+                        // Status message for "no results due to name filter" is primarily handled by in-container message
+                        statusElement.textContent = ""; 
+                    } else if (numCurrentlyDisplayedInResults === 0 && countInputValue === 0){
                         statusElement.textContent = translations[currentLang].status_initial_prompt;
                     }
                 }
@@ -1088,136 +1116,63 @@
             if (!list || list.length === 0) return;
             const directionMultiplier = currentSortDirection === 'asc' ? 1 : -1;
             switch (currentSortCriteria) {
-                case 'id':
-                    list.sort((a, b) => (a.id - b.id) * directionMultiplier);
-                    break;
-                case 'name':
-                    list.sort((a, b) => {
-                         const nameA = currentLang === 'de' && a.germanName ? a.germanName : a.name;
-                         const nameB = currentLang === 'de' && b.germanName ? b.germanName : b.name;
-                         return nameA.localeCompare(nameB, currentLang) * directionMultiplier;
-                    });
-                    break;
-                case 'type':
-                    list.sort((a, b) => {
-                        const typeA = a.types.length > 0 ? a.types[0] : '';
-                        const typeB = b.types.length > 0 ? b.types[0] : '';
-                        return typeA.localeCompare(typeB) * directionMultiplier;
-                    });
-                    break;
-                case 'random':
-                    for (let i = list.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [list[i], list[j]] = [list[j], list[i]];
-                    }
-                    break;
-                default: 
-                     list.sort((a, b) => a.id - b.id);
+                case 'id': list.sort((a, b) => (a.id - b.id) * directionMultiplier); break;
+                case 'name': list.sort((a, b) => { const nameA = currentLang === 'de' && a.germanName ? a.germanName : a.name; const nameB = currentLang === 'de' && b.germanName ? b.germanName : b.name; return nameA.localeCompare(nameB, currentLang) * directionMultiplier; }); break;
+                case 'type': list.sort((a, b) => { const typeA = a.types.length > 0 ? a.types[0] : ''; const typeB = b.types.length > 0 ? b.types[0] : ''; return typeA.localeCompare(typeB) * directionMultiplier; }); break;
+                case 'random': for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; } break;
+                default: list.sort((a, b) => a.id - b.id);
             }
         }
 
         function updateSortIcons() {
              document.querySelectorAll('.sort-icon').forEach(icon => {
                 icon.classList.remove('active');
-                if (icon.dataset.sort === currentSortCriteria) {
-                    icon.classList.add('active');
-                }
+                if (icon.dataset.sort === currentSortCriteria) icon.classList.add('active');
              });
-
-             if (currentSortCriteria === 'random') {
-                 sortDirectionIcon.className = 'fas'; 
-             } else {
-                 sortDirectionIcon.className = `fas ${currentSortDirection === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short'}`;
-             }
+             sortDirectionIcon.className = currentSortCriteria === 'random' ? 'fas' : `fas ${currentSortDirection === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short'}`;
         }
 
         function toggleShiny(imgElement) {
-            const currentSrc = imgElement.src;
-            const normalSrc = imgElement.dataset.normal;
-            const shinySrc = imgElement.dataset.shiny;
-            const imageContainer = imgElement.parentElement;
-            const indicator = imageContainer.querySelector('.shiny-indicator');
-            if (shinySrc && shinySrc !== 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt' && shinySrc !== 'https://placehold.co/120x120/e0e0e0/333?text=Fehler') {
+            const currentSrc = imgElement.src; const normalSrc = imgElement.dataset.normal; const shinySrc = imgElement.dataset.shiny; const imageContainer = imgElement.parentElement; const indicator = imageContainer.querySelector('.shiny-indicator');
+            if (shinySrc && shinySrc.includes('http')) { // Basic check if shinySrc is a valid URL
                  if (currentSrc === normalSrc) { imgElement.src = shinySrc; if (indicator) indicator.classList.add('active'); } 
                  else { imgElement.src = normalSrc; if (indicator) indicator.classList.remove('active'); }
             }
         }
 
         function toggleLockPokemon(pokemonId) {
-            const pokemonToToggle = pokemonData.find(p => p.id === pokemonId);
-            if (!pokemonToToggle) return;
-
-            if (lockedPokemonIds.has(pokemonId)) { 
-                lockedPokemonIds.delete(pokemonId);
-            } else { 
-                lockedPokemonIds.add(pokemonId);
-                const indexInDisplayed = displayedPokemonList.findIndex(p => p.id === pokemonId);
-                if (indexInDisplayed > -1) {
-                    displayedPokemonList.splice(indexInDisplayed, 1);
-                }
-            }
+            const pokemonToToggle = pokemonData.find(p => p.id === pokemonId); if (!pokemonToToggle) return;
+            if (lockedPokemonIds.has(pokemonId)) lockedPokemonIds.delete(pokemonId);
+            else { lockedPokemonIds.add(pokemonId); const indexInDisplayed = displayedPokemonList.findIndex(p => p.id === pokemonId); if (indexInDisplayed > -1) displayedPokemonList.splice(indexInDisplayed, 1); }
             localStorage.setItem(LOCKED_POKEMON_CACHE_KEY, JSON.stringify(Array.from(lockedPokemonIds)));
             renderAllPokemon(); 
         }
 
-        // --- Team Builder Functions ---
         function toggleTeamMember(pokemonId) {
-            const pokemon = pokemonData.find(p => p.id === pokemonId);
-            if (!pokemon) return;
-
+            const pokemon = pokemonData.find(p => p.id === pokemonId); if (!pokemon) return;
             const teamIndex = currentTeam.findIndex(member => member.id === pokemonId);
-
-            if (teamIndex > -1) { 
-                currentTeam.splice(teamIndex, 1);
-            } else { 
-                if (currentTeam.length < MAX_TEAM_SIZE) {
-                    currentTeam.push(pokemon);
-                } else {
-                    alert(translations[currentLang].teamFullMessage);
-                    return; 
-                }
-            }
-            saveTeamState();
-            renderTeamBuilder();
-            renderAllPokemon(); 
+            if (teamIndex > -1) currentTeam.splice(teamIndex, 1);
+            else { if (currentTeam.length < MAX_TEAM_SIZE) currentTeam.push(pokemon); else { alert(translations[currentLang].teamFullMessage); return; } }
+            saveTeamState(); renderTeamBuilder(); renderAllPokemon(); 
         }
 
         function renderTeamBuilder() {
             teamBuilderResultsContainer.innerHTML = ""; 
-
-            if (currentTeam.length > 0) {
-                teamBuilderSectionContainer.style.display = 'block';
-                currentTeam.forEach(pokemon => {
-                    const teamCard = createPokemonCard(pokemon, true); 
-                    teamBuilderResultsContainer.appendChild(teamCard);
-                });
-            } else {
-                teamBuilderSectionContainer.style.display = 'none';
-            }
+            if (currentTeam.length > 0) { teamBuilderSectionContainer.style.display = 'block'; currentTeam.forEach(pokemon => { teamBuilderResultsContainer.appendChild(createPokemonCard(pokemon, true)); }); }
+            else teamBuilderSectionContainer.style.display = 'none';
             analyzeTeamTypes(); 
         }
 
-        function saveTeamState() {
-            const teamMemberIds = currentTeam.map(p => p.id);
-            localStorage.setItem(TEAM_MEMBERS_CACHE_KEY, JSON.stringify(teamMemberIds));
-        }
+        function saveTeamState() { localStorage.setItem(TEAM_MEMBERS_CACHE_KEY, JSON.stringify(currentTeam.map(p => p.id))); }
 
         function loadTeamState() {
             const savedTeamIdsJSON = localStorage.getItem(TEAM_MEMBERS_CACHE_KEY);
             if (savedTeamIdsJSON) {
                 try {
                     const savedTeamIds = JSON.parse(savedTeamIdsJSON);
-                    if (pokemonData.length > 0) {
-                        currentTeam = savedTeamIds.map(id => pokemonData.find(p => p.id === id)).filter(p => p); 
-                    } else {
-                        currentTeam = [];
-                        console.warn("loadTeamState called before pokemonData was ready. Team might not load correctly on first pass.");
-                    }
-                } catch (e) {
-                    console.error("Error loading team state:", e);
-                    currentTeam = [];
-                    localStorage.removeItem(TEAM_MEMBERS_CACHE_KEY);
-                }
+                    if (pokemonData.length > 0) currentTeam = savedTeamIds.map(id => pokemonData.find(p => p.id === id)).filter(p => p); 
+                    else { currentTeam = []; console.warn("loadTeamState called before pokemonData was ready."); }
+                } catch (e) { console.error("Error loading team state:", e); currentTeam = []; localStorage.removeItem(TEAM_MEMBERS_CACHE_KEY); }
             }
         }
         
@@ -1619,6 +1574,12 @@
             toggleAnalysisViewBtn.addEventListener('click', () => {
                 isDetailedAnalysisVisible = !isDetailedAnalysisVisible;
                 updateAnalysisViewDisplay();
+            });
+        }
+        
+        if (nameFilterInput) {
+            nameFilterInput.addEventListener('input', () => {
+                renderAllPokemon(); 
             });
         }
 
