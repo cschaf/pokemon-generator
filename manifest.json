@@ -1,6 +1,6 @@
 {
   "name": "Pokémon Generator",
-  "short_name": "Poké-Generator",
+  "short_name": "Pokémon-Generator",
   "description": "Generate random Pokémon based on filters like generation, type, and evolution.",
   "start_url": "./index.html",
   "display": "standalone",
