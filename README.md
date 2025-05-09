@@ -27,20 +27,105 @@ If you enjoy this tool and would like to support its development, you can:
 [Support me via PayPal.Me](https://paypal.me/DEIN_PAYPALME_LINK_ODER_NAME) <!-- Ersetze DEIN_PAYPALME_LINK_ODER_NAME -->
 
 ## Key Features
-<!-- ... (Rest der Features bleibt gleich) ... -->
+
+*   **⚙️ Customizable Generation:** Specify the exact number of *new* random Pokémon to generate.
+*   **🔬 Extensive Filtering:**
+    *   By Generation (1-9).
+    *   By Type (multi-select).
+    *   By Evolution Stage (position in chain).
+    *   By Evolution Chain Length.
+    *   Inclusion/Exclusion of Legendary & Mythical Pokémon.
+    *   Collapsible filter sections for a cleaner interface.
+    *   "Select/Deselect All" options for Generation, Type, Evolution Stage, and Chain Length filters.
+    *   **Persistent Filters:** Your selected filter settings are saved and restored across browser sessions.
+*   **🤝 Team Builder:**
+    *   Add/Remove Pokémon to a persistent team (max 6 members) using icons on each card.
+    *   Dedicated team display section with compact Pokémon cards.
+    *   Basic team type weakness and resistance analysis displayed using type icons.
+    *   Team composition persists across browser sessions.
+*   **🔒 Pokémon Locking:**
+    *   Click the lock icon on a card to save it.
+    *   Locked Pokémon appear in a separate section at the top.
+    *   Locked Pokémon persist across browser sessions.
+    *   Locked cards use a compact layout.
+*   **🔄 Sorting:** Sort the *generated* (non-locked) Pokémon list by:
+    *   Pokédex ID (Ascending/Descending)
+    *   Name (Alphabetical, Ascending/Descending)
+    *   Primary Type (Alphabetical, Ascending/Descending)
+    *   Random Shuffle
+*   **✨ Shiny Toggle:** Click Pokémon images to view shiny sprites.
+*   **🔗 External Links:** Quick access to detailed Pokémon info on Pokémon Database.
+*   **🌓 UI Enhancements:**
+    *   Dark Mode support.
+    *   Language switching (German/English) with persistent preference.
+    *   Fully responsive design for desktop, tablet, and mobile.
+    *   Sticky "Generate" button and sorting controls appear when scrolling down.
+    *   "Scroll to Top" button for easy navigation.
+    *   Lazy loading for Pokémon images for improved performance.
+    *   Clear status messages indicating generation results and filter effects.
+    *   Informative "No Results" message directly in the results area if filters yield no matches.
+    *   Button to clear all app-specific data from `localStorage` (cache, settings, locked Pokémon, team).
 
 ## Technology Stack
-<!-- ... (bleibt gleich) ... -->
+
+*   **HTML5:** Structure and content.
+*   **CSS3:** Styling, layout (including Flexbox and Grid), responsiveness, and dark mode theming.
+*   **JavaScript (Vanilla):** DOM manipulation, API fetching (`fetch`), event handling, filtering logic, sorting, `localStorage` management.
+*   **PokeAPI (v2):** Primary source for all Pokémon data (details, species, evolution chains, sprites).
+*   **Font Awesome:** Icons for UI elements (theme toggle, locks, sorting, collapsible sections, team actions, etc.).
+*   **Google Fonts:** `Inter` font for the UI text.
+*   **Flagcdn.com:** Source for language switcher flag icons.
+*   **partywhale/pokemon-type-icons:** Source for Pokémon type icons used in filters, cards, and team analysis.
 
 ## How to Use
-<!-- ... (bleibt gleich) ... -->
+
+1.  **Access the App:**
+    *   Visit the live demo: **[Pokémon Generator](https://cschaf.github.io/pokemon-generator/index.html)**
+    *   *Alternatively:* Clone this repository (`git clone https://github.com/CSchaf/pokemon-generator.git`) and open `index.html` locally in your browser.
+2.  **Set Filters:**
+    *   Use the input field to specify the **Number of new Pokémon to generate**.
+    *   Expand the collapsible filter sections (Generation, Types, Evolution, etc.).
+    *   Check/uncheck the boxes to define your desired criteria. Use the "Select/Deselect All" icons within filter groups for convenience. Your filter choices will be saved for your next visit.
+3.  **Generate:** Click the main "Generate Pokémon!" button (or the sticky one that appears when scrolling).
+4.  **View Results:**
+    *   **Locked Pokémon** (if any) will appear first in their own compact section.
+    *   **Current Team** (if any) will be displayed in its dedicated section, also with compact cards and type analysis.
+    *   **Newly Generated Pokémon** will appear below, sorted according to the current sort selection (default is by ID).
+5.  **Interact with Cards:**
+    *   Click a Pokémon's image to toggle its **Shiny** form.
+    *   Click the **Pokédex number or name** to open its Pokémon Database page in a new tab.
+    *   Click the **lock/unlock icon** (top-left of a card in the "Generated" or "Locked" list) to add/remove it from the persistent Locked Pokémon list.
+    *   Click the **plus/minus icon** (bottom-right of a card in the "Generated" or "Locked" list) to add/remove the Pokémon from your Team.
+    *   Click the **'X' icon** (top-right of a card in the "Current Team" list) to remove it directly from the team.
+6.  **Sort Results:** When scrolled down, use the sorting icons (next to the sticky Generate button) to re-order the *newly generated* Pokémon. The direction arrow indicates ascending/descending order. Random shuffle is also available.
+7.  **UI Options:**
+    *   Use the **moon/sun icon** in the top-right to toggle Dark Mode.
+    *   Click the **flag icons** to switch between German and English interface text.
+    *   Use the **arrow button** in the bottom-right (appears on scroll) to quickly return to the top of the page.
+    *   Use the **"Alle App-Daten löschen" / "Clear All App Data"** button at the bottom to reset all stored preferences and cached data.
 
 ## Development Notes
-<!-- ... (bleibt gleich) ... -->
+
+*   This project's code, including feature implementation and refinements, was developed iteratively with the assistance of **Gemini**, a large language model from Google, based on user prompts and requirements.
+*   Focus was placed on using vanilla JavaScript for core functionality.
+*   `localStorage` is used for persisting:
+    *   Dark Mode preference (`darkMode`)
+    *   Language preference (`language`)
+    *   List of Locked Pokémon IDs (`lockedPokemonIds_v1`)
+    *   Selected filter states (`pokemonGeneratorFilterState_v1`)
+    *   Current team member IDs (`pokemonTeamMembers_v1`)
+    *   The main Pokémon data cache (`pokemonGeneratorCache_v4`)
+*   The application includes a check for incomplete Pokémon data cache and will attempt to refresh if the cached data seems too small.
 
 ## Data Sources, Credits & Attributions
-<!-- ... (bleibt gleich) ... -->
 
+This project utilizes several excellent free resources:
+
+*   **Primary Data & Sprites:** All Pokémon data (names, types, evolution details, Pokédex numbers, generation info, legendary/mythical status) and Pokémon sprite images (normal and shiny) are fetched from the **[PokeAPI (v2)](https://pokeapi.co/)**. This is an incredible, free, and open RESTful API.
+*   **Type Icons:** The distinctive Pokémon type icons used throughout the application (in filters, on Pokémon cards, and in the team analysis) are provided by **[partywhale/pokemon-type-icons on GitHub](https://github.com/partywhale/pokemon-type-icons)**. These are licensed under the MIT License.
+*   **Flag Icons:** Language switcher flag icons (German and US flags) are sourced from **[Flag Cdn API (flagcdn.com)](https://flagcdn.com/)**. These are provided under a permissive license (likely public domain or similar, but always good to verify their terms for specific use cases).
+*   **UI Icons:** General user interface icons (dark mode toggle, lock, sort arrows, collapsible chevrons, team add/remove, etc.) are from **[Font Awesome (Free version)](https://fontawesome.com/)**.
+*   **Font:** The `Inter` typeface used for the application's text is from **[Google Fonts](https://fonts.google.com/specimen/Inter)**.
 ## Copyright and Disclaimer
 
 *   Pokémon and all associated names, characters, and images are trademarks and copyrights of © Nintendo, Creatures Inc., Game Freak Inc., and The Pokémon Company International.
