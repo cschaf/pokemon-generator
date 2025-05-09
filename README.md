@@ -4,9 +4,6 @@ A dynamic web application that generates random Pokémon based on user-defined f
 
 **[🚀 Launch the Pokémon Generator Application](https://cschaf.github.io/pokemon-generator/index.html)**
 
-<!-- Optional: Add a screenshot or GIF here -->
-<!-- ![Pokémon Generator Screenshot](link_to_screenshot.png) -->
-
 ## Project Description
 
 This project is a feature-rich, web-based Pokémon Generator designed for fans and developers alike. It allows users to explore the world of Pokémon by generating customized lists based on a variety of criteria, including:
