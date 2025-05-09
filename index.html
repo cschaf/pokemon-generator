@@ -260,6 +260,22 @@
             background-color: var(--accent-color);
             color: var(--dark-bg);
         }
+		
+		.no-results-message {
+			grid-column: 1 / -1; /* Make it span all columns in the grid */
+			text-align: center;
+			padding: 40px 20px;
+			font-size: 1.1em;
+			color: var(--light-details-text);
+			border: 2px dashed var(--light-border);
+			border-radius: 8px;
+			margin-top: 20px; /* Add some space if it's the only thing showing */
+		}
+
+		body.dark-mode .no-results-message {
+			color: var(--dark-details-text);
+			border-color: var(--dark-border);
+		}
 
 
         /* Sticky/Fixed UI Elements */
@@ -648,6 +664,7 @@
                 attributionText: 'Daten und Bilder bereitgestellt von der <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. Alle Rechte vorbehalten. Alle Bilder der Pokémon-Typen wurden von <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a> bereitgestellt.',
                 clearCacheButton: "Alle App-Daten löschen",
                 confirmClearCache: "Möchtest du wirklich alle lokal gespeicherten Daten dieser App (Cache, Einstellungen, etc.) löschen? Die Seite wird danach neu geladen.",
+				noResultsInContainer: "Keine Pokémon entsprechen deinen aktuellen Filtern. Versuche, sie anzupassen!",
                 cacheCleared: "Alle lokalen Daten gelöscht. Die Seite wird neu geladen."
             },
             en: {
@@ -699,7 +716,8 @@
                 attributionText: 'Data and images provided by the <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>.<br>Pokémon © 2025 Nintendo, Creatures Inc., Game Freak Inc. All Rights Reserved. The images for all Pokémon types are provided by <a href="https://github.com/partywhale/pokemon-type-icons/" target="_blank">partywhale</a>.',
                 clearCacheButton: "Clear All App Data",
                 confirmClearCache: "Are you sure you want to delete all locally stored data for this app (cache, settings, etc.)? The page will reload afterwards.",
-                cacheCleared: "All local data cleared. The page will reload."
+                noResultsInContainer: "No Pokémon match your current filters. Try adjusting them!",
+				cacheCleared: "All local data cleared. The page will reload."
             }
         };
         let currentLang = 'de';
@@ -1076,77 +1094,113 @@
         }
 
         function renderAllPokemon() {
-            lockedPokemonResultsContainer.innerHTML = "";
-            resultsContainer.innerHTML = "";
-            const statusElement = document.getElementById('status');
+			// 1. Clear containers
+			lockedPokemonResultsContainer.innerHTML = "";
+			resultsContainer.innerHTML = ""; // Clear it first
+			const statusElement = document.getElementById('status');
 
-            let actualDisplayedLockedPokemons = [];
-            if (lockedPokemonIds.size > 0) {
-                lockedPokemonIds.forEach(id => {
-                    const pokemon = pokemonData.find(p => p.id === id);
-                    if (pokemon) {
-                        actualDisplayedLockedPokemons.push(pokemon);
-                    }
-                });
-                actualDisplayedLockedPokemons.sort((a,b) => a.id - b.id).forEach(p => {
-                    lockedPokemonResultsContainer.appendChild(createPokemonCard(p));
-                });
-                lockedPokemonSectionContainer.style.display = 'block';
-            } else {
-                lockedPokemonSectionContainer.style.display = 'none';
-            }
+			// 2. Render Locked Pokemon (same as before)
+			let actualDisplayedLockedPokemons = [];
+			if (lockedPokemonIds.size > 0) {
+				lockedPokemonIds.forEach(id => {
+					const pokemon = pokemonData.find(p => p.id === id);
+					if (pokemon) {
+						actualDisplayedLockedPokemons.push(pokemon);
+					}
+				});
+				actualDisplayedLockedPokemons.sort((a,b) => a.id - b.id).forEach(p => {
+					lockedPokemonResultsContainer.appendChild(createPokemonCard(p));
+				});
+				lockedPokemonSectionContainer.style.display = 'block';
+			} else {
+				lockedPokemonSectionContainer.style.display = 'none';
+			}
 
-            sortPokemonList(displayedPokemonList); 
+			// 3. Sort and Render the current `displayedPokemonList` (non-locked Pokémon)
+			sortPokemonList(displayedPokemonList); // Sorts in-place
 
-            displayedPokemonList.forEach(p => {
-                resultsContainer.appendChild(createPokemonCard(p));
-            });
+			if (displayedPokemonList.length > 0) {
+				displayedPokemonList.forEach(p => {
+					resultsContainer.appendChild(createPokemonCard(p));
+				});
+			} else if (hasGeneratedAtLeastOnce && pokemonData.length > 0) { 
+				// Only show "no results in container" if a generation has been attempted
+				// and there is data to filter from.
+				// Don't show if it's initial load before any generation.
+				const noResultsDiv = document.createElement('div');
+				noResultsDiv.className = 'no-results-message';
+				noResultsDiv.textContent = translations[currentLang].noResultsInContainer;
+				resultsContainer.appendChild(noResultsDiv);
+			}
+			// If displayedPokemonList is empty and it's the initial load (hasGeneratedAtLeastOnce is false),
+			// the #results container will simply remain empty, which is fine.
 
-            const numLocked = actualDisplayedLockedPokemons.length;
-            const numCurrentlyDisplayed = displayedPokemonList.length; 
-            const filteredCandidatesForStatus = filterPokemon();
-            const numTotalPossibleNew = filteredCandidatesForStatus.filter(p => !lockedPokemonIds.has(p.id)).length;
-            const countInputValue = parseInt(document.getElementById('count').value) || 0;
+			// 4. Update Status Message (logic mostly remains, but consider the new in-container message)
+			const numLocked = actualDisplayedLockedPokemons.length;
+			const numCurrentlyDisplayed = displayedPokemonList.length; 
+			const filteredCandidatesForStatus = filterPokemon();
+			const numTotalPossibleNew = filteredCandidatesForStatus.filter(p => !lockedPokemonIds.has(p.id)).length;
+			const countInputValue = parseInt(document.getElementById('count').value) || 0;
 
-            if (isLoading) {
-                // Status handled by fetchPokemonDataFromAPI
-            } else if (pokemonData.length === 0) {
-                statusElement.textContent = translations[currentLang].status_initial_prompt;
-            } else if (!hasGeneratedAtLeastOnce) {
-                if (numLocked > 0) {
-                    let initialMsg = translations[currentLang].status_locked_only(numLocked);
-                    if (translations[currentLang].status_initial_prompt_append_generate) {
-                         initialMsg += " " + translations[currentLang].status_initial_prompt_append_generate;
-                    }
-                    statusElement.textContent = initialMsg;
-                } else {
-                    statusElement.textContent = translations[currentLang].status_initial_prompt;
-                }
-            } else { 
-                if (numLocked > 0 && countInputValue === 0 && numCurrentlyDisplayed === 0) {
-                    statusElement.textContent = translations[currentLang].status_locked_only(numLocked);
-                } else if (numLocked > 0 && numCurrentlyDisplayed > 0) {
-                    statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numCurrentlyDisplayed, numTotalPossibleNew);
-                } else if (numLocked > 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
-                    statusElement.textContent = translations[currentLang].status_locked_no_new_match(numLocked);
-                } else if (numLocked === 0 && numCurrentlyDisplayed > 0) {
-                    statusElement.textContent = translations[currentLang].status_generated_only(numCurrentlyDisplayed, numTotalPossibleNew);
-                } else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
-                    if (filteredCandidatesForStatus.length === 0 && pokemonData.length > 0 && document.querySelectorAll('.gen-checkbox:checked, .type-checkbox:checked, .evo-position-checkbox:checked, .chain-length-checkbox:checked').length > 0) {
-                        statusElement.textContent = translations[currentLang].status_no_pokemon_at_all;
-                    } else {
-                        statusElement.textContent = translations[currentLang].status_no_new_match;
-                    }
-                } else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue === 0) {
-                     statusElement.textContent = translations[currentLang].status_initial_prompt; 
-                } else {
-                    statusElement.textContent = translations[currentLang].status_initial_prompt; 
-                }
-            }
-            
-            updateSortIcons();
-            handleScroll();
-        }
+			if (isLoading) {
+				statusElement.textContent = translations[currentLang].loadingData;
+			} else if (pokemonData.length === 0) {
+				statusElement.textContent = translations[currentLang].status_initial_prompt;
+			} else if (!hasGeneratedAtLeastOnce) {
+				if (numLocked > 0) {
+					let initialMsg = translations[currentLang].status_locked_only(numLocked);
+					if (translations[currentLang].status_initial_prompt_append_generate) {
+						 initialMsg += " " + translations[currentLang].status_initial_prompt_append_generate;
+					}
+					statusElement.textContent = initialMsg;
+				} else {
+					statusElement.textContent = translations[currentLang].status_initial_prompt;
+				}
+			} else { // hasGeneratedAtLeastOnce is true
+				if (numLocked > 0 && countInputValue === 0 && numCurrentlyDisplayed === 0) {
+					statusElement.textContent = translations[currentLang].status_locked_only(numLocked);
+				} else if (numLocked > 0 && numCurrentlyDisplayed > 0) {
+					statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numCurrentlyDisplayed, numTotalPossibleNew);
+				} else if (numLocked > 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
+					// The in-container message already covers "no new Pokémon match filters" for the #results area.
+					// The status line can be more concise or reinforce the locked count.
+					statusElement.textContent = translations[currentLang].status_locked_no_new_match(numLocked);
+				} else if (numLocked === 0 && numCurrentlyDisplayed > 0) {
+					statusElement.textContent = translations[currentLang].status_generated_only(numCurrentlyDisplayed, numTotalPossibleNew);
+				} else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue > 0) {
+					// The in-container message handles "no results". The status can be simpler.
+					// Check if filters are actually restrictive or if there's no data.
+					const activeFilters = document.querySelectorAll('.gen-checkbox:checked, .type-checkbox:checked, .evo-position-checkbox:checked, .chain-length-checkbox:checked').length > 0 ||
+										  !document.getElementById('includeLegendary').checked ||
+										  !document.getElementById('includeMythical').checked;
+
+					if (filteredCandidatesForStatus.length === 0 && pokemonData.length > 0 && activeFilters) {
+						 statusElement.textContent = translations[currentLang].status_no_pokemon_at_all; // This implies filters are too strict.
+					} else {
+						 statusElement.textContent = translations[currentLang].status_no_new_match; // Generic "no new match" if filters aren't obviously the sole cause.
+					}
+				} else if (numLocked === 0 && numCurrentlyDisplayed === 0 && countInputValue === 0) {
+					 statusElement.textContent = translations[currentLang].status_initial_prompt; 
+					 // Or a message like "Generated 0 new Pokémon as requested."
+				} else {
+					// Fallback, potentially redundant if in-container message shows.
+					// Consider if this state is reachable and what message is best.
+					// For now, if hasGeneratedAtLeastOnce is true, and numCurrentlyDisplayed is 0, the in-container message appears.
+					// The status line could be empty or say something generic.
+					if (numCurrentlyDisplayed === 0) {
+						 // Status message might be less critical here since the .no-results-message is shown
+						 statusElement.textContent = ""; // Or a very brief summary
+					} else {
+						// This case should ideally be covered by one of the above.
+						statusElement.textContent = translations[currentLang].status_initial_prompt; 
+					}
+				}
+			}
+					
+			// 5. Update UI elements
+			updateSortIcons();
+			handleScroll();
+		}
 
 
         function sortPokemonList(list) {
