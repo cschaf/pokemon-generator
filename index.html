@@ -95,23 +95,26 @@
         .lock-icon.locked { color: var(--primary-color); }
         body.dark-mode .lock-icon { color: var(--dark-status-text); }
         body.dark-mode .lock-icon.locked { color: var(--accent-color); }
-        .pokemon-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .pokemon-info { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; }
         .pokemon-name { margin: 0 0 8px 0; color: var(--light-text); font-size: 1.1em; font-weight: 700; word-break: break-word; }
         body.dark-mode .pokemon-name { color: var(--dark-text); }
         .pokedex-link { color: inherit; text-decoration: none; transition: color 0.2s, text-decoration 0.2s; }
         .pokedex-link:hover { text-decoration: underline; color: var(--secondary-color); }
         body.dark-mode .pokedex-link:hover { color: var(--accent-color); }
-        .pokemon-details { font-size: 0.9em; color: var(--light-details-text); margin: 0 0 5px 0; }
-        body.dark-mode .pokemon-details { color: var(--dark-details-text); }
-        .pokemon-types { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px 10px; }
+        .pokemon-meta-details { margin-bottom: 8px; }
+        .pokemon-detail-item { font-size: 0.85em; color: var(--light-details-text); margin: 0 0 3px 0; line-height: 1.3; }
+        body.dark-mode .pokemon-detail-item { color: var(--dark-details-text); }
+        .pokemon-types { margin-top: 0; margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 8px 10px; }
         .pokemon-type-item { display: inline-flex; align-items: center; }
         .pokemon-type-item .type-icon { width: 18px; height: 18px; margin-right: 4px; }
         .pokemon-type-name { font-size: 0.9em; color: var(--light-details-text); text-transform: capitalize; font-weight: 500; }
         body.dark-mode .pokemon-type-name { color: var(--dark-details-text); }
+        .pokemon-special-status { font-size: 0.85em; color: var(--light-details-text); margin: 0; font-weight: bold; }
+        body.dark-mode .pokemon-special-status { color: var(--dark-details-text); }
         #locked-pokemon-results .pokemon-card .pokemon-image { height: 100px; }
         #locked-pokemon-results .pokemon-card .pokemon-info { padding: 10px; }
         #locked-pokemon-results .pokemon-card .pokemon-name { font-size: 0.95em; margin-bottom: 5px; }
-        #locked-pokemon-results .pokemon-card .pokemon-details { font-size: 0.8em; margin-bottom: 3px;}
+        #locked-pokemon-results .pokemon-card .pokemon-detail-item { font-size: 0.8em; margin-bottom: 2px;}
         #locked-pokemon-results .pokemon-card .pokemon-types { margin-top: 6px; gap: 4px 6px; }
         #locked-pokemon-results .pokemon-card .pokemon-type-item .type-icon { width: 14px; height: 14px; margin-right: 3px; }
         #locked-pokemon-results .pokemon-card .pokemon-type-name { font-size: 0.8em; }
@@ -137,7 +140,8 @@
         #team-builder-results .pokemon-card .pokemon-image { height: 80px; }
         #team-builder-results .pokemon-card .pokemon-info { padding: 8px; }
         #team-builder-results .pokemon-card .pokemon-name { font-size: 0.85em; margin-bottom: 4px; }
-        #team-builder-results .pokemon-card .pokemon-details { display: none; } 
+        #team-builder-results .pokemon-card .pokemon-detail-item { display: none; } 
+        #team-builder-results .pokemon-card .pokemon-special-status { display: none; } 
         #team-builder-results .pokemon-card .pokemon-types { margin-top: 5px; gap: 3px 5px; }
         #team-builder-results .pokemon-card .pokemon-type-item .type-icon { width: 13px; height: 13px; margin-right: 2px; }
         #team-builder-results .pokemon-card .pokemon-type-name { font-size: 0.75em; }
@@ -203,7 +207,7 @@
         #stickyGenerateBtn:disabled { background-color: #ccc !important; color: #666 !important; cursor: not-allowed; transform: translateY(0); }
         body.dark-mode #stickyGenerateBtn { background-color: var(--dark-sticky-btn-bg); color: var(--dark-sticky-btn-text); box-shadow: 0 2px 8px rgba(255,255,255,0.1); }
         body.dark-mode #stickyGenerateBtn:hover { background-color: var(--dark-sticky-btn-hover-bg); color: white; }
-        #sorting-controls { display: none; background-color: var(--light-controls-bg); padding: 5px 10px; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; }
+        #sorting-controls { display: none; background-color: var(--light-controls-bg); padding: 5px 10px; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         body.dark-mode #sorting-controls { background-color: var(--dark-controls-bg); box-shadow: 0 1px 5px rgba(255,255,255,0.1); }
         .sort-icon { cursor: pointer; font-size: 1.1em; padding: 3px 5px; color: var(--light-sort-icon-color); transition: color 0.2s; position: relative; border-radius: 3px; }
         .sort-icon:hover { background-color: rgba(0, 0, 0, 0.05); }
@@ -220,10 +224,14 @@
             h1 { font-size: 1.8em; margin-bottom: 20px;} body { padding: 15px; } .page-actions-container { top: 10px; right: 10px; gap: 8px;} .top-right-icons-group { gap: 10px; } .language-switcher img, .theme-switcher i { font-size: 22px; width: 22px; } 
             #stickyGenerateBtn { padding: 7px 12px; font-size: 0.85em; } #sorting-controls { gap: 6px; padding: 5px 9px; } .sort-icon { font-size: 1.05em; padding: 3px 5px;} #sort-direction { font-size: 0.85em; } #scrollToTopBtn { bottom: 15px; right: 15px; padding: 9px 11px; font-size: 17px; } 
             .controls { padding: 15px; } .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } button#generate { padding: 10px 15px; font-size: 1em; }
-            #results { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; } #results .pokemon-image { height: 110px; } #results .pokemon-info { padding: 10px; } #results .pokemon-name { font-size: 0.9em; } #results .pokemon-details { font-size: 0.8em; } #results .pokemon-type-item .type-icon { width: 15px; height: 15px;} #results .pokemon-type-name { font-size: 0.8em; } #results .lock-icon, #results .shiny-indicator, #results .team-action-icon { font-size: 1em; } #results .team-action-icon { width: 26px; height: 26px; padding: 4px; }
-            #locked-pokemon-results .pokemon-card .pokemon-image { height: 80px; } #locked-pokemon-results .pokemon-card .pokemon-info { padding: 8px; } #locked-pokemon-results .pokemon-card .pokemon-name { font-size: 0.8em; margin-bottom: 3px; }           #locked-pokemon-results .pokemon-card .pokemon-details { font-size: 0.7em; margin-bottom: 2px;}           #locked-pokemon-results .pokemon-card .pokemon-types { margin-top: 4px; gap: 3px 5px; }           #locked-pokemon-results .pokemon-card .pokemon-type-item .type-icon { width: 12px; height: 12px; margin-right: 2px; }           #locked-pokemon-results .pokemon-card .pokemon-type-name { font-size: 0.7em; }           #locked-pokemon-results .pokemon-card .lock-icon { font-size: 1em; top: 4px; left: 4px; }           #locked-pokemon-results .pokemon-card .shiny-indicator { font-size: 1em; top: 4px; right: 4px; }
+            #results { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; } #results .pokemon-image { height: 110px; } #results .pokemon-info { padding: 10px; } #results .pokemon-name { font-size: 0.9em; } 
+            #results .pokemon-detail-item, #results .pokemon-special-status { font-size: 0.8em; }
+            #results .pokemon-type-item .type-icon { width: 15px; height: 15px;} #results .pokemon-type-name { font-size: 0.8em; } #results .lock-icon, #results .shiny-indicator, #results .team-action-icon { font-size: 1em; } #results .team-action-icon { width: 26px; height: 26px; padding: 4px; }
+            #locked-pokemon-results .pokemon-card .pokemon-image { height: 80px; } #locked-pokemon-results .pokemon-card .pokemon-info { padding: 8px; } #locked-pokemon-results .pokemon-card .pokemon-name { font-size: 0.8em; margin-bottom: 3px; }           
+            #locked-pokemon-results .pokemon-card .pokemon-detail-item, #locked-pokemon-results .pokemon-card .pokemon-special-status { font-size: 0.7em; margin-bottom: 2px;}          
+            #locked-pokemon-results .pokemon-card .pokemon-types { margin-top: 4px; gap: 3px 5px; }           #locked-pokemon-results .pokemon-card .pokemon-type-item .type-icon { width: 12px; height: 12px; margin-right: 2px; }           #locked-pokemon-results .pokemon-card .pokemon-type-name { font-size: 0.7em; }           #locked-pokemon-results .pokemon-card .lock-icon { font-size: 1em; top: 4px; left: 4px; }           #locked-pokemon-results .pokemon-card .shiny-indicator { font-size: 1em; top: 4px; right: 4px; }
             .pokemon-team-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); } #team-builder-results .pokemon-card .team-remove-on-card-icon { font-size: 1.1em; } 
-            #team-analysis-chart { font-size: 0.8em; /* min-width: 500px; */ }
+            #team-analysis-chart { font-size: 0.8em; }
             #team-analysis-chart .pokemon-header-cell img { max-width: 28px; max-height: 28px; } 
             #team-analysis-chart .pokemon-header-cell span { font-size: 0.75em; max-width: 40px; }
             #team-analysis-chart .type-icon-cell img.type-icon { width: 16px; height: 16px; }
@@ -235,9 +243,11 @@
             #stickyGenerateBtn { padding: 8px 12px; font-size: 0.9em; } #sorting-controls { flex-wrap: wrap; justify-content: flex-end; gap: 5px; padding: 6px 10px; } .sort-icon { font-size: 1.1em; padding: 4px 6px; } #scrollToTopBtn { bottom: 10px; right: 10px; padding: 10px 12px; font-size: 18px; } .team-action-icon { font-size: 1.2em; width: 24px; height: 24px; padding: 4px; } #results .team-action-icon { width: 22px; height: 22px; padding: 3px; }
             .controls { padding: 10px; } .control-group, .instructions-container { padding: 8px 10px; } .checkbox-group { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px 8px; } .checkbox-item label { font-size: 0.85em; } .type-icon { width: 16px; height: 16px; margin-right: 4px; }
             #results { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); } #results .pokemon-image { height: 100px; }
-            #locked-pokemon-results .pokemon-card .pokemon-image { height: 70px; } #locked-pokemon-results .pokemon-card .pokemon-name { font-size: 0.75em; } #locked-pokemon-results .pokemon-card .pokemon-details { font-size: 0.65em; } #locked-pokemon-results .pokemon-card .pokemon-type-item .type-icon { width: 11px; height: 11px; } #locked-pokemon-results .pokemon-card .pokemon-type-name { font-size: 0.65em; }
+            #locked-pokemon-results .pokemon-card .pokemon-image { height: 70px; } #locked-pokemon-results .pokemon-card .pokemon-name { font-size: 0.75em; } 
+            #locked-pokemon-results .pokemon-card .pokemon-detail-item, #locked-pokemon-results .pokemon-card .pokemon-special-status { font-size: 0.65em; } 
+            #locked-pokemon-results .pokemon-card .pokemon-type-item .type-icon { width: 11px; height: 11px; } #locked-pokemon-results .pokemon-card .pokemon-type-name { font-size: 0.65em; }
             .pokemon-team-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); } #team-builder-results .pokemon-card .team-remove-on-card-icon { font-size: 1em; }
-            #team-analysis-chart { font-size: 0.7em; /* min-width: auto; */ } 
+            #team-analysis-chart { font-size: 0.7em; } 
             #team-analysis-chart th, #team-analysis-chart td { padding: 3px 1px; white-space: normal; min-width: 25px; } 
             #team-analysis-chart th.attacking-type-header { width: auto; padding: 3px 4px;} 
             #team-analysis-chart .pokemon-header-cell img { max-width: 20px; max-height: 20px; } 
@@ -258,34 +268,37 @@
                 <img src="https://flagcdn.com/us.svg" data-lang="en" alt="US Flagge">
             </div>
             <div class="theme-switcher">
-                <i id="darkModeToggle" class="fas fa-moon"></i>
+                <i id="darkModeToggle" class="fa-solid fa-moon"></i>
             </div>
         </div>
         <button id="stickyGenerateBtn" data-i18n="generateButton">Pokémon generieren!</button>
         <div id="sorting-controls" style="display: none;">
-            <span class="sort-icon" data-sort="id" title="Sort by ID"><i class="fa-solid fa-hashtag"></i></span>
-            <span class="sort-icon" data-sort="name" title="Sort by Name"><i class="fa-solid fa-arrow-down-a-z"></i></span>
-            <span class="sort-icon" data-sort="type" title="Sort by Type"><i class="fa-solid fa-leaf"></i></span>
-            <span class="sort-icon" data-sort="random" title="Sort Randomly"><i class="fa-solid fa-shuffle"></i></span>
-            <i id="sort-direction" class="fas"></i>
+            <span class="sort-icon" data-sort="id" data-i18n-title="tooltipSortById"><i class="fa-solid fa-hashtag"></i></span>
+            <span class="sort-icon" data-sort="name" data-i18n-title="tooltipSortByName"><i class="fa-solid fa-arrow-down-a-z"></i></span>
+            <span class="sort-icon" data-sort="type" data-i18n-title="tooltipSortByType"><i class="fa-solid fa-leaf"></i></span>
+            <span class="sort-icon" data-sort="shiny" data-i18n-title="tooltipSortByShiny"><i class="fa-solid fa-star"></i></span>
+            <span class="sort-icon" data-sort="legendary" data-i18n-title="tooltipSortByLegendary"><i class="fa-solid fa-shield-halved"></i></span>
+            <span class="sort-icon" data-sort="mythical" data-i18n-title="tooltipSortByMythical"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+            <span class="sort-icon" data-sort="random" data-i18n-title="tooltipSortByRandom"><i class="fa-solid fa-shuffle"></i></span>
+            <i id="sort-direction" class="fa-solid"></i>
         </div>
     </div>
 
     <div class="instructions-container collapsible is-closed"> 
         <div class="instructions-header">
             <span class="title" data-i18n="instructionsTitle">Anleitung</span>
-            <i class="fas fa-chevron-down collapse-icon"></i>
+            <i class="fa-solid fa-chevron-down collapse-icon"></i>
         </div>
         <div class="instructions-content">
             <p data-i18n="instructionsIntro">Willkommen beim Pokémon Generator! Hier kannst du zufällige Pokémon basierend auf deinen Filtern entdecken.</p>
             <strong data-i18n="usageTitle">So funktioniert's:</strong>
             <ul>
                 <li data-i18n="usageStep1"><strong>Filter wählen:</strong> Öffne die Filterbereiche (Generation, Typen, etc.) und wähle deine Kriterien aus. Nutze die <i class="fa-solid fa-square-check"></i> / <i class="fa-solid fa-square-minus"></i> Icons, um schnell alle Optionen einer Gruppe an-/abzuwählen.</li>
-                <li data-i18n="usageStep2"><strong>Anzahl festlegen:</strong> Gib an, wie viele <strong>neue</strong> Pokémon generiert werden sollen (0 ist möglich, um nur gesperrte anzuzeigen).</li>
+                <li data-i18n="usageStep2"><strong>Anzahl festlegen:</strong> Gib an, wie viele <strong>neue</strong> Pokémon generiert werden sollen (0 ist möglich, um nur gesperrte anzuzeigen). Du kannst auch die Enter-Taste drücken, um die Generierung zu starten.</li>
                 <li data-i18n="usageStep3"><strong>Generieren:</strong> Klicke auf den "Pokémon generieren!" Knopf (oder den kleineren, der beim Scrollen oben rechts erscheint).</li>
                 <li data-i18n="usageStep4"><strong>Erkunden:</strong><ul><li>Klicke auf ein Pokémon-Bild, um zwischen der normalen und der <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny-Form zu wechseln (falls verfügbar).</li><li>Klicke auf die Pokédex-Nummer oder den Namen, um die Detailseite auf Pokémon Database in einem neuen Tab zu öffnen.</li><li>Klicke auf das <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> Symbol oben links auf einer Karte (in der generierten oder gesperrten Liste), um dieses Pokémon zu sperren oder zu entsperren. Gesperrte Pokémon erscheinen oben in einem separaten Bereich und werden bei der nächsten Generierung nicht neu ausgewählt.</li><li>Klicke auf das <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> Symbol unten rechts auf einer Karte (in der generierten oder gesperrten Liste), um es zu deinem Team hinzuzufügen oder daraus zu entfernen (max. 6 Pokémon).</li><li>Klicke auf das <i class='fa-solid fa-times-circle'></i> Symbol oben rechts auf einer Karte im 'Aktuelles Team'-Bereich, um ein Pokémon direkt aus dem Team zu entfernen.</li></ul></li>
-                <li data-i18n="usageStep5"><strong>Sortieren:</strong> Wenn du nach unten scrollst, erscheint neben dem "Generieren"-Knopf eine Sortierleiste. Klicke auf <i class="fa-solid fa-hashtag"></i> (ID), <i class="fa-solid fa-arrow-down-a-z"></i> (Name), <i class="fa-solid fa-leaf"></i> (Typ) oder <i class="fa-solid fa-shuffle"></i> (Zufall), um die <strong>neu generierten</strong> Pokémon zu sortieren. Erneutes Klicken (außer bei Zufall) kehrt die Richtung um (<i class="fa-solid fa-arrow-up-short-wide"></i> / <i class="fa-solid fa-arrow-down-wide-short"></i>).</li>
-                <li data-i18n="usageStep6"><strong>Ansicht anpassen:</strong> Nutze die Icons oben rechts für den <i class="fa-solid fa-moon"></i> / <i class="fa-solid fa-sun"></i> Dark Mode oder den Sprachwechsel (<img src="https://flagcdn.com/de.svg" alt="DE" style="width:1em;height:auto;vertical-align:middle;"> / <img src="https://flagcdn.com/us.svg" alt="EN" style="width:1em;height:auto;vertical-align:middle;">).</li>
+                <li data-i18n="usageStep5"><strong>Sortieren:</strong> Wenn du nach unten scrollst, erscheint neben dem "Generieren"-Knopf eine Sortierleiste. Klicke auf <i class="fa-solid fa-hashtag"></i> (ID), <i class="fa-solid fa-arrow-down-a-z"></i> (Name), <i class="fa-solid fa-leaf"></i> (Typ), <i class="fa-solid fa-star"></i> (Shiny), <i class="fa-solid fa-shield-halved"></i> (Legendär), <i class="fa-solid fa-wand-magic-sparkles"></i> (Mysteriös) oder <i class="fa-solid fa-shuffle"></i> (Zufall), um die <strong>neu generierten</strong> Pokémon zu sortieren. Erneutes Klicken (außer bei Zufall) kehrt die Richtung um (<i class="fa-solid fa-arrow-up-short-wide"></i> / <i class="fa-solid fa-arrow-down-wide-short"></i>).</li>
+                <li data-i18n="usageStep6"><strong>Ansicht anpassen:</strong> Nutze die Icons oben rechts für den <i class="fa-solid fa-moon"></i> / <i class="fa-solid fa-sun"></i> Dark Mode oder den Sprachwechsel (<img src='https://flagcdn.com/de.svg' alt='DE' style='width:1em;height:auto;vertical-align:middle;'> / <img src='https://flagcdn.com/us.svg' alt='EN' style='width:1em;height:auto;vertical-align:middle;'>).</li>
                  <li data-i18n="usageStep7">Mit dem <i class="fa-solid fa-arrow-up"></i> Knopf unten rechts gelangst du schnell wieder nach oben.</li>
             </ul>
         </div>
@@ -309,7 +322,7 @@
                 <div class="label-and-toggle">
                     <label data-i18n="generationLabel">Generation:</label>
                     <i class="toggle-all-icon" data-group="gen-checkbox" title=""></i>
-                </div> <i class="fas fa-chevron-down collapse-icon"></i>
+                </div> <i class="fa-solid fa-chevron-down collapse-icon"></i>
             </div>
             <div class="collapsible-content">
                 <div class="checkbox-group">
@@ -330,7 +343,7 @@
                 <div class="label-and-toggle">
                     <label data-i18n="typesLabel">Typen:</label>
                     <i class="toggle-all-icon" data-group="type-checkbox" title=""></i>
-                </div> <i class="fas fa-chevron-down collapse-icon"></i>
+                </div> <i class="fa-solid fa-chevron-down collapse-icon"></i>
             </div>
             <div class="collapsible-content">
                 <div class="checkbox-group">
@@ -360,7 +373,7 @@
                 <div class="label-and-toggle">
                     <label data-i18n="evolutionPositionLabel">Evolution (Position in Kette):</label>
                     <i class="toggle-all-icon" data-group="evo-position-checkbox" title=""></i>
-                </div> <i class="fas fa-chevron-down collapse-icon"></i>
+                </div> <i class="fa-solid fa-chevron-down collapse-icon"></i>
             </div>
             <div class="collapsible-content">
                 <div class="checkbox-group">
@@ -375,7 +388,7 @@
                 <div class="label-and-toggle">
                     <label data-i18n="evolutionChainLengthLabel">Anzahl Entwicklungstufen (Gesamtlänge der Reihe):</label>
                     <i class="toggle-all-icon" data-group="chain-length-checkbox" title=""></i>
-                </div> <i class="fas fa-chevron-down collapse-icon"></i>
+                </div> <i class="fa-solid fa-chevron-down collapse-icon"></i>
             </div>
             <div class="collapsible-content">
                 <div class="checkbox-group">
@@ -390,12 +403,31 @@
                 <div class="label-and-toggle">
                     <label data-i18n="specialPokemonLabel">Spezielle Pokémon:</label>
                     <i class="toggle-all-icon" data-group="special-checkbox" title=""></i>
-                </div> <i class="fas fa-chevron-down collapse-icon"></i>
+                </div> <i class="fa-solid fa-chevron-down collapse-icon"></i>
             </div>
             <div class="collapsible-content">
                 <div class="checkbox-group">
                     <div class="checkbox-item"><input type="checkbox" id="includeLegendary" class="special-checkbox" checked><label for="includeLegendary" data-i18n="includeLegendaryLabel">Legendäre Pokémon</label></div>
                     <div class="checkbox-item"><input type="checkbox" id="includeMythical" class="special-checkbox" checked><label for="includeMythical" data-i18n="includeMythicalLabel">Mysteriöse Pokémon</label></div>
+                </div>
+            </div>
+        </div>
+        <div class="control-group collapsible"> 
+            <div class="control-group-header">
+                <div class="label-and-toggle">
+                    <label data-i18n="bstLabel">Basiswertsumme (BST):</label>
+                </div> <i class="fa-solid fa-chevron-down collapse-icon"></i>
+            </div>
+            <div class="collapsible-content">
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 120px; margin-bottom: 10px;">
+                        <label for="bstMin" data-i18n="bstMinLabel">Min. BST:</label>
+                        <input type="number" id="bstMin" class="bst-input count-input" min="0" max="1200" data-i18n-placeholder="bstMinPlaceholder" style="width: 100%; box-sizing: border-box;">
+                    </div>
+                    <div style="flex: 1; min-width: 120px; margin-bottom: 10px;">
+                        <label for="bstMax" data-i18n="bstMaxLabel">Max. BST:</label>
+                        <input type="number" id="bstMax" class="bst-input count-input" min="0" max="1200" data-i18n-placeholder="bstMaxPlaceholder" style="width: 100%; box-sizing: border-box;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -428,7 +460,7 @@
     </div>
 
     <div id="results"></div>
-    <button id="scrollToTopBtn" title="Nach oben scrollen"><i class="fas fa-arrow-up"></i></button>
+    <button id="scrollToTopBtn" title="Nach oben scrollen"><i class="fa-solid fa-arrow-up"></i></button>
     <div class="attribution" data-i18n="attributionText"></div>
     <div style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
         <button id="clearCacheBtn" data-i18n="clearCacheButton">Alle App-Daten löschen</button>
@@ -455,9 +487,11 @@
         const LOCKED_POKEMON_CACHE_KEY = 'lockedPokemonIds_v1';
         const FILTER_STATE_CACHE_KEY = 'pokemonGeneratorFilterState_v1';
         const TEAM_MEMBERS_CACHE_KEY = 'pokemonTeamMembers_v1';
+        const SHINY_POKEMON_CACHE_KEY = 'shinyPokemonIds_v1';
 
 
         let lockedPokemonIds = new Set();
+        let shinyPokemonIds = new Set();
         let countForNewPokemons = 10; 
         let currentSortCriteria = 'id'; 
         let currentSortDirection = 'asc'; 
@@ -482,6 +516,7 @@
         const toggleAnalysisViewBtn = document.getElementById('toggle-analysis-view-btn');
         const nameFilterContainer = document.getElementById('name-filter-container');
         const nameFilterInput = document.getElementById('nameFilter');
+        const countInput = document.getElementById('count');
 
 
         const ICON_SELECT_ALL = 'fa-solid fa-square-check';
@@ -495,10 +530,10 @@
                 instructionsIntro: "Willkommen beim Pokémon Generator! Hier kannst du zufällige Pokémon basierend auf deinen Filtern entdecken.",
                 usageTitle: "So funktioniert's:",
                 usageStep1: "<strong>Filter wählen:</strong> Öffne die Filterbereiche (Generation, Typen, etc.) und wähle deine Kriterien aus. Nutze die <i class='fa-solid fa-square-check'></i> / <i class='fa-solid fa-square-minus'></i> Icons, um schnell alle Optionen einer Gruppe an-/abzuwählen.",
-                usageStep2: "<strong>Anzahl festlegen:</strong> Gib an, wie viele <strong>neue</strong> Pokémon generiert werden sollen (0 ist möglich, um nur gesperrte anzuzeigen).",
+                usageStep2: "<strong>Anzahl festlegen:</strong> Gib an, wie viele <strong>neue</strong> Pokémon generiert werden sollen (0 ist möglich, um nur gesperrte anzuzeigen). Du kannst auch die Enter-Taste drücken, um die Generierung zu starten.",
                 usageStep3: "<strong>Generieren:</strong> Klicke auf den \"Pokémon generieren!\" Knopf (oder den kleineren, der beim Scrollen oben rechts erscheint).",
                 usageStep4: "<strong>Erkunden:</strong><ul><li>Klicke auf ein Pokémon-Bild, um zwischen der normalen und der <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny-Form zu wechseln (falls verfügbar).</li><li>Klicke auf die Pokédex-Nummer oder den Namen, um die Detailseite auf Pokémon Database in einem neuen Tab zu öffnen.</li><li>Klicke auf das <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> Symbol oben links auf einer Karte (in der generierten oder gesperrten Liste), um dieses Pokémon zu sperren oder zu entsperren. Gesperrte Pokémon erscheinen oben in einem separaten Bereich und werden bei der nächsten Generierung nicht neu ausgewählt.</li><li>Klicke auf das <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> Symbol unten rechts auf einer Karte (in der generierten oder gesperrten Liste), um es zu deinem Team hinzuzufügen oder daraus zu entfernen (max. 6 Pokémon).</li><li>Klicke auf das <i class='fa-solid fa-times-circle'></i> Symbol oben rechts auf einer Karte im 'Aktuelles Team'-Bereich, um ein Pokémon direkt aus dem Team zu entfernen.</li></ul>",
-                usageStep5: "<strong>Sortieren:</strong> Wenn du nach unten scrollst, erscheint neben dem \"Generieren\"-Knopf eine Sortierleiste. Klicke auf <i class='fa-solid fa-hashtag'></i> (ID), <i class='fa-solid fa-arrow-down-a-z'></i> (Name), <i class='fa-solid fa-leaf'></i> (Typ) oder <i class='fa-solid fa-shuffle'></i> (Zufall), um die <strong>neu generierten</strong> Pokémon zu sortieren. Erneutes Klicken (außer bei Zufall) kehrt die Richtung um (<i class='fa-solid fa-arrow-up-short-wide'></i> / <i class='fa-solid fa-arrow-down-wide-short'></i>).",
+                usageStep5: "<strong>Sortieren:</strong> Wenn du nach unten scrollst, erscheint neben dem \"Generieren\"-Knopf eine Sortierleiste. Klicke auf <i class='fa-solid fa-hashtag'></i> (ID), <i class='fa-solid fa-arrow-down-a-z'></i> (Name), <i class='fa-solid fa-leaf'></i> (Typ), <i class='fa-solid fa-star'></i> (Shiny), <i class='fa-solid fa-shield-halved'></i> (Legendär), <i class='fa-solid fa-wand-magic-sparkles'></i> (Mysteriös) oder <i class='fa-solid fa-shuffle'></i> (Zufall), um die <strong>neu generierten</strong> Pokémon zu sortieren. Erneutes Klicken (außer bei Zufall) kehrt die Richtung um (<i class='fa-solid fa-arrow-up-short-wide'></i> / <i class='fa-solid fa-arrow-down-wide-short'></i>).",
                 usageStep6: "<strong>Ansicht anpassen:</strong> Nutze die Icons oben rechts für den <i class='fa-solid fa-moon'></i> / <i class='fa-solid fa-sun'></i> Dark Mode oder den Sprachwechsel (<img src='https://flagcdn.com/de.svg' alt='DE' style='width:1em;height:auto;vertical-align:middle;'> / <img src='https://flagcdn.com/us.svg' alt='EN' style='width:1em;height:auto;vertical-align:middle;'>).",
                 usageStep7: "Mit dem <i class='fa-solid fa-arrow-up'></i> Knopf unten rechts gelangst du schnell wieder nach oben.",
                 countLabel: "Anzahl neuer Pokémon zum Generieren:",
@@ -509,6 +544,13 @@
                 tooltipDeselectAll: "Alle abwählen",
                 tooltipLock: "Pokémon sperren",
                 tooltipUnlock: "Pokémon entsperren",
+                tooltipSortById: "Nach ID sortieren",
+                tooltipSortByName: "Nach Name sortieren",
+                tooltipSortByType: "Nach Typ sortieren",
+                tooltipSortByShiny: "Nach Shiny sortieren",
+                tooltipSortByLegendary: "Nach Legendär sortieren",
+                tooltipSortByMythical: "Nach Mysteriös sortieren",
+                tooltipSortByRandom: "Zufällig sortieren",
                 lockedPokemonSectionTitle: "Gesperrte Pokémon",
                 expandAllLabel: "Alle ausklappen",
                 collapseAllLabel: "Alle einklappen",
@@ -519,7 +561,13 @@
                 evolutionChainLengthLabel: "Anzahl Entwicklungstufen (Gesamtlänge der Reihe):",
                 chain_length1: "Keine Entwicklung (1 Stufe)", chain_length2: "Eine Entwicklung (2 Stufen)", chain_length3: "Zwei Entwicklungen (3 Stufen)",
                 specialPokemonLabel: "Spezielle Pokémon:",
-                includeLegendaryLabel: "Legendäre Pokémon", includeMythicalLabel: "Mysteriöse Pokémon",
+                includeLegendaryLabel: "Legendäres Pokémon", includeMythicalLabel: "Mysteriöses Pokémon",
+                bstLabel: "Basiswertsumme (BST):",
+                bstMinLabel: "Min. BST:",
+                bstMaxLabel: "Max. BST:",
+                bstMinPlaceholder: "z.B. 100",
+                bstMaxPlaceholder: "z.B. 600",
+                cardBST: "BST",
                 generateButton: "Pokémon generieren!",
                 loadingData: "Lade Pokémon-Daten von der PokeAPI...",
                 loadedFromCache: "Pokémon-Daten aus Cache geladen!",
@@ -564,10 +612,10 @@
                 instructionsIntro: "Welcome to the Pokémon Generator! Discover random Pokémon based on your selected filters.",
                 usageTitle: "How it works:",
                 usageStep1: "<strong>Select Filters:</strong> Expand the filter sections (Generation, Types, etc.) and choose your criteria. Use the <i class='fa-solid fa-square-check'></i> / <i class='fa-solid fa-square-minus'></i> icons to quickly select/deselect all options in a group.",
-                usageStep2: "<strong>Set Count:</strong> Enter how many <strong>new</strong> Pokémon you want to generate (0 is possible to only show locked Pokémon).",
+                usageStep2: "<strong>Set Count:</strong> Enter how many <strong>new</strong> Pokémon you want to generate (0 is possible to only show locked Pokémon). You can also press Enter to start generation.",
                 usageStep3: "<strong>Generate:</strong> Click the \"Generate Pokémon!\" button (or the smaller one that appears top-right when scrolling).",
                 usageStep4: "<strong>Explore:</strong><ul><li>Click a Pokémon's image to toggle between its normal and <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny form (if available).</li><li>Click the Pokédex number or name to open its detail page on Pokémon Database in a new tab.</li><li>Click the <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> icon on the top-left of a card (in the generated or locked list) to lock or unlock that Pokémon. Locked Pokémon appear in a separate section above and won't be randomly generated again.</li><li>Click the <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> icon on the bottom-right of a card (in the generated or locked list) to add or remove it from your team (max 6 Pokémon).</li><li>Click the <i class='fa-solid fa-times-circle'></i> icon on the top-right of a card in the 'Current Team' section to remove a Pokémon directly from the team.</li></ul>",
-                usageStep5: "<strong>Sort:</strong> When you scroll down, a sort bar appears next to the Generate button. Click <i class='fa-solid fa-hashtag'></i> (ID), <i class='fa-solid fa-arrow-down-a-z'></i> (Name), <i class='fa-solid fa-leaf'></i> (Type), or <i class='fa-solid fa-shuffle'></i> (Random) to sort the <strong>newly generated</strong> Pokémon. Clicking again (except for Random) reverses the direction (<i class='fa-solid fa-arrow-up-short-wide'></i> / <i class='fa-solid fa-arrow-down-wide-short'></i>).",
+                usageStep5: "<strong>Sort:</strong> When you scroll down, a sort bar appears next to the Generate button. Click <i class='fa-solid fa-hashtag'></i> (ID), <i class='fa-solid fa-arrow-down-a-z'></i> (Name), <i class='fa-solid fa-leaf'></i> (Type), <i class='fa-solid fa-star'></i> (Shiny), <i class='fa-solid fa-shield-halved'></i> (Legendary), <i class='fa-solid fa-wand-magic-sparkles'></i> (Mythical), or <i class='fa-solid fa-shuffle'></i> (Random) to sort the <strong>newly generated</strong> Pokémon. Clicking again (except for Random) reverses the direction (<i class='fa-solid fa-arrow-up-short-wide'></i> / <i class='fa-solid fa-arrow-down-wide-short'></i>).",
                 usageStep6: "<strong>Customize View:</strong> Use the icons in the top-right for <i class='fa-solid fa-moon'></i> / <i class='fa-solid fa-sun'></i> Dark Mode or language switching (<img src='https://flagcdn.com/de.svg' alt='DE' style='width:1em;height:auto;vertical-align:middle;'> / <img src='https://flagcdn.com/us.svg' alt='EN' style='width:1em;height:auto;vertical-align:middle;'>).",
                 usageStep7: "Use the <i class='fa-solid fa-arrow-up'></i> button in the bottom-right to quickly scroll back to the top.",
                 countLabel: "Number of new Pokémon to generate:",
@@ -578,6 +626,13 @@
                 tooltipDeselectAll: "Deselect All",
                 tooltipLock: "Lock Pokémon",
                 tooltipUnlock: "Unlock Pokémon",
+                tooltipSortById: "Sort by ID",
+                tooltipSortByName: "Sort by Name",
+                tooltipSortByType: "Sort by Type",
+                tooltipSortByShiny: "Sort by Shiny",
+                tooltipSortByLegendary: "Sort by Legendary",
+                tooltipSortByMythical: "Sort by Mythical",
+                tooltipSortByRandom: "Sort Randomly",
                 lockedPokemonSectionTitle: "Locked Pokémon",
                 expandAllLabel: "Expand All",
                 collapseAllLabel: "Collapse All",
@@ -589,6 +644,12 @@
                 chain_length1: "No Evolution (1 Stage)", chain_length2: "One Evolution (2 Stages)", chain_length3: "Two Evolutions (3 Stages)",
                 specialPokemonLabel: "Special Pokémon:",
                 includeLegendaryLabel: "Legendary Pokémon", includeMythicalLabel: "Mythical Pokémon",
+                bstLabel: "Base Stat Total (BST):",
+                bstMinLabel: "Min BST:",
+                bstMaxLabel: "Max BST:",
+                bstMinPlaceholder: "e.g. 100",
+                bstMaxPlaceholder: "e.g. 600",
+                cardBST: "BST",
                 generateButton: "Generate Pokémon!",
                 loadingData: "Loading Pokémon data from PokeAPI...",
                 loadedFromCache: "Pokémon data loaded from cache!",
@@ -677,6 +738,18 @@
                     }
                 }
             });
+             document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    element.placeholder = translations[lang][key];
+                }
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(element => {
+                const key = element.getAttribute('data-i18n-title');
+                if (translations[lang] && translations[lang][key]) {
+                    element.title = translations[lang][key];
+                }
+            });
             const toggleAllFiltersButton = document.getElementById('toggleAllFiltersBtn');
             if (toggleAllFiltersButton) {
                 toggleAllFiltersButton.textContent = translations[currentLang][allFiltersExpanded ? 'collapseAllLabel' : 'expandAllLabel'];
@@ -712,7 +785,7 @@
         }
         function updateDarkModeIcon(isDarkMode) {
             const darkModeIcon = document.getElementById('darkModeToggle');
-            if (darkModeIcon) darkModeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+            if (darkModeIcon) darkModeIcon.className = `fa-solid ${isDarkMode ? 'fa-sun' : 'fa-moon'}`;
         }
 
         function getEvolutionStage(pokemonName, chain, stage = 0) {
@@ -747,7 +820,7 @@
             if (cachedDataJSON) {
                 try {
                     const cachedData = JSON.parse(cachedDataJSON);
-                    if (cachedData.pokemon && cachedData.pokemon.length >= MIN_EXPECTED_POKEMON_COUNT) {
+                    if (cachedData.pokemon && cachedData.pokemon.length >= MIN_EXPECTED_POKEMON_COUNT && cachedData.pokemon.every(p => p.hasOwnProperty('baseStatTotal'))) {
                         pokemonData.push(...cachedData.pokemon);
                         if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
                         isLoading = false; 
@@ -756,7 +829,7 @@
                         validateLockedPokemonIds(); 
                         return; 
                     } else {
-                        console.warn(`Cached Pokémon data is incomplete (${cachedData.pokemon ? cachedData.pokemon.length : 0} found, expected >= ${MIN_EXPECTED_POKEMON_COUNT}). Forcing API refresh.`);
+                        console.warn(`Cached Pokémon data is incomplete or outdated. Forcing API refresh.`);
                         localStorage.removeItem(CACHE_KEY); 
                     }
                 } catch (e) { 
@@ -787,6 +860,7 @@
                         const speciesData = await speciesResponse.json();
                         const generationUrl = speciesData.generation ? speciesData.generation.url : null;
                         let generation = generationUrl ? parseInt(generationUrl.match(/\/generation\/(\d+)\//)?.[1] || 0) : null;
+                        
                         let evolutionChainData = null, totalStages = 0;
                         if (speciesData.evolution_chain && speciesData.evolution_chain.url) {
                             const chainUrl = speciesData.evolution_chain.url;
@@ -799,9 +873,18 @@
                             }
                             if (evolutionChainData) totalStages = countStagesInChain(evolutionChainData.chain);
                         } else if (!speciesData.evolves_from_species) totalStages = 1;
+                        
                         let evolutionStage = -1;
                         if (evolutionChainData) evolutionStage = getEvolutionStage(detailData.name, evolutionChainData.chain);
                         else if (!speciesData.evolves_from_species) evolutionStage = 0;
+
+                        let baseStatTotal = 0;
+                        if (detailData.stats && Array.isArray(detailData.stats)) {
+                            detailData.stats.forEach(statInfo => {
+                                baseStatTotal += statInfo.base_stat;
+                            });
+                        }
+                        
                         pokemonDetail = {
                             id: detailData.id, name: detailData.name,
                             germanName: speciesData.names.find(name => name.language.name === 'de')?.name || null,
@@ -810,7 +893,8 @@
                             image: detailData.sprites.other?.['official-artwork']?.front_default || detailData.sprites.front_default,
                             shinyImage: detailData.sprites.other?.['official-artwork']?.front_shiny || detailData.sprites.front_shiny,
                             generation, evolutionStage, totalStages,
-                            isLegendary: speciesData.is_legendary, isMythical: speciesData.is_mythical
+                            isLegendary: speciesData.is_legendary, isMythical: speciesData.is_mythical,
+                            baseStatTotal 
                         };
                     } catch (error) { console.warn(`Error processing ${p.name}: ${error.message}`);} 
                     finally {
@@ -822,7 +906,7 @@
                     return pokemonDetail;
                 });
                 const results = await Promise.all(pokemonDetailsPromises);
-                pokemonData.push(...results.filter(p => p !== null));
+                pokemonData.push(...results.filter(p => p !== null && p.baseStatTotal > 0));
                 pokemonData.sort((a, b) => a.id - b.id);
                 try { localStorage.setItem(CACHE_KEY, JSON.stringify({ pokemon: pokemonData })); } 
                 catch (e) { console.error("Error saving Pokémon data to cache:", e); }
@@ -862,6 +946,19 @@
                 if (document.getElementById('includeLegendary') && !includeLegendary) filtered = filtered.filter(p => !p.isLegendary);
                 if (document.getElementById('includeMythical') && !includeMythical) filtered = filtered.filter(p => !p.isMythical);
             }
+
+            const bstMinInput = document.getElementById('bstMin');
+            const bstMaxInput = document.getElementById('bstMax');
+            const bstMin = bstMinInput && bstMinInput.value !== "" ? parseInt(bstMinInput.value) : null;
+            const bstMax = bstMaxInput && bstMaxInput.value !== "" ? parseInt(bstMaxInput.value) : null;
+
+            if (bstMin !== null && !isNaN(bstMin)) {
+                filtered = filtered.filter(p => p.baseStatTotal !== undefined && p.baseStatTotal >= bstMin);
+            }
+            if (bstMax !== null && !isNaN(bstMax)) {
+                filtered = filtered.filter(p => p.baseStatTotal !== undefined && p.baseStatTotal <= bstMax);
+            }
+            
             return filtered;
         }
 
@@ -884,6 +981,9 @@
         function createPokemonCard(pokemon, isTeamMemberCard = false) {
             const card = document.createElement('div');
             card.className = 'pokemon-card';
+            if (!isTeamMemberCard) {
+                card.id = `card-${pokemon.id}`;
+            }
             const displayedName = currentLang === 'de' && pokemon.germanName ? pokemon.germanName : capitalizeFirstLetter(pokemon.name);
             const pokemonDbUrl = `${POKEMONDB_URL}${pokemon.name}`;
             
@@ -907,38 +1007,44 @@
             }
 
             const isCurrentlyLocked = lockedPokemonIds.has(pokemon.id);
-            const lockIconClass = isCurrentlyLocked ? 'fa-lock locked' : 'fa-unlock';
+            const lockIconClass = `fa-solid ${isCurrentlyLocked ? 'fa-lock locked' : 'fa-unlock'}`;
             const lockIconTitle = isCurrentlyLocked ? translations[currentLang].tooltipUnlock : translations[currentLang].tooltipLock;
 
             const isInTeam = currentTeam.some(member => member.id === pokemon.id);
-            const teamActionIconClass = isInTeam ? 'fa-minus' : 'fa-plus';
+            const teamActionIconClass = `fa-solid ${isInTeam ? 'fa-minus' : 'fa-plus'}`;
             const teamActionIconTitle = isInTeam ? translations[currentLang].removeFromTeamTooltip : translations[currentLang].addToTeamTooltip;
 
-            const removeFromTeamOnCardIcon = `<i class="fas fa-times-circle team-remove-on-card-icon" data-pokemon-id="${pokemon.id}" title="${translations[currentLang].removeFromTeamOnTeamCardTooltip}"></i>`;
+            const removeFromTeamOnCardIcon = `<i class="fa-solid fa-times-circle team-remove-on-card-icon" data-pokemon-id="${pokemon.id}" title="${translations[currentLang].removeFromTeamOnTeamCardTooltip}"></i>`;
+            
+            const isInitiallyShiny = shinyPokemonIds.has(pokemon.id);
 
             card.innerHTML = `
                 <div class="pokemon-image">
-                    ${!isTeamMemberCard ? `<i class="fas ${lockIconClass} lock-icon" data-pokemon-id="${pokemon.id}" title="${lockIconTitle}"></i>` : ''}
+                    ${!isTeamMemberCard ? `<i class="${lockIconClass} lock-icon" data-pokemon-id="${pokemon.id}" title="${lockIconTitle}"></i>` : ''}
                     ${isTeamMemberCard ? removeFromTeamOnCardIcon : ''} 
-                    <img src="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}" 
+                    <img src="${isInitiallyShiny && pokemon.shinyImage ? pokemon.shinyImage : (pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt')}" 
                          alt="${pokemon.name}"
                          loading="lazy"  
+                         data-pokemon-id="${pokemon.id}"
                          data-normal="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}"
                          data-shiny="${pokemon.shinyImage || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt'}"
-                         onclick="toggleShiny(this)"
+                         onclick="toggleShiny(this, ${pokemon.id})"
                          onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Fehler'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Fehler';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Fehler';">
-                    <span class="shiny-indicator ${pokemon.shinyImage && pokemon.shinyImage.includes('sparkles-icon.png') ? 'custom-icon' : ''}">
+                    <span class="shiny-indicator ${isInitiallyShiny && pokemon.shinyImage ? 'active' : ''} ${pokemon.shinyImage && pokemon.shinyImage.includes('sparkles-icon.png') ? 'custom-icon' : ''}">
                         ${pokemon.shinyImage && pokemon.shinyImage.includes('sparkles-icon.png') ? '<img src="sparkles-icon.png" alt="Sparkles Icon" width=32 height=32/>' : '✨'}
                     </span>
                 </div>
                 <div class="pokemon-info">
                     <h3 class="pokemon-name"><a href="${pokemonDbUrl}" target="_blank" class="pokedex-link">#${pokemon.id} ${displayedName}</a></h3>
-                    ${!isTeamMemberCard ? `<p class="pokemon-details">${translations[currentLang].cardGeneration}: ${pokemon.generation !== null ? pokemon.generation : 'Unbekannt'}</p>` : ''}
-                    ${!isTeamMemberCard ? `<p class="pokemon-details">${evolutionText}</p>` : ''}
+                    <div class="pokemon-meta-details">
+                        ${!isTeamMemberCard ? `<p class="pokemon-detail-item">${translations[currentLang].cardGeneration}: ${pokemon.generation !== null ? pokemon.generation : 'Unbekannt'}</p>` : ''}
+                        ${!isTeamMemberCard ? `<p class="pokemon-detail-item">${evolutionText}</p>` : ''}
+                        ${!isTeamMemberCard && pokemon.baseStatTotal !== undefined ? `<p class="pokemon-detail-item">${translations[currentLang].cardBST || 'BST'}: ${pokemon.baseStatTotal}</p>` : ''}
+                    </div>
                     <div class="pokemon-types">${typeHtml}</div>
-                    ${!isTeamMemberCard && (pokemon.isLegendary || pokemon.isMythical) ? `<p class="pokemon-details"><strong>${[pokemon.isLegendary ? translations[currentLang].includeLegendaryLabel : null, pokemon.isMythical ? translations[currentLang].includeMythicalLabel : null].filter(Boolean).join(', ')}</strong></p>` : ''}
+                    ${!isTeamMemberCard && (pokemon.isLegendary || pokemon.isMythical) ? `<p class="pokemon-special-status">${[pokemon.isLegendary ? translations[currentLang].includeLegendaryLabel : null, pokemon.isMythical ? translations[currentLang].includeMythicalLabel : null].filter(Boolean).join(', ')}</p>` : ''}
                 </div>
-                ${!isTeamMemberCard ? `<i class="fas ${teamActionIconClass} team-action-icon" data-pokemon-id="${pokemon.id}" title="${teamActionIconTitle}"></i>` : ''}
+                ${!isTeamMemberCard ? `<i class="${teamActionIconClass} team-action-icon" data-pokemon-id="${pokemon.id}" title="${teamActionIconTitle}"></i>` : ''}
             `;
             
             if (!isTeamMemberCard) {
@@ -951,6 +1057,7 @@
                 }
                 const teamActionIconEl = card.querySelector('.team-action-icon');
                 if (teamActionIconEl) {
+                    teamActionIconEl.classList.toggle('in-team', isInTeam);
                     teamActionIconEl.addEventListener('click', (e) => {
                         e.stopPropagation();
                         toggleTeamMember(pokemon.id);
@@ -982,7 +1089,7 @@
             hasGeneratedAtLeastOnce = true; 
             if (nameFilterInput) nameFilterInput.value = ""; 
             validateLockedPokemonIds(); 
-            countForNewPokemons = parseInt(document.getElementById('count').value) || 0;
+            countForNewPokemons = parseInt(countInput.value) || 0; // Use const countInput
             
             const filteredCandidates = filterPokemon();
             const availableForRandom = filteredCandidates.filter(p => !lockedPokemonIds.has(p.id) && !currentTeam.some(member => member.id === p.id)); 
@@ -1021,6 +1128,10 @@
                 lockedPokemonSectionContainer.style.display = 'none';
             }
 
+            displayedPokemonList.forEach(pokemon => {
+                pokemon.isCurrentlyShiny = shinyPokemonIds.has(pokemon.id);
+            });
+
             sortPokemonList(displayedPokemonList); 
 
             const nameFilterValue = nameFilterInput.value.toLowerCase().trim();
@@ -1034,12 +1145,12 @@
                 });
             }
             
-            if (finalFilteredList.length > 0) {
-                finalFilteredList.forEach(p => {
-                    resultsContainer.appendChild(createPokemonCard(p));
-                });
-            } else if (hasGeneratedAtLeastOnce && pokemonData.length > 0) { 
-                const noResultsDiv = document.createElement('div');
+            finalFilteredList.forEach(p => { // Render cards after sorting and filtering by name
+                resultsContainer.appendChild(createPokemonCard(p));
+            });
+
+            if (finalFilteredList.length === 0 && hasGeneratedAtLeastOnce && pokemonData.length > 0) { 
+                 const noResultsDiv = document.createElement('div');
                 noResultsDiv.className = 'no-results-message';
                 if (displayedPokemonList.length > 0 && nameFilterValue !== "") { 
                     let baseMsg = translations[currentLang].noResultsInContainer;
@@ -1049,16 +1160,16 @@
                 } else { 
                      noResultsDiv.textContent = translations[currentLang].noResultsInContainer;
                 }
-                resultsContainer.appendChild(noResultsDiv);
+                if (resultsContainer.innerHTML === "") resultsContainer.appendChild(noResultsDiv); // Only add if empty
             }
             
-            nameFilterContainer.style.display = displayedPokemonList.length > 0 ? 'block' : 'none';
+            nameFilterContainer.style.display = displayedPokemonList.length > 0 || (nameFilterInput && nameFilterInput.value !== "") ? 'block' : 'none';
             
             const numLocked = actualDisplayedLockedPokemons.length;
             const numCurrentlyDisplayedInResults = finalFilteredList.length;
             const filteredCandidatesForStatus = filterPokemon();
             const numTotalPossibleNew = filteredCandidatesForStatus.filter(p => !lockedPokemonIds.has(p.id) && !currentTeam.some(member => member.id === p.id)).length;
-            const countInputValue = parseInt(document.getElementById('count').value) || 0;
+            const countInputValue = parseInt(countInput.value) || 0;
 
             if (isLoading) { statusElement.textContent = translations[currentLang].loadingData; }
             else if (pokemonData.length === 0) { statusElement.textContent = translations[currentLang].status_initial_prompt; }
@@ -1088,7 +1199,7 @@
                 } else if (numLocked === 0 && numCurrentlyDisplayedInResults > 0) {
                     statusElement.textContent = translations[currentLang].status_generated_only(numCurrentlyDisplayedInResults, numTotalPossibleNew);
                 } else if (numLocked === 0 && numCurrentlyDisplayedInResults === 0 && countInputValue > 0) {
-                    const activeFilters = document.querySelectorAll('.gen-checkbox:checked, .type-checkbox:checked, .evo-position-checkbox:checked, .chain-length-checkbox:checked').length > 0 ||
+                    const activeFilters = document.querySelectorAll('.gen-checkbox:checked, .type-checkbox:checked, .evo-position-checkbox:checked, .chain-length-checkbox:checked, #bstMin[value]:not([value=""]), #bstMax[value]:not([value=""])').length > 0 ||
                                           !document.getElementById('includeLegendary').checked ||
                                           !document.getElementById('includeMythical').checked;
                     if (filteredCandidatesForStatus.length === 0 && pokemonData.length > 0 && activeFilters) {
@@ -1100,7 +1211,6 @@
                      statusElement.textContent = translations[currentLang].status_initial_prompt; 
                 } else {
                     if (numCurrentlyDisplayedInResults === 0 && countInputValue > 0 && nameFilterValue !== "") { 
-                        // Status message for "no results due to name filter" is primarily handled by in-container message
                         statusElement.textContent = ""; 
                     } else if (numCurrentlyDisplayedInResults === 0 && countInputValue === 0){
                         statusElement.textContent = translations[currentLang].status_initial_prompt;
@@ -1119,6 +1229,15 @@
                 case 'id': list.sort((a, b) => (a.id - b.id) * directionMultiplier); break;
                 case 'name': list.sort((a, b) => { const nameA = currentLang === 'de' && a.germanName ? a.germanName : a.name; const nameB = currentLang === 'de' && b.germanName ? b.germanName : b.name; return nameA.localeCompare(nameB, currentLang) * directionMultiplier; }); break;
                 case 'type': list.sort((a, b) => { const typeA = a.types.length > 0 ? a.types[0] : ''; const typeB = b.types.length > 0 ? b.types[0] : ''; return typeA.localeCompare(typeB) * directionMultiplier; }); break;
+                case 'shiny': 
+                    list.sort((a,b) => ( (b.isCurrentlyShiny ? 1:0) - (a.isCurrentlyShiny ? 1:0) ) * directionMultiplier); 
+                    break;
+                case 'legendary': 
+                    list.sort((a,b) => ( (b.isLegendary ? 1:0) - (a.isLegendary ? 1:0) ) * directionMultiplier); 
+                    break;
+                case 'mythical': 
+                    list.sort((a,b) => ( (b.isMythical ? 1:0) - (a.isMythical ? 1:0) ) * directionMultiplier); 
+                    break;
                 case 'random': for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; } break;
                 default: list.sort((a, b) => a.id - b.id);
             }
@@ -1129,14 +1248,39 @@
                 icon.classList.remove('active');
                 if (icon.dataset.sort === currentSortCriteria) icon.classList.add('active');
              });
-             sortDirectionIcon.className = currentSortCriteria === 'random' ? 'fas' : `fas ${currentSortDirection === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short'}`;
+             sortDirectionIcon.className = `fa-solid ${currentSortCriteria === 'random' ? '' : (currentSortDirection === 'asc' ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short')}`;
+             if (currentSortCriteria === 'random') sortDirectionIcon.className = 'fa-solid';
         }
 
-        function toggleShiny(imgElement) {
-            const currentSrc = imgElement.src; const normalSrc = imgElement.dataset.normal; const shinySrc = imgElement.dataset.shiny; const imageContainer = imgElement.parentElement; const indicator = imageContainer.querySelector('.shiny-indicator');
-            if (shinySrc && shinySrc.includes('http')) { // Basic check if shinySrc is a valid URL
-                 if (currentSrc === normalSrc) { imgElement.src = shinySrc; if (indicator) indicator.classList.add('active'); } 
-                 else { imgElement.src = normalSrc; if (indicator) indicator.classList.remove('active'); }
+        function toggleShiny(imgElement, pokemonId) {
+            const currentSrc = imgElement.src;
+            const normalSrc = imgElement.dataset.normal;
+            const shinySrc = imgElement.dataset.shiny;
+            const imageContainer = imgElement.parentElement;
+            const indicator = imageContainer.querySelector('.shiny-indicator');
+
+            if (shinySrc && shinySrc.includes('http')) {
+                let isNowShiny = false;
+                if (currentSrc === normalSrc) {
+                    imgElement.src = shinySrc;
+                    if (indicator) indicator.classList.add('active');
+                    shinyPokemonIds.add(pokemonId);
+                    isNowShiny = true;
+                } else {
+                    imgElement.src = normalSrc;
+                    if (indicator) indicator.classList.remove('active');
+                    shinyPokemonIds.delete(pokemonId);
+                }
+                localStorage.setItem(SHINY_POKEMON_CACHE_KEY, JSON.stringify(Array.from(shinyPokemonIds)));
+
+                const pokemonInList = displayedPokemonList.find(p => p.id === pokemonId);
+                if (pokemonInList) {
+                    pokemonInList.isCurrentlyShiny = isNowShiny;
+                }
+            }
+
+            if (currentSortCriteria === 'shiny' && hasGeneratedAtLeastOnce) {
+                renderAllPokemon();
             }
         }
 
@@ -1400,7 +1544,6 @@
                 toggleAnalysisViewBtn.setAttribute('data-i18n', 'toggleAnalysisDetail');
             }
         }
-        // --- End Team Builder Functions ---
 
 
         function capitalizeFirstLetter(string) {
@@ -1444,6 +1587,12 @@
             filterCheckboxes.forEach(checkbox => {
                 filterState[checkbox.id] = checkbox.checked;
             });
+            
+            const bstMinInput = document.getElementById('bstMin');
+            const bstMaxInput = document.getElementById('bstMax');
+            if (bstMinInput) filterState['bstMin'] = bstMinInput.value;
+            if (bstMaxInput) filterState['bstMax'] = bstMaxInput.value;
+
             try {
                 localStorage.setItem(FILTER_STATE_CACHE_KEY, JSON.stringify(filterState));
             } catch (e) {
@@ -1464,6 +1613,16 @@
                             checkbox.checked = savedState[checkbox.id];
                         }
                     });
+
+                    const bstMinInput = document.getElementById('bstMin');
+                    const bstMaxInput = document.getElementById('bstMax');
+                    if (bstMinInput && savedState.hasOwnProperty('bstMin')) {
+                        bstMinInput.value = savedState['bstMin'];
+                    }
+                    if (bstMaxInput && savedState.hasOwnProperty('bstMax')) {
+                        bstMaxInput.value = savedState['bstMax'];
+                    }
+
                 } catch (e) {
                     console.error("Error loading or applying filter state from localStorage:", e);
                     localStorage.removeItem(FILTER_STATE_CACHE_KEY);
@@ -1531,8 +1690,15 @@
             }
         }
 
-        // --- Initialize Event Listeners ---
-        document.getElementById('count').addEventListener('input', () => {});
+        if (countInput) {
+            countInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); 
+                    handleNewGenerationRequest();
+                }
+            });
+        }
+
         mainGenerateBtn.addEventListener('click', handleNewGenerationRequest);
         stickyGenerateBtn.addEventListener('click', handleNewGenerationRequest);
         scrollToTopBtn.addEventListener('click', () => {
@@ -1563,7 +1729,13 @@
         if (clearCacheBtn) {
             clearCacheBtn.addEventListener('click', () => {
                 if (window.confirm(translations[currentLang].confirmClearCache)) {
-                    localStorage.clear(); 
+                    localStorage.removeItem(CACHE_KEY);
+                    localStorage.removeItem(LOCKED_POKEMON_CACHE_KEY);
+                    localStorage.removeItem(FILTER_STATE_CACHE_KEY);
+                    localStorage.removeItem(TEAM_MEMBERS_CACHE_KEY);
+                    localStorage.removeItem(SHINY_POKEMON_CACHE_KEY);
+                    localStorage.removeItem('darkMode');
+                    localStorage.removeItem('language');
                     alert(translations[currentLang].cacheCleared);
                     window.location.reload();
                 }
@@ -1601,6 +1773,15 @@
                     lockedPokemonIds = new Set();
                 }
              }
+             const savedShinyIds = localStorage.getItem(SHINY_POKEMON_CACHE_KEY);
+             if (savedShinyIds) {
+                try {
+                    shinyPokemonIds = new Set(JSON.parse(savedShinyIds).map(id => parseInt(id)));
+                } catch (e) {
+                    console.error("Error loading shiny Pokémon IDs:", e);
+                    shinyPokemonIds = new Set();
+                }
+            }
              
              const savedLang = localStorage.getItem('language') || 'de';
              
@@ -1612,6 +1793,16 @@
              setLanguage(translations[savedLang] ? savedLang : 'de'); 
              
              updateSortIcons(); 
+
+             const bstMinInput = document.getElementById('bstMin');
+             const bstMaxInput = document.getElementById('bstMax');
+             if (bstMinInput) {
+                 bstMinInput.addEventListener('input', saveFilterState);
+             }
+             if (bstMaxInput) {
+                 bstMaxInput.addEventListener('input', saveFilterState);
+             }
+            
 
              fetchPokemonDataFromAPI().then(() => {
                 loadTeamState();     
