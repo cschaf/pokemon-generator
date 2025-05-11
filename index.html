@@ -296,7 +296,7 @@
                 <li data-i18n="usageStep1"><strong>Filter wählen:</strong> Öffne die Filterbereiche (Generation, Typen, etc.) und wähle deine Kriterien aus. Nutze die <i class="fa-solid fa-square-check"></i> / <i class="fa-solid fa-square-minus"></i> Icons, um schnell alle Optionen einer Gruppe an-/abzuwählen.</li>
                 <li data-i18n="usageStep2"><strong>Anzahl festlegen:</strong> Gib an, wie viele <strong>neue</strong> Pokémon generiert werden sollen (0 ist möglich, um nur gesperrte anzuzeigen). Du kannst auch die Enter-Taste drücken, um die Generierung zu starten.</li>
                 <li data-i18n="usageStep3"><strong>Generieren:</strong> Klicke auf den "Pokémon generieren!" Knopf (oder den kleineren, der beim Scrollen oben rechts erscheint).</li>
-                <li data-i18n="usageStep4"><strong>Erkunden:</strong><ul><li>Klicke auf ein Pokémon-Bild, um zwischen der normalen und der <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny-Form zu wechseln (falls verfügbar).</li><li>Klicke auf die Pokédex-Nummer oder den Namen, um die Detailseite auf Pokémon Database in einem neuen Tab zu öffnen.</li><li>Klicke auf das <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> Symbol oben links auf einer Karte (in der generierten oder gesperrten Liste), um dieses Pokémon zu sperren oder zu entsperren. Gesperrte Pokémon erscheinen oben in einem separaten Bereich und werden bei der nächsten Generierung nicht neu ausgewählt.</li><li>Klicke auf das <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> Symbol unten rechts auf einer Karte (in der generierten oder gesperrten Liste), um es zu deinem Team hinzuzufügen oder daraus zu entfernen (max. 6 Pokémon).</li><li>Klicke auf das <i class='fa-solid fa-times-circle'></i> Symbol oben rechts auf einer Karte im 'Aktuelles Team'-Bereich, um ein Pokémon direkt aus dem Team zu entfernen.</li></ul></li>
+                <li data-i18n="usageStep4"><strong>Erkunden:</strong><ul><li>Klicke auf ein Pokémon-Bild, um zwischen der normalen und der <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny-Form zu wechseln (falls verfügbar).</li><li>Klicke auf die Pokédex-Nummer oder den Namen, um die Detailseite auf PokéWiki in einem neuen Tab zu öffnen.</li><li>Klicke auf das <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> Symbol oben links auf einer Karte (in der generierten oder gesperrten Liste), um dieses Pokémon zu sperren oder zu entsperren. Gesperrte Pokémon erscheinen oben in einem separaten Bereich und werden bei der nächsten Generierung nicht neu ausgewählt.</li><li>Klicke auf das <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> Symbol unten rechts auf einer Karte (in der generierten oder gesperrten Liste), um es zu deinem Team hinzuzufügen oder daraus zu entfernen (max. 6 Pokémon).</li><li>Klicke auf das <i class='fa-solid fa-times-circle'></i> Symbol oben rechts auf einer Karte im 'Aktuelles Team'-Bereich, um ein Pokémon direkt aus dem Team zu entfernen.</li></ul></li>
                 <li data-i18n="usageStep5"><strong>Sortieren:</strong> Wenn du nach unten scrollst, erscheint neben dem "Generieren"-Knopf eine Sortierleiste. Klicke auf <i class="fa-solid fa-hashtag"></i> (ID), <i class="fa-solid fa-arrow-down-a-z"></i> (Name), <i class="fa-solid fa-leaf"></i> (Typ), <i class="fa-solid fa-star"></i> (Shiny), <i class="fa-solid fa-shield-halved"></i> (Legendär), <i class="fa-solid fa-wand-magic-sparkles"></i> (Mysteriös) oder <i class="fa-solid fa-shuffle"></i> (Zufall), um die <strong>neu generierten</strong> Pokémon zu sortieren. Erneutes Klicken (außer bei Zufall) kehrt die Richtung um (<i class="fa-solid fa-arrow-up-short-wide"></i> / <i class="fa-solid fa-arrow-down-wide-short"></i>).</li>
                 <li data-i18n="usageStep6"><strong>Ansicht anpassen:</strong> Nutze die Icons oben rechts für den <i class="fa-solid fa-moon"></i> / <i class="fa-solid fa-sun"></i> Dark Mode oder den Sprachwechsel (<img src='https://flagcdn.com/de.svg' alt='DE' style='width:1em;height:auto;vertical-align:middle;'> / <img src='https://flagcdn.com/us.svg' alt='EN' style='width:1em;height:auto;vertical-align:middle;'>).</li>
                  <li data-i18n="usageStep7">Mit dem <i class="fa-solid fa-arrow-up"></i> Knopf unten rechts gelangst du schnell wieder nach oben.</li>
@@ -480,7 +480,7 @@
         const POKEMON_LIMIT = 1300; 
         const MIN_EXPECTED_POKEMON_COUNT = 1000; 
         const BASE_API_URL = 'https://pokeapi.co/api/v2/';
-        const POKEMONDB_URL = 'https://pokemondb.net/pokedex/';
+        const POKEWIKI_URL_BASE = 'https://www.pokewiki.de/';
         const TYPE_ICON_BASE_URL = 'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/';
         
         const CACHE_KEY = 'pokemonGeneratorCache_v4'; 
@@ -532,7 +532,7 @@
                 usageStep1: "<strong>Filter wählen:</strong> Öffne die Filterbereiche (Generation, Typen, etc.) und wähle deine Kriterien aus. Nutze die <i class='fa-solid fa-square-check'></i> / <i class='fa-solid fa-square-minus'></i> Icons, um schnell alle Optionen einer Gruppe an-/abzuwählen.",
                 usageStep2: "<strong>Anzahl festlegen:</strong> Gib an, wie viele <strong>neue</strong> Pokémon generiert werden sollen (0 ist möglich, um nur gesperrte anzuzeigen). Du kannst auch die Enter-Taste drücken, um die Generierung zu starten.",
                 usageStep3: "<strong>Generieren:</strong> Klicke auf den \"Pokémon generieren!\" Knopf (oder den kleineren, der beim Scrollen oben rechts erscheint).",
-                usageStep4: "<strong>Erkunden:</strong><ul><li>Klicke auf ein Pokémon-Bild, um zwischen der normalen und der <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny-Form zu wechseln (falls verfügbar).</li><li>Klicke auf die Pokédex-Nummer oder den Namen, um die Detailseite auf Pokémon Database in einem neuen Tab zu öffnen.</li><li>Klicke auf das <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> Symbol oben links auf einer Karte (in der generierten oder gesperrten Liste), um dieses Pokémon zu sperren oder zu entsperren. Gesperrte Pokémon erscheinen oben in einem separaten Bereich und werden bei der nächsten Generierung nicht neu ausgewählt.</li><li>Klicke auf das <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> Symbol unten rechts auf einer Karte (in der generierten oder gesperrten Liste), um es zu deinem Team hinzuzufügen oder daraus zu entfernen (max. 6 Pokémon).</li><li>Klicke auf das <i class='fa-solid fa-times-circle'></i> Symbol oben rechts auf einer Karte im 'Aktuelles Team'-Bereich, um ein Pokémon direkt aus dem Team zu entfernen.</li></ul>",
+                usageStep4: "<strong>Erkunden:</strong><ul><li>Klicke auf ein Pokémon-Bild, um zwischen der normalen und der <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny-Form zu wechseln (falls verfügbar).</li><li>Klicke auf die Pokédex-Nummer oder den Namen, um die Detailseite auf PokéWiki in einem neuen Tab zu öffnen.</li><li>Klicke auf das <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> Symbol oben links auf einer Karte (in der generierten oder gesperrten Liste), um dieses Pokémon zu sperren oder zu entsperren. Gesperrte Pokémon erscheinen oben in einem separaten Bereich und werden bei der nächsten Generierung nicht neu ausgewählt.</li><li>Klicke auf das <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> Symbol unten rechts auf einer Karte (in der generierten oder gesperrten Liste), um es zu deinem Team hinzuzufügen oder daraus zu entfernen (max. 6 Pokémon).</li><li>Klicke auf das <i class='fa-solid fa-times-circle'></i> Symbol oben rechts auf einer Karte im 'Aktuelles Team'-Bereich, um ein Pokémon direkt aus dem Team zu entfernen.</li></ul>",
                 usageStep5: "<strong>Sortieren:</strong> Wenn du nach unten scrollst, erscheint neben dem \"Generieren\"-Knopf eine Sortierleiste. Klicke auf <i class='fa-solid fa-hashtag'></i> (ID), <i class='fa-solid fa-arrow-down-a-z'></i> (Name), <i class='fa-solid fa-leaf'></i> (Typ), <i class='fa-solid fa-star'></i> (Shiny), <i class='fa-solid fa-shield-halved'></i> (Legendär), <i class='fa-solid fa-wand-magic-sparkles'></i> (Mysteriös) oder <i class='fa-solid fa-shuffle'></i> (Zufall), um die <strong>neu generierten</strong> Pokémon zu sortieren. Erneutes Klicken (außer bei Zufall) kehrt die Richtung um (<i class='fa-solid fa-arrow-up-short-wide'></i> / <i class='fa-solid fa-arrow-down-wide-short'></i>).",
                 usageStep6: "<strong>Ansicht anpassen:</strong> Nutze die Icons oben rechts für den <i class='fa-solid fa-moon'></i> / <i class='fa-solid fa-sun'></i> Dark Mode oder den Sprachwechsel (<img src='https://flagcdn.com/de.svg' alt='DE' style='width:1em;height:auto;vertical-align:middle;'> / <img src='https://flagcdn.com/us.svg' alt='EN' style='width:1em;height:auto;vertical-align:middle;'>).",
                 usageStep7: "Mit dem <i class='fa-solid fa-arrow-up'></i> Knopf unten rechts gelangst du schnell wieder nach oben.",
@@ -614,7 +614,7 @@
                 usageStep1: "<strong>Select Filters:</strong> Expand the filter sections (Generation, Types, etc.) and choose your criteria. Use the <i class='fa-solid fa-square-check'></i> / <i class='fa-solid fa-square-minus'></i> icons to quickly select/deselect all options in a group.",
                 usageStep2: "<strong>Set Count:</strong> Enter how many <strong>new</strong> Pokémon you want to generate (0 is possible to only show locked Pokémon). You can also press Enter to start generation.",
                 usageStep3: "<strong>Generate:</strong> Click the \"Generate Pokémon!\" button (or the smaller one that appears top-right when scrolling).",
-                usageStep4: "<strong>Explore:</strong><ul><li>Click a Pokémon's image to toggle between its normal and <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny form (if available).</li><li>Click the Pokédex number or name to open its detail page on Pokémon Database in a new tab.</li><li>Click the <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> icon on the top-left of a card (in the generated or locked list) to lock or unlock that Pokémon. Locked Pokémon appear in a separate section above and won't be randomly generated again.</li><li>Click the <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> icon on the bottom-right of a card (in the generated or locked list) to add or remove it from your team (max 6 Pokémon).</li><li>Click the <i class='fa-solid fa-times-circle'></i> icon on the top-right of a card in the 'Current Team' section to remove a Pokémon directly from the team.</li></ul>",
+                usageStep4: "<strong>Explore:</strong><ul><li>Click a Pokémon's image to toggle between its normal and <i class='fa-solid fa-star' style='color: var(--shiny-color);'></i> Shiny form (if available).</li><li>Click the Pokédex number or name to open its detail page on PokéWiki in a new tab.</li><li>Click the <i class='fa-solid fa-unlock'></i> / <i class='fa-solid fa-lock'></i> icon on the top-left of a card (in the generated or locked list) to lock or unlock that Pokémon. Locked Pokémon appear in a separate section above and won't be randomly generated again.</li><li>Click the <i class='fa-solid fa-plus'></i> / <i class='fa-solid fa-minus'></i> icon on the bottom-right of a card (in the generated or locked list) to add or remove it from your team (max 6 Pokémon).</li><li>Click the <i class='fa-solid fa-times-circle'></i> icon on the top-right of a card in the 'Current Team' section to remove a Pokémon directly from the team.</li></ul>",
                 usageStep5: "<strong>Sort:</strong> When you scroll down, a sort bar appears next to the Generate button. Click <i class='fa-solid fa-hashtag'></i> (ID), <i class='fa-solid fa-arrow-down-a-z'></i> (Name), <i class='fa-solid fa-leaf'></i> (Type), <i class='fa-solid fa-star'></i> (Shiny), <i class='fa-solid fa-shield-halved'></i> (Legendary), <i class='fa-solid fa-wand-magic-sparkles'></i> (Mythical), or <i class='fa-solid fa-shuffle'></i> (Random) to sort the <strong>newly generated</strong> Pokémon. Clicking again (except for Random) reverses the direction (<i class='fa-solid fa-arrow-up-short-wide'></i> / <i class='fa-solid fa-arrow-down-wide-short'></i>).",
                 usageStep6: "<strong>Customize View:</strong> Use the icons in the top-right for <i class='fa-solid fa-moon'></i> / <i class='fa-solid fa-sun'></i> Dark Mode or language switching (<img src='https://flagcdn.com/de.svg' alt='DE' style='width:1em;height:auto;vertical-align:middle;'> / <img src='https://flagcdn.com/us.svg' alt='EN' style='width:1em;height:auto;vertical-align:middle;'>).",
                 usageStep7: "Use the <i class='fa-solid fa-arrow-up'></i> button in the bottom-right to quickly scroll back to the top.",
@@ -985,7 +985,7 @@
                 card.id = `card-${pokemon.id}`;
             }
             const displayedName = currentLang === 'de' && pokemon.germanName ? pokemon.germanName : capitalizeFirstLetter(pokemon.name);
-            const pokemonDbUrl = `${POKEMONDB_URL}${pokemon.name}`;
+            const pokemonWikiUrl = `${POKEWIKI_URL_BASE}${encodeURIComponent(displayedName)}`;
             
             const typeHtml = pokemon.types.map(type => {
                 const typeNameTranslated = translations[currentLang][`type_${type}`] || capitalizeFirstLetter(type);
@@ -1035,7 +1035,7 @@
                     </span>
                 </div>
                 <div class="pokemon-info">
-                    <h3 class="pokemon-name"><a href="${pokemonDbUrl}" target="_blank" class="pokedex-link">#${pokemon.id} ${displayedName}</a></h3>
+                    <h3 class="pokemon-name"><a href="${pokemonWikiUrl}" target="_blank" class="pokedex-link">#${pokemon.id} ${displayedName}</a></h3>
                     <div class="pokemon-meta-details">
                         ${!isTeamMemberCard ? `<p class="pokemon-detail-item">${translations[currentLang].cardGeneration}: ${pokemon.generation !== null ? pokemon.generation : 'Unbekannt'}</p>` : ''}
                         ${!isTeamMemberCard ? `<p class="pokemon-detail-item">${evolutionText}</p>` : ''}
@@ -1089,23 +1089,67 @@
             hasGeneratedAtLeastOnce = true; 
             if (nameFilterInput) nameFilterInput.value = ""; 
             validateLockedPokemonIds(); 
-            countForNewPokemons = parseInt(countInput.value) || 0; // Use const countInput
+            
+            let numToGenerate = parseInt(countInput.value) || 0;
+            countForNewPokemons = numToGenerate; // Update global count for status messages
             
             const filteredCandidates = filterPokemon();
-            const availableForRandom = filteredCandidates.filter(p => !lockedPokemonIds.has(p.id) && !currentTeam.some(member => member.id === p.id)); 
+            const availableForRandomOverall = filteredCandidates.filter(p => !lockedPokemonIds.has(p.id) && !currentTeam.some(member => member.id === p.id));
             
-            displayedPokemonList = []; 
+            displayedPokemonList = [];
 
-            if (availableForRandom.length > 0 && countForNewPokemons > 0) {
-                if (countForNewPokemons >= availableForRandom.length) {
-                    displayedPokemonList = [...availableForRandom];
-                } else {
-                    let tempShuffledList = [...availableForRandom].sort(() => 0.5 - Math.random());
-                    displayedPokemonList = tempShuffledList.slice(0, countForNewPokemons);
+            if (availableForRandomOverall.length === 0 || numToGenerate === 0) {
+                renderAllPokemon();
+                return;
+            }
+
+            const selectedGensFromCheckboxes = Array.from(document.querySelectorAll('.gen-checkbox:checked')).map(cb => parseInt(cb.value));
+            
+            const pokemonBySelectedGeneration = new Map();
+            selectedGensFromCheckboxes.forEach(gen => pokemonBySelectedGeneration.set(gen, []));
+
+            availableForRandomOverall.forEach(p => {
+                if (p.generation !== null && pokemonBySelectedGeneration.has(p.generation)) {
+                    pokemonBySelectedGeneration.get(p.generation).push(p);
+                }
+            });
+
+            // Shuffle each generation's list of candidates
+            pokemonBySelectedGeneration.forEach(list => list.sort(() => 0.5 - Math.random()));
+
+            // Shuffle the order of generations to pick from to ensure fairness if numToGenerate is small
+            let generationPickOrder = [...selectedGensFromCheckboxes].filter(gen => pokemonBySelectedGeneration.get(gen) && pokemonBySelectedGeneration.get(gen).length > 0)
+                                                                  .sort(() => 0.5 - Math.random()); 
+
+            // Pass 1: Try to pick one from each selected (and available) generation
+            for (const gen of generationPickOrder) {
+                if (numToGenerate === 0) break;
+                const candidatesInGen = pokemonBySelectedGeneration.get(gen);
+                if (candidatesInGen && candidatesInGen.length > 0) {
+                    const pickedPokemon = candidatesInGen.pop(); // Get one from the (shuffled) list for this gen
+                    displayedPokemonList.push(pickedPokemon);
+                    numToGenerate--;
                 }
             }
+
+            // Pass 2: Fill remaining spots from all available Pokémon, ensuring diversity if possible
+            if (numToGenerate > 0) {
+                let allRemainingCandidates = [];
+                // Collect all Pokémon that are still available in their generation lists
+                pokemonBySelectedGeneration.forEach(list => allRemainingCandidates.push(...list));
+                
+                if (allRemainingCandidates.length > 0) {
+                    allRemainingCandidates.sort(() => 0.5 - Math.random()); // Shuffle all remaining candidates
+                    
+                    const numToTakeFromRemaining = Math.min(numToGenerate, allRemainingCandidates.length);
+                    displayedPokemonList.push(...allRemainingCandidates.slice(0, numToTakeFromRemaining));
+                    // numToGenerate -= numToTakeFromRemaining; // Not strictly needed to update here as we just take what we can
+                }
+            }
+            
             renderAllPokemon(); 
         }
+
 
         function renderAllPokemon() {
             lockedPokemonResultsContainer.innerHTML = "";
@@ -1166,7 +1210,9 @@
             nameFilterContainer.style.display = displayedPokemonList.length > 0 || (nameFilterInput && nameFilterInput.value !== "") ? 'block' : 'none';
             
             const numLocked = actualDisplayedLockedPokemons.length;
-            const numCurrentlyDisplayedInResults = finalFilteredList.length;
+            const numCurrentlyDisplayedInResults = finalFilteredList.length; // This is after name filtering
+            const numGeneratedBeforeNameFilter = displayedPokemonList.length; // This is what was actually generated
+
             const filteredCandidatesForStatus = filterPokemon();
             const numTotalPossibleNew = filteredCandidatesForStatus.filter(p => !lockedPokemonIds.has(p.id) && !currentTeam.some(member => member.id === p.id)).length;
             const countInputValue = parseInt(countInput.value) || 0;
@@ -1190,15 +1236,15 @@
                 }
                 statusElement.textContent = combinedMsg || translations[currentLang].status_initial_prompt;
             } else { 
-                if (numLocked > 0 && countInputValue === 0 && numCurrentlyDisplayedInResults === 0) {
+                if (numLocked > 0 && countInputValue === 0 && numGeneratedBeforeNameFilter === 0) { // Check generated, not just displayed
                     statusElement.textContent = translations[currentLang].status_locked_only(numLocked);
-                } else if (numLocked > 0 && numCurrentlyDisplayedInResults > 0) {
-                    statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numCurrentlyDisplayedInResults, numTotalPossibleNew);
-                } else if (numLocked > 0 && numCurrentlyDisplayedInResults === 0 && countInputValue > 0) {
+                } else if (numLocked > 0 && numGeneratedBeforeNameFilter > 0) {
+                    statusElement.textContent = translations[currentLang].status_locked_and_generated(numLocked, numGeneratedBeforeNameFilter, numTotalPossibleNew);
+                } else if (numLocked > 0 && numGeneratedBeforeNameFilter === 0 && countInputValue > 0) {
                     statusElement.textContent = translations[currentLang].status_locked_no_new_match(numLocked);
-                } else if (numLocked === 0 && numCurrentlyDisplayedInResults > 0) {
-                    statusElement.textContent = translations[currentLang].status_generated_only(numCurrentlyDisplayedInResults, numTotalPossibleNew);
-                } else if (numLocked === 0 && numCurrentlyDisplayedInResults === 0 && countInputValue > 0) {
+                } else if (numLocked === 0 && numGeneratedBeforeNameFilter > 0) {
+                    statusElement.textContent = translations[currentLang].status_generated_only(numGeneratedBeforeNameFilter, numTotalPossibleNew);
+                } else if (numLocked === 0 && numGeneratedBeforeNameFilter === 0 && countInputValue > 0) {
                     const activeFilters = document.querySelectorAll('.gen-checkbox:checked, .type-checkbox:checked, .evo-position-checkbox:checked, .chain-length-checkbox:checked, #bstMin[value]:not([value=""]), #bstMax[value]:not([value=""])').length > 0 ||
                                           !document.getElementById('includeLegendary').checked ||
                                           !document.getElementById('includeMythical').checked;
@@ -1207,12 +1253,12 @@
                     } else {
                          statusElement.textContent = translations[currentLang].status_no_new_match; 
                     }
-                } else if (numLocked === 0 && numCurrentlyDisplayedInResults === 0 && countInputValue === 0) {
+                } else if (numLocked === 0 && numGeneratedBeforeNameFilter === 0 && countInputValue === 0) {
                      statusElement.textContent = translations[currentLang].status_initial_prompt; 
                 } else {
-                    if (numCurrentlyDisplayedInResults === 0 && countInputValue > 0 && nameFilterValue !== "") { 
-                        statusElement.textContent = ""; 
-                    } else if (numCurrentlyDisplayedInResults === 0 && countInputValue === 0){
+                    if (numGeneratedBeforeNameFilter === 0 && countInputValue > 0 && nameFilterValue !== "") { 
+                        statusElement.textContent = ""; // No results due to name filter, but some were generated
+                    } else if (numGeneratedBeforeNameFilter === 0 && countInputValue === 0){
                         statusElement.textContent = translations[currentLang].status_initial_prompt;
                     }
                 }
