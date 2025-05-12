@@ -120,19 +120,19 @@ self.addEventListener('fetch', event => {
             fetch(event.request)
                 .then(networkResponse => {
                     // Optionally cache successful sprite/flag responses
-                    // if ((isSpriteRequest || isFlagRequest) && networkResponse.ok) {
-                    //     const responseToCache = networkResponse.clone();
-                    //     caches.open(CACHE_NAME).then(cache => {
-                    //         cache.put(event.request, responseToCache);
-                    //     });
-                    // }
+                     if ((isSpriteRequest || isFlagRequest) && networkResponse.ok) {
+                         const responseToCache = networkResponse.clone();
+                         caches.open(CACHE_NAME).then(cache => {
+                             cache.put(event.request, responseToCache);
+                         });
+                     }
                     return networkResponse;
                 })
                 .catch(() => {
                     // If network fails for sprite/flag, try cache
-                    // if (isSpriteRequest || isFlagRequest) {
-                    //     return caches.match(event.request);
-                    // }
+                     if (isSpriteRequest || isFlagRequest) {
+                         return caches.match(event.request);
+                     }
                     // Don't provide offline fallback for API requests usually
                 })
         );

@@ -1449,8 +1449,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 7. Set initial count input value (optional)
-    // const savedCount = localStorage.getItem('pokemonCount');
-    // if (savedCount && countInput) {
-    //     countInput.value = savedCount;
-    // }
+     const savedCount = localStorage.getItem('pokemonCount');
+     if (savedCount && countInput) {
+         countInput.value = savedCount;
+    }
 });
