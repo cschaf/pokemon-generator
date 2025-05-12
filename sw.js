@@ -1,14 +1,15 @@
-const CACHE_NAME = 'pokemon-generator-cache-v1'; // Change version to force update
+const CACHE_NAME = 'pokemon-generator-cache-v2'; // Increment version due to file structure changes
 const urlsToCache = [
-    './', // Cache the root directory (often serves index.html)
+    './', // Cache the root directory
     './index.html',
-    // Add other essential static assets IF they were separate files (e.g., './style.css', './script.js')
-    // Since CSS/JS are inline, index.html covers them.
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css', // Cache Font Awesome
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap', // Cache Google Font CSS request
-    // Cache webfonts if loaded by the Google Font CSS (browser might handle this, but explicit can help)
-    // Add specific font file URLs if needed - check Network tab in dev tools
-    'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/normal.svg', // Example type icon - Cache *all* needed type icons
+    './css/style.css', // Cache the CSS file
+    './js/pokedex-data.js', // Cache JS files
+    './js/i18n.js',
+    './js/app.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap',
+    // Cache needed type icons (keep the list or load dynamically if preferred)
+    'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/normal.svg',
     'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/fire.svg',
     'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/water.svg',
     'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/electric.svg',
@@ -27,9 +28,8 @@ const urlsToCache = [
     'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/steel.svg',
     'https://cdn.jsdelivr.net/gh/partywhale/pokemon-type-icons@main/icons/fairy.svg',
     './favicon.ico',
-    './manifest.json', // Cache the manifest itself
-    // Add your actual icon paths here once created:
-    './icons/icon-192.png',
+    './manifest.json',
+    './icons/icon-192.png', // Cache PWA icons with correct path
     './icons/icon-512.png'
 ];
 
@@ -39,13 +39,10 @@ self.addEventListener('install', event => {
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('Opened cache');
-                // Use addAll for atomic caching - if one fails, none are added
                 return cache.addAll(urlsToCache);
             })
             .catch(err => {
                 console.error("Failed to cache assets during install:", err);
-                // Optionally skip waiting to allow activation even if caching fails partially
-                // self.skipWaiting();
             })
     );
 });
@@ -56,77 +53,88 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cache => {
-                    if (cache !== CACHE_NAME) { // Delete caches not matching the current version
+                    if (cache !== CACHE_NAME) {
                         console.log('Service Worker: Clearing old cache:', cache);
                         return caches.delete(cache);
                     }
                 })
             );
         })
-            // Force the activated service worker to take control immediately
             .then(() => self.clients.claim())
     );
 });
 
 // Fetch event: Serve cached assets first, fallback to network
 self.addEventListener('fetch', event => {
-    // Strategy: Cache first, then network fallback.
-    // We only apply this to GET requests.
     if (event.request.method !== 'GET') {
         return;
     }
 
-    // Don't cache PokeAPI requests or image sprites in the SW Cache
-    // Let browser HTTP cache and localStorage handle those.
+    // Network first for API, Sprites, Flags (or Cache then Network if offline sprites are desired)
     const isApiRequest = event.request.url.includes('pokeapi.co');
-    const isSpriteRequest = event.request.url.includes('raw.githubusercontent.com'); // Adjust if sprite source changes
-    const isFlagRequest = event.request.url.includes('flagcdn.com'); // Let browser cache flags
+    // Assuming sprites still come from official artwork URL (adjust if different)
+    const isSpriteRequest = event.request.url.includes('raw.githubusercontent.com/PokeAPI/sprites') || event.request.url.includes('placehold.co');
+    const isFlagRequest = event.request.url.includes('flagcdn.com');
+    const isFontRequest = event.request.url.includes('fonts.gstatic.com'); // Also cache font files
 
-    if (isApiRequest || isSpriteRequest || isFlagRequest) {
-        // Go directly to network for API/Sprites/Flags
-        event.respondWith(fetch(event.request));
-        return;
-    }
-
-    // For App Shell resources (HTML, FA, Fonts, Type Icons, Manifest, App Icons)
-    event.respondWith(
-        caches.match(event.request)
-            .then(cachedResponse => {
-                // Cache hit - return response
-                if (cachedResponse) {
-                    return cachedResponse;
-                }
-
-                // Not in cache - fetch from network
-                return fetch(event.request).then(
-                    networkResponse => {
-                        // Check if we received a valid response
-                        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic' && networkResponse.type !== 'cors') {
-                            return networkResponse; // Don't cache errors or opaque responses for app shell
-                        }
-
-                        // IMPORTANT: Clone the response. A response is a stream
-                        // and because we want the browser to consume the response
-                        // as well as the cache consuming the response, we need
-                        // to clone it so we have two streams.
-                        const responseToCache = networkResponse.clone();
-
-                        caches.open(CACHE_NAME)
-                            .then(cache => {
-                                // Cache the fetched response
-                                // Only cache resources listed initially or resources from same origin or known CDNs
-                                if(urlsToCache.includes(event.request.url) || event.request.url.startsWith(self.location.origin) || event.request.url.includes('cdnjs.cloudflare.com') || event.request.url.includes('fonts.googleapis.com') || event.request.url.includes('fonts.gstatic.com') || event.request.url.includes('cdn.jsdelivr.net')) {
-                                    cache.put(event.request, responseToCache);
-                                }
-                            });
-
-                        return networkResponse; // Return original network response to browser
+    // Cache-First strategy for App Shell and Type Icons
+    if (!isApiRequest && !isSpriteRequest && !isFlagRequest) {
+        event.respondWith(
+            caches.match(event.request)
+                .then(cachedResponse => {
+                    if (cachedResponse) {
+                        return cachedResponse;
                     }
-                ).catch(error => {
-                    console.error('Fetch failed; returning offline page instead.', error);
-                    // Optional: return a specific offline fallback page/asset if needed
-                    // return caches.match('./offline.html');
-                });
-            })
-    );
+
+                    // Not in cache, fetch from network
+                    return fetch(event.request).then(
+                        networkResponse => {
+                            // Check if we received a valid response
+                            // Allow caching opaque responses for CDNs like fonts.gstatic.com
+                            if (!networkResponse || networkResponse.status !== 200 ) {
+                                // Don't cache non-200 responses unless it's a known CDN where opaque responses are expected
+                                if (networkResponse.type !== 'opaque' || !isFontRequest) {
+                                    return networkResponse;
+                                }
+                            }
+
+                            const responseToCache = networkResponse.clone();
+
+                            caches.open(CACHE_NAME)
+                                .then(cache => {
+                                    // Cache the fetched response
+                                    cache.put(event.request, responseToCache);
+                                });
+
+                            return networkResponse;
+                        }
+                    ).catch(error => {
+                        console.error('Fetch failed; returning offline page or asset might be needed.', error);
+                        // Optional: return caches.match('./offline.html');
+                    });
+                })
+        );
+    } else {
+        // For API, Sprites, Flags - Network first, cache fallback (optional, useful for offline sprites)
+        event.respondWith(
+            fetch(event.request)
+                .then(networkResponse => {
+                    // Optionally cache successful sprite/flag responses
+                    // if ((isSpriteRequest || isFlagRequest) && networkResponse.ok) {
+                    //     const responseToCache = networkResponse.clone();
+                    //     caches.open(CACHE_NAME).then(cache => {
+                    //         cache.put(event.request, responseToCache);
+                    //     });
+                    // }
+                    return networkResponse;
+                })
+                .catch(() => {
+                    // If network fails for sprite/flag, try cache
+                    // if (isSpriteRequest || isFlagRequest) {
+                    //     return caches.match(event.request);
+                    // }
+                    // Don't provide offline fallback for API requests usually
+                })
+        );
+    }
 });
