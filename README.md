@@ -4,9 +4,6 @@ A dynamic, filterable Pokémon generator and team builder web application. Fetch
 
 **[🚀 Launch the Pokémon Generator Application](https://cschaf.github.io/pokemon-generator/index.html)**
 
-[![Pokémon Generator Screenshot](https://raw.githubusercontent.com/CSchaf/pokemon-generator/main/pokemon-generator-screenshot.png)](https://cschaf.github.io/pokemon-generator/index.html)
-*(Screenshot showing various features like filtering, locked Pokémon, team builder, and generated results)*
-
 ## Project Description
 
 This project is a feature-rich, web-based Pokémon Generator designed for fans and developers alike. It allows users to explore the world of Pokémon by generating customized lists based on a variety of criteria, including:
