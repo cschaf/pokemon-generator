@@ -104,7 +104,10 @@ async function fetchPokemonDataFromAPI() {
                     p.hasOwnProperty('baseStatTotal') &&
                     p.hasOwnProperty('isMega') &&
                     p.hasOwnProperty('isAlolan') &&
-                    p.hasOwnProperty('isDefaultForm')))
+                    p.hasOwnProperty('isDefaultForm') && // Existing checks
+                    p.hasOwnProperty('image_url') &&    // New check
+                    p.hasOwnProperty('shiny_image_url') &&// New check
+                    p.hasOwnProperty('icon_url')))     // New check
             {
                 pokemonData.push(...cachedData.pokemon);
                 if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
@@ -400,7 +403,7 @@ function createPokemonCard(pokemon, isTeamMemberCard = false) {
                  data-normal="${pokemon.image_url || 'https://placehold.co/120x120/e0e0e0/333?text=Image+Missing'}"
                  data-shiny="${pokemon.shiny_image_url || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing'}"
                  onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Error'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Image+Missing';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing';">
-            <span class="shiny-indicator ${isInitiallyShiny && pokemon.shinyImage ? 'active' : ''}">✨</span>
+            <span class="shiny-indicator ${isInitiallyShiny && pokemon.shiny_image_url && pokemon.shiny_image_url !== 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing' ? 'active' : ''}">✨</span>
         </div>
         <div class="pokemon-info">
             <h3 class="pokemon-name"><a href="${pokemonWikiUrl}" target="_blank" class="pokedex-link">#${pokemon.id} ${displayedNameOnCard}</a></h3>
