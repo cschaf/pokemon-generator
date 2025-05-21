@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="appTitle">Pokémon Generator</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- Note: PWA features like "Add to Home Screen" or custom theming via manifest.json might not work as expected when this page is opened directly from the file system (file:/// protocol) due to browser security restrictions (CORS) on local file access. For full PWA functionality, please use a local HTTP server. -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#3b5ca8">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -231,20 +232,26 @@
 <!-- Order matters: Load data/constants first, then translations, then main app logic -->
 <script src="js/pokedex-data.js"></script>
 <script src="js/i18n.js"></script>
-<script src="js/app.js"></script>
+<script type="module" src="js/app.js"></script>
 
 <!-- PWA Service Worker Registration -->
 <script>
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                })
-                .catch(error => {
-                    console.log('ServiceWorker registration failed: ', error);
-                });
-        });
+        // Check if the page is loaded over http or https
+        if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        } else {
+            // Optional: Log a message if SW is not registered due to protocol
+            console.warn('Service Worker not registered. App is loaded via a non-HTTP/HTTPS protocol (e.g., file:///). PWA features might be limited.');
+        }
     }
 </script>
 </body>
