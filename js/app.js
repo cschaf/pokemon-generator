@@ -1351,22 +1351,19 @@ function setupEventListeners() {
         });
     });
 
-    if (clearCacheBtn) {
-        clearCacheBtn.addEventListener('click', () => {
-            if (window.confirm(translations[currentLang].confirmClearCache)) {
-                localStorage.removeItem(CACHE_KEY);
-                localStorage.removeItem(LOCKED_POKEMON_CACHE_KEY);
-                localStorage.removeItem(FILTER_STATE_CACHE_KEY);
-                localStorage.removeItem(TEAM_MEMBERS_CACHE_KEY);
-                localStorage.removeItem(SHINY_POKEMON_CACHE_KEY);
-                localStorage.removeItem('darkMode');
-                localStorage.removeItem('language');
-                // localStorage.removeItem('pokemonCount'); // Clear count if saved
-                alert(translations[currentLang].cacheCleared);
-                window.location.reload();
-            }
-        });
-    }
+if (clearCacheBtn) {
+    clearCacheBtn.addEventListener('click', () => {
+        if (window.confirm(translations[currentLang].confirmClearCache)) {
+            // Clear all items from localStorage for the current origin
+            Object.keys(localStorage).forEach(key => {
+                localStorage.removeItem(key);
+            });
+            localStorage.removeItem('pokemonCount'); // Clear count if saved
+            alert(translations[currentLang].cacheCleared);
+            window.location.reload();
+        }
+    });
+}
 
     if (toggleAnalysisViewBtn) {
         toggleAnalysisViewBtn.addEventListener('click', () => {
