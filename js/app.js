@@ -176,9 +176,12 @@ async function fetchPokemonDataFromAPI() {
                     id: detailData.id, name: detailData.name,
                     germanName: speciesData.names.find(name => name.language.name === 'de')?.name || null,
                     types: detailData.types.map(typeInfo => typeInfo.type.name),
-                    sprites: detailData.sprites,
-                    image: detailData.sprites.other?.['official-artwork']?.front_default || detailData.sprites.front_default,
-                    shinyImage: detailData.sprites.other?.['official-artwork']?.front_shiny || detailData.sprites.front_shiny,
+                    // sprites: detailData.sprites, // Removed
+                    // image: detailData.sprites.other?.['official-artwork']?.front_default || detailData.sprites.front_default, // Removed
+                    // shinyImage: detailData.sprites.other?.['official-artwork']?.front_shiny || detailData.sprites.front_shiny, // Removed
+                    image_url: detailData.sprites.other?.['official-artwork']?.front_default || detailData.sprites.front_default || 'https://placehold.co/120x120/e0e0e0/333?text=Image+Missing',
+                    shiny_image_url: detailData.sprites.other?.['official-artwork']?.front_shiny || detailData.sprites.front_shiny || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing',
+                    icon_url: detailData.sprites.versions?.['generation-vii']?.icons?.front_default || detailData.sprites.front_default || 'https://placehold.co/32x32/e0e0e0/333?text=?',
                     generation, evolutionStage, totalStages,
                     isLegendary: speciesData.is_legendary,
                     isMythical: speciesData.is_mythical,
@@ -199,8 +202,19 @@ async function fetchPokemonDataFromAPI() {
         const results = await Promise.all(pokemonDetailsPromises);
         pokemonData.push(...results.filter(p => p !== null && p.baseStatTotal > 0));
         pokemonData.sort((a, b) => a.id - b.id);
-        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ pokemon: pokemonData })); }
-        catch (e) { console.error("Error saving Pokémon data to cache:", e); }
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ pokemon: pokemonData }));
+        } catch (e) {
+            if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                console.warn("QuotaExceededError: Could not cache Pokémon data. App will use in-memory data for this session.");
+                if (statusElement) { // Ensure statusElement exists
+                    statusElement.textContent = translations[currentLang].quotaExceededError || 'Storage limit reached. Pokémon data could not be fully saved offline.';
+                }
+            } else {
+                console.error("Error saving Pokémon data to cache:", e);
+                // Optionally, inform the user of a generic cache error if desired
+            }
+        }
     } catch (error) { console.error("Fehler beim Laden der Pokémon-Daten:", error); statusElement.textContent = `${translations[currentLang].loadingError} ${error.message}`; }
     finally {
         isLoading = false;
@@ -365,7 +379,7 @@ function createPokemonCard(pokemon, isTeamMemberCard = false) {
     const removeFromTeamOnCardIcon = `<i class="fa-solid fa-times-circle team-remove-on-card-icon" data-pokemon-id="${pokemon.id}" title="${translations[currentLang].removeFromTeamOnTeamCardTooltip}"></i>`;
 
     const isInitiallyShiny = shinyPokemonIds.has(pokemon.id);
-    const currentImageSrc = isInitiallyShiny && pokemon.shinyImage ? pokemon.shinyImage : (pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt');
+    const currentImageSrc = isInitiallyShiny && pokemon.shiny_image_url ? pokemon.shiny_image_url : (pokemon.image_url || 'https://placehold.co/120x120/e0e0e0/333?text=Image+Missing');
 
 
     let specialStatuses = [];
@@ -383,9 +397,9 @@ function createPokemonCard(pokemon, isTeamMemberCard = false) {
                  alt="${displayedNameOnCard}"
                  loading="lazy"
                  data-pokemon-id="${pokemon.id}"
-                 data-normal="${pokemon.image || 'https://placehold.co/120x120/e0e0e0/333?text=Bild+fehlt'}"
-                 data-shiny="${pokemon.shinyImage || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+fehlt'}"
-                 onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Fehler'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Fehler';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Fehler';">
+                 data-normal="${pokemon.image_url || 'https://placehold.co/120x120/e0e0e0/333?text=Image+Missing'}"
+                 data-shiny="${pokemon.shiny_image_url || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing'}"
+                 onerror="this.onerror=null; this.src='https://placehold.co/120x120/e0e0e0/333?text=Error'; this.dataset.normal='https://placehold.co/120x120/e0e0e0/333?text=Image+Missing';this.dataset.shiny='https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing';">
             <span class="shiny-indicator ${isInitiallyShiny && pokemon.shinyImage ? 'active' : ''}">✨</span>
         </div>
         <div class="pokemon-info">
@@ -987,13 +1001,11 @@ function analyzeTeamTypes() {
         th.classList.add('pokemon-header-cell');
         const img = document.createElement('img');
         // Use small icon sprite if available, fallback to default sprite/image
-        img.src = pokemon.sprites?.versions?.['generation-vii']?.icons?.front_default ||
-            pokemon.sprites?.front_default ||
-            pokemon.image; // Fallback to official art if no sprite
+        img.src = pokemon.icon_url; // Updated to use pokemon.icon_url
         img.alt = pokemon.name;
         img.onerror = function() { // Fallback if sprite fails
             this.onerror = null; // prevent infinite loop
-            this.src = pokemon.image || 'https://placehold.co/32x32/e0e0e0/333?text=?';
+            this.src = pokemon.image_url || 'https://placehold.co/32x32/e0e0e0/333?text=?'; // Fallback to image_url or placeholder
         }
         th.appendChild(img);
         const nameSpan = document.createElement('span');
