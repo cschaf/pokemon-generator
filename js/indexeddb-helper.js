@@ -1,15 +1,15 @@
-const DB_NAME = 'pokedexAppDB';
-const DB_VERSION = 1;
-const POKEMON_STORE_NAME = 'pokemonStore';
+const DB_NAME_INTERNAL = 'pokedexAppDB'; // Renamed to avoid conflict if DB_NAME is also global
+const DB_VERSION_INTERNAL = 1; // Renamed
+const POKEMON_STORE_NAME_INTERNAL = 'pokemonStore'; // Renamed
 
-export function initDB() {
+function initDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = indexedDB.open(DB_NAME_INTERNAL, DB_VERSION_INTERNAL);
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      if (!db.objectStoreNames.contains(POKEMON_STORE_NAME)) {
-        db.createObjectStore(POKEMON_STORE_NAME, { keyPath: 'id' });
+      if (!db.objectStoreNames.contains(POKEMON_STORE_NAME_INTERNAL)) {
+        db.createObjectStore(POKEMON_STORE_NAME_INTERNAL, { keyPath: 'id' });
       }
     };
 
@@ -23,7 +23,7 @@ export function initDB() {
   });
 }
 
-export function saveData(db, storeName, data) {
+function saveData(db, storeName, data) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readwrite');
     const store = transaction.objectStore(storeName);
@@ -39,7 +39,7 @@ export function saveData(db, storeName, data) {
   });
 }
 
-export function loadData(db, storeName, key) {
+function loadData(db, storeName, key) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readonly');
     const store = transaction.objectStore(storeName);
@@ -55,7 +55,7 @@ export function loadData(db, storeName, key) {
   });
 }
 
-export function clearData(db, storeName, key) {
+function clearData(db, storeName, key) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readwrite');
     const store = transaction.objectStore(storeName);
@@ -70,3 +70,14 @@ export function clearData(db, storeName, key) {
     };
   });
 }
+
+// Expose functions and constants via a global object
+window.indexedDBHelper = {
+  DB_NAME: DB_NAME_INTERNAL,
+  DB_VERSION: DB_VERSION_INTERNAL,
+  POKEMON_STORE_NAME: POKEMON_STORE_NAME_INTERNAL,
+  initDB: initDB,
+  saveData: saveData,
+  loadData: loadData,
+  clearData: clearData
+};

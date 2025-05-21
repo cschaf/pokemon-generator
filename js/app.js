@@ -1,6 +1,5 @@
 // --- Global State Variables ---
-// Import IndexedDB helper functions
-import { initDB, saveData, loadData, clearData, POKEMON_STORE_NAME, DB_NAME } from './indexeddb-helper.js'; // Added DB_NAME
+// IndexedDB helper functions are now available via window.indexedDBHelper
 
 let dbInstance = null; // To hold the initialized DB object
 
@@ -94,45 +93,51 @@ function countStagesInChain(chain) {
     return maxDepth;
 }
 
+// This is the primary fetchPokemonDataFromAPI and will be kept.
+// The older one using localStorage and CACHE_KEY is removed by this diff.
 async function fetchPokemonDataFromAPI() {
     isLoading = true;
     mainGenerateBtn.disabled = true;
     stickyGenerateBtn.disabled = true;
     statusElement.textContent = translations[currentLang].loadingData;
 
-    const cachedDataJSON = localStorage.getItem(CACHE_KEY);
-    if (cachedDataJSON) {
+    if (dbInstance) {
         try {
-            const cachedData = JSON.parse(cachedDataJSON);
-            if (cachedData.pokemon && cachedData.pokemon.length >= MIN_EXPECTED_POKEMON_COUNT &&
-                cachedData.pokemon.every(p => p && // Ensure pokemon object itself is not null/undefined
-                    p.hasOwnProperty('baseStatTotal') &&
-                    p.hasOwnProperty('isMega') &&
-                    p.hasOwnProperty('isAlolan') &&
-                    p.hasOwnProperty('isDefaultForm') && // Existing checks
-                    p.hasOwnProperty('image_url') &&    // New check
-                    p.hasOwnProperty('shiny_image_url') &&// New check
-                    p.hasOwnProperty('icon_url')))     // New check
-            {
-                pokemonData.push(...cachedData.pokemon);
-                if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
-                isLoading = false;
-                mainGenerateBtn.disabled = false;
-                stickyGenerateBtn.disabled = false;
-                statusElement.textContent = translations[currentLang].loadedFromCache;
-                validateLockedPokemonIds();
-                return; // Exit early if valid cache found
-            } else {
-                console.warn(`Cached Pokémon data is incomplete, outdated, or contains invalid entries. Forcing API refresh.`);
-                localStorage.removeItem(CACHE_KEY);
+            const cachedStoreData = await window.indexedDBHelper.loadData(dbInstance, window.indexedDBHelper.POKEMON_STORE_NAME, 'mainCache');
+            if (cachedStoreData && cachedStoreData.pokemon) { // Check cachedStoreData directly
+                const cachedData = cachedStoreData; // Use the direct object from loadData
+                 if (cachedData.pokemon && cachedData.pokemon.length >= MIN_EXPECTED_POKEMON_COUNT &&
+                    cachedData.pokemon.every(p => p &&
+                        p.hasOwnProperty('baseStatTotal') &&
+                        p.hasOwnProperty('isMega') &&
+                        p.hasOwnProperty('isAlolan') &&
+                        p.hasOwnProperty('isDefaultForm') &&
+                        p.hasOwnProperty('image_url') &&
+                        p.hasOwnProperty('shiny_image_url') &&
+                        p.hasOwnProperty('icon_url')))
+                {
+                    pokemonData.push(...cachedData.pokemon);
+                    if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
+                    isLoading = false;
+                    mainGenerateBtn.disabled = false;
+                    stickyGenerateBtn.disabled = false;
+                    statusElement.textContent = translations[currentLang].loadedFromCache;
+                    validateLockedPokemonIds();
+                    return; // Exit early if valid cache found
+                } else {
+                    console.warn(`Cached Pokémon data in IndexedDB is incomplete, outdated, or contains invalid entries. Forcing API refresh.`);
+                    await window.indexedDBHelper.clearData(dbInstance, window.indexedDBHelper.POKEMON_STORE_NAME, 'mainCache'); // Clear invalid cache from IndexedDB
+                }
             }
         } catch (e) {
-            console.error("Error parsing cached Pokémon data:", e);
-            localStorage.removeItem(CACHE_KEY);
+            console.error("Error loading Pokémon data from IndexedDB:", e);
+            // Fall through to API fetch
         }
+    } else {
+        console.warn("DB instance not available for fetching Pokémon data. Attempting API fetch.");
     }
 
-    // --- Fetching logic (identical to original, ensure BASE_API_URL, POKEMON_LIMIT, etc. are available from pokedex-data.js) ---
+    // --- Fetching logic ---
     if (loadingProgressContainer) loadingProgressContainer.style.display = 'block';
     if (loadingProgressBarElement) loadingProgressBarElement.style.width = '0%';
     if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(0, POKEMON_LIMIT);
@@ -184,9 +189,6 @@ async function fetchPokemonDataFromAPI() {
                     id: detailData.id, name: detailData.name,
                     germanName: speciesData.names.find(name => name.language.name === 'de')?.name || null,
                     types: detailData.types.map(typeInfo => typeInfo.type.name),
-                    // sprites: detailData.sprites, // Removed
-                    // image: detailData.sprites.other?.['official-artwork']?.front_default || detailData.sprites.front_default, // Removed
-                    // shinyImage: detailData.sprites.other?.['official-artwork']?.front_shiny || detailData.sprites.front_shiny, // Removed
                     image_url: detailData.sprites.other?.['official-artwork']?.front_default || detailData.sprites.front_default || 'https://placehold.co/120x120/e0e0e0/333?text=Image+Missing',
                     shiny_image_url: detailData.sprites.other?.['official-artwork']?.front_shiny || detailData.sprites.front_shiny || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing',
                     icon_url: detailData.sprites.versions?.['generation-vii']?.icons?.front_default || detailData.sprites.front_default || 'https://placehold.co/32x32/e0e0e0/333?text=?',
@@ -210,18 +212,31 @@ async function fetchPokemonDataFromAPI() {
         const results = await Promise.all(pokemonDetailsPromises);
         pokemonData.push(...results.filter(p => p !== null && p.baseStatTotal > 0));
         pokemonData.sort((a, b) => a.id - b.id);
-        try {
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ pokemon: pokemonData }));
-        } catch (e) {
-            if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                console.warn("QuotaExceededError: Could not cache Pokémon data. App will use in-memory data for this session.");
-                if (statusElement) { // Ensure statusElement exists
-                    statusElement.textContent = translations[currentLang].quotaExceededError || 'Storage limit reached. Pokémon data could not be fully saved offline.';
+
+        if (dbInstance) {
+            try {
+                await window.indexedDBHelper.saveData(dbInstance, window.indexedDBHelper.POKEMON_STORE_NAME, { id: 'mainCache', pokemon: pokemonData });
+                // Attempt to remove any known old localStorage cache keys for Pokémon data.
+                localStorage.removeItem('pokemonCache'); // Common key used previously or as a fallback.
+                // If CACHE_KEY was a specific constant from another file (e.g., pokedex-data.js)
+                // and that file/constant is still part of the build, it could be referenced directly.
+                // However, to avoid dependency or undefined errors if it's removed,
+                // we'll rely on specific known keys or a general cleanup strategy.
+                // For this example, 'pokemonCache' is assumed to be a primary old key.
+                // If a global CACHE_KEY variable exists and is imported, it could be used:
+                // if (typeof CACHE_KEY !== 'undefined') localStorage.removeItem(CACHE_KEY);
+                console.log("Pokémon data saved to IndexedDB. Old localStorage cache for Pokémon data (if any) removed.");
+            } catch (e) {
+                console.error("Error saving Pokémon data to IndexedDB:", e);
+                if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                     console.warn("QuotaExceededError with IndexedDB: Could not cache Pokémon data. App will use in-memory data for this session.");
+                    if (statusElement) {
+                        statusElement.textContent = translations[currentLang].quotaExceededError || 'Storage limit reached. Pokémon data could not be fully saved offline.';
+                    }
                 }
-            } else {
-                console.error("Error saving Pokémon data to cache:", e);
-                // Optionally, inform the user of a generic cache error if desired
             }
+        } else {
+            console.warn("DB instance not available for saving Pokémon data.");
         }
     } catch (error) { console.error("Fehler beim Laden der Pokémon-Daten:", error); statusElement.textContent = `${translations[currentLang].loadingError} ${error.message}`; }
     finally {
@@ -313,158 +328,8 @@ function validateLockedPokemonIds() {
     }
 }
 
-async function fetchPokemonDataFromAPI() {
-    isLoading = true;
-    mainGenerateBtn.disabled = true;
-    stickyGenerateBtn.disabled = true;
-    statusElement.textContent = translations[currentLang].loadingData;
-
-    if (dbInstance) {
-        try {
-            const cachedStoreData = await loadData(dbInstance, POKEMON_STORE_NAME, 'mainCache');
-            if (cachedStoreData && cachedStoreData.pokemon) { // Check cachedStoreData directly
-                const cachedData = cachedStoreData; // Use the direct object from loadData
-                 if (cachedData.pokemon && cachedData.pokemon.length >= MIN_EXPECTED_POKEMON_COUNT &&
-                    cachedData.pokemon.every(p => p &&
-                        p.hasOwnProperty('baseStatTotal') &&
-                        p.hasOwnProperty('isMega') &&
-                        p.hasOwnProperty('isAlolan') &&
-                        p.hasOwnProperty('isDefaultForm') &&
-                        p.hasOwnProperty('image_url') &&
-                        p.hasOwnProperty('shiny_image_url') &&
-                        p.hasOwnProperty('icon_url')))
-                {
-                    pokemonData.push(...cachedData.pokemon);
-                    if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
-                    isLoading = false;
-                    mainGenerateBtn.disabled = false;
-                    stickyGenerateBtn.disabled = false;
-                    statusElement.textContent = translations[currentLang].loadedFromCache;
-                    validateLockedPokemonIds();
-                    return; // Exit early if valid cache found
-                } else {
-                    console.warn(`Cached Pokémon data in IndexedDB is incomplete, outdated, or contains invalid entries. Forcing API refresh.`);
-                    await clearData(dbInstance, POKEMON_STORE_NAME, 'mainCache'); // Clear invalid cache from IndexedDB
-                }
-            }
-        } catch (e) {
-            console.error("Error loading Pokémon data from IndexedDB:", e);
-            // Fall through to API fetch
-        }
-    } else {
-        console.warn("DB instance not available for fetching Pokémon data. Attempting API fetch.");
-    }
-
-    // --- Fetching logic ---
-    if (loadingProgressContainer) loadingProgressContainer.style.display = 'block';
-    if (loadingProgressBarElement) loadingProgressBarElement.style.width = '0%';
-    if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(0, POKEMON_LIMIT);
-    let loadedCount = 0, totalToLoad = 0;
-    try {
-        const response = await fetch(`${BASE_API_URL}pokemon?limit=${POKEMON_LIMIT}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        totalToLoad = data.results.length;
-        if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(0, totalToLoad);
-        const pokemonDetailsPromises = data.results.map(async (p) => {
-            let pokemonDetail = null;
-            try {
-                const detailResponse = await fetch(p.url);
-                if (!detailResponse.ok) throw new Error(`Detail fetch for ${p.name} failed: ${detailResponse.status}`);
-                const detailData = await detailResponse.json();
-
-                const speciesResponse = await fetch(detailData.species.url);
-                if (!speciesResponse.ok) throw new Error(`Species fetch for ${p.name} failed: ${speciesResponse.status}`);
-                const speciesData = await speciesResponse.json();
-                const generationUrl = speciesData.generation ? speciesData.generation.url : null;
-                let generation = generationUrl ? parseInt(generationUrl.match(/\/generation\/(\d+)\//)?.[1] || 0) : null;
-
-                let evolutionChainData = null, totalStages = 0;
-                if (speciesData.evolution_chain && speciesData.evolution_chain.url) {
-                    const chainUrl = speciesData.evolution_chain.url;
-                    if (evolutionChains.has(chainUrl)) evolutionChainData = evolutionChains.get(chainUrl);
-                    else {
-                        try {
-                            const chainResponse = await fetch(chainUrl);
-                            if (chainResponse.ok) { evolutionChainData = await chainResponse.json(); evolutionChains.set(chainUrl, evolutionChainData); }
-                        } catch (chainError) { console.warn(`Evo chain fetch error for ${p.name}:`, chainError); }
-                    }
-                    if (evolutionChainData) totalStages = countStagesInChain(evolutionChainData.chain);
-                } else if (!speciesData.evolves_from_species) totalStages = 1;
-
-                let evolutionStage = -1;
-                if (evolutionChainData) evolutionStage = getEvolutionStage(detailData.name, evolutionChainData.chain);
-                else if (!speciesData.evolves_from_species) evolutionStage = 0;
-
-                let baseStatTotal = 0;
-                if (detailData.stats && Array.isArray(detailData.stats)) {
-                    detailData.stats.forEach(statInfo => {
-                        baseStatTotal += statInfo.base_stat;
-                    });
-                }
-
-                pokemonDetail = {
-                    id: detailData.id, name: detailData.name,
-                    germanName: speciesData.names.find(name => name.language.name === 'de')?.name || null,
-                    types: detailData.types.map(typeInfo => typeInfo.type.name),
-                    image_url: detailData.sprites.other?.['official-artwork']?.front_default || detailData.sprites.front_default || 'https://placehold.co/120x120/e0e0e0/333?text=Image+Missing',
-                    shiny_image_url: detailData.sprites.other?.['official-artwork']?.front_shiny || detailData.sprites.front_shiny || 'https://placehold.co/120x120/e0e0e0/333?text=Shiny+Missing',
-                    icon_url: detailData.sprites.versions?.['generation-vii']?.icons?.front_default || detailData.sprites.front_default || 'https://placehold.co/32x32/e0e0e0/333?text=?',
-                    generation, evolutionStage, totalStages,
-                    isLegendary: speciesData.is_legendary,
-                    isMythical: speciesData.is_mythical,
-                    isMega: detailData.name.includes('-mega'),
-                    isAlolan: detailData.name.includes('-alola'),
-                    isDefaultForm: detailData.is_default,
-                    baseStatTotal
-                };
-            } catch (error) { console.warn(`Error processing ${p.name}: ${error.message}`);}
-            finally {
-                loadedCount++;
-                const progressPercent = totalToLoad > 0 ? (loadedCount / totalToLoad) * 100 : 0;
-                if (loadingProgressBarElement) loadingProgressBarElement.style.width = `${progressPercent}%`;
-                if (loadingProgressTextElement) loadingProgressTextElement.textContent = translations[currentLang].progressText(loadedCount, totalToLoad);
-            }
-            return pokemonDetail;
-        });
-        const results = await Promise.all(pokemonDetailsPromises);
-        pokemonData.push(...results.filter(p => p !== null && p.baseStatTotal > 0));
-        pokemonData.sort((a, b) => a.id - b.id);
-
-        if (dbInstance) {
-            try {
-                await saveData(dbInstance, POKEMON_STORE_NAME, { id: 'mainCache', pokemon: pokemonData });
-                // Attempt to remove any known old localStorage cache keys for Pokémon data.
-                localStorage.removeItem('pokemonCache'); // Common key used previously or as a fallback.
-                // If CACHE_KEY was a specific constant from another file (e.g., pokedex-data.js)
-                // and that file/constant is still part of the build, it could be referenced directly.
-                // However, to avoid dependency or undefined errors if it's removed,
-                // we'll rely on specific known keys or a general cleanup strategy.
-                // For this example, 'pokemonCache' is assumed to be a primary old key.
-                // If a global CACHE_KEY variable exists and is imported, it could be used:
-                // if (typeof CACHE_KEY !== 'undefined') localStorage.removeItem(CACHE_KEY);
-                console.log("Pokémon data saved to IndexedDB. Old localStorage cache for Pokémon data (if any) removed.");
-            } catch (e) {
-                console.error("Error saving Pokémon data to IndexedDB:", e);
-                if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
-                     console.warn("QuotaExceededError with IndexedDB: Could not cache Pokémon data. App will use in-memory data for this session.");
-                    if (statusElement) {
-                        statusElement.textContent = translations[currentLang].quotaExceededError || 'Storage limit reached. Pokémon data could not be fully saved offline.';
-                    }
-                }
-            }
-        } else {
-            console.warn("DB instance not available for saving Pokémon data.");
-        }
-    } catch (error) { console.error("Fehler beim Laden der Pokémon-Daten:", error); statusElement.textContent = `${translations[currentLang].loadingError} ${error.message}`; }
-    finally {
-        isLoading = false;
-        mainGenerateBtn.disabled = false;
-        stickyGenerateBtn.disabled = false;
-        if (loadingProgressContainer) loadingProgressContainer.style.display = 'none';
-        validateLockedPokemonIds();
-    }
-}
+// This function is already updated to use window.indexedDBHelper, so it's fine.
+// async function fetchPokemonDataFromAPI() { ... }
 
 function createPokemonCard(pokemon, isTeamMemberCard = false) {
     // Make sure translations, currentLang, TYPE_ICON_BASE_URL etc. are accessible
@@ -1534,7 +1399,7 @@ if (clearCacheBtn) {
 
             if (dbInstance) {
                 try {
-                    await clearData(dbInstance, POKEMON_STORE_NAME, 'mainCache');
+                    await window.indexedDBHelper.clearData(dbInstance, window.indexedDBHelper.POKEMON_STORE_NAME, 'mainCache');
                     console.log("Pokémon data cleared from IndexedDB.");
                 } catch (e) {
                     console.error("Error clearing Pokémon data from IndexedDB:", e);
@@ -1623,21 +1488,31 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 
     // 6. Initialize DB, then Fetch Core Data, then load dependent data and render
-    try {
-        dbInstance = await initDB();
-        console.log("Database initialized successfully.");
-    } catch (error) {
-        console.error("Failed to initialize database:", error);
-        // Application can still proceed but caching will not work.
-        // Potentially show a user-facing message if DB is critical.
-    }
+    // Wrapped in an async IIFE
+    (async () => {
+        try {
+            dbInstance = await window.indexedDBHelper.initDB();
+            console.log("Database initialized successfully.");
+        } catch (dbError) {
+            console.error("Failed to initialize database:", dbError);
+            // dbInstance will remain null, application can proceed with API-only data
+            statusElement.textContent = translations[currentLang].databaseInitError || "Failed to initialize local database. Data will not be cached.";
+        }
 
-    // Fetch data after DB initialization attempt
-    fetchPokemonDataFromAPI().then(() => {
-        loadTeamState(); // Load team state *after* pokemonData is available
-        renderTeamBuilder(); // Render initial team
-        renderAllPokemon(); // Render initial locked Pokémon and status message
-    });
+        // Always attempt to fetch data (API or cache via DB if dbInstance is available)
+        // and then proceed with UI rendering.
+        try {
+            await fetchPokemonDataFromAPI(); // fetchPokemonDataFromAPI handles dbInstance being null
+            loadTeamState(); 
+            renderTeamBuilder(); 
+            renderAllPokemon(); 
+        } catch (appError) {
+            console.error("Error during initial data load or rendering:", appError);
+            if (statusElement) { // Ensure statusElement exists
+                 statusElement.textContent = translations[currentLang].loadingError + " " + appError.message;
+            }
+        }
+    })();
 
     // 7. Set initial count input value (optional)
      const savedCount = localStorage.getItem('pokemonCount');
